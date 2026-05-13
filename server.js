@@ -6,6 +6,12 @@ const app = express();
 
 const db = new sqlite3.Database("./dados.db");
 
+db.run(`CREATE TABLE IF NOT EXISTS config(
+        id INTEGER PRIMARY KEY,
+        nome_empresa TEXT,
+        
+    )`)
+
 db.run(`CREATE TABLE IF NOT EXISTS login(
     nome TEXT,
     email TEXT,
@@ -253,6 +259,19 @@ app.post("/api/agendamentos", function (req, res) {
             });
         },
     );
+});
+
+app.get('/api/agenda', function (req, res) {
+    db.all(`SELECT * FROM agendamentos
+            WHERE data = ?`, [req.body.data], (err, rows) => {
+        if (err) {
+            return res.status(500).json({
+                mensagem: `Erro ao exibir a agenda. ${err}`
+            });
+        };
+
+        res.json(rows);
+    });
 });
 
 app.listen(3000, function () {

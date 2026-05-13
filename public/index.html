@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flooty Pet - Login</title>
+    <link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+    <aside>
+        <img src="assets/login/loginbanner-horizontal2.png" alt="Imagem que fala sobre o sistema e as suas funções.">
+    </aside>
+    <main>
+        <form method="post" id="form-login">
+        </div>
+            <h2>Bem-vindo!</h2>
+            <p>Faça login para acessar o sistema</p>
+
+            <label for="email">E-mail</label>
+            <div class="container-input">
+                <input type="email" class="input" name="email" id="email" placeholder="seu@email.com">
+                <img src="assets/login/icon_mail.png" alt="simbolo de email" class="iconinput">
+            </div>
+
+            <label for="senha">Senha</label>
+            <div class="container-input">
+                <input type="password" name="senha" id="senha" placeholder="Sua senha">
+                <img src="assets/login/icon_lock.png" alt="simbolo de email" class="iconinput">
+            </div>
+
+            <div class="lembrarlinha">
+                <div>
+                    <input type="checkbox" name="lembrar" id="lembrar">
+                    <label for="lembrar">Lembrar-me</label>
+                </div>
+
+                <a href="#">Esqueci minha senha</a>
+            </div>
+            <button type="submit" id="submit_form" class="button">Entrar</button>
+
+            <div class="ou-container">
+                <div class="linhaou"></div>
+                <span class="textou">OU</span>
+                <div class="linhaou"></div>
+            </div>
+
+            <button type="button" class="button button-outline">Conhecer sistema</button>
+        </form>
+    </main>
+    <script src="js/login.js"></script>
+</body>
+</html>
