@@ -8,9 +8,8 @@ const db = new sqlite3.Database("./dados.db");
 
 db.run(`CREATE TABLE IF NOT EXISTS config(
         id INTEGER PRIMARY KEY,
-        nome_empresa TEXT,
-        
-    )`)
+        nome_empresa TEXT        
+)`)
 
 db.run(`CREATE TABLE IF NOT EXISTS login(
     nome TEXT,
@@ -23,7 +22,7 @@ db.run(`CREATE TABLE IF NOT EXISTS clientes(
     nome TEXT,
     cpf TEXT,
     datanasc DATE,
-    numero INTEGER,
+    numero TEXT,
     obs TEXT,
     logradouro TEXT,
     bairro TEXT,
@@ -61,6 +60,10 @@ db.run(`CREATE TABLE IF NOT EXISTS agendamentos(
 )`);
 
 app.use(express.json());
+
+app.use(express.static('public'))
+
+// API
 
 app.get("/api/clientes", function (req, res) {
     db.all(`SELECT * FROM clientes`, [], (err, rows) => {
