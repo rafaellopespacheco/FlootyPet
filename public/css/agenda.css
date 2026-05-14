@@ -1,15 +1,16 @@
 @charset 'UTF-8';
 
 :root {
-    --sidebar_color: #151A2D;
+    --sidebar_color: #151a2d;
     --sidebar_text: #e2e2e2;
-    --background_color: #FEFEFE;
-    --destaque_color: #7C5CFA;    --sucesso_claro: #D0F5DF;
-    --sucesso_escuro: #77CDA0;
-    --danger_claro: #FECED9;
-    --danger_escuro: #F799B5;
-    --atencao_claro: #FEE8BE;
-    --atencao_escuro: #FDD981;
+    --background_color: #fefefe;
+    --destaque_color: #7c5cfa;
+    --sucesso_claro: #d0f5df;
+    --sucesso_escuro: #77cda0;
+    --danger_claro: #feced9;
+    --danger_escuro: #f799b5;
+    --atencao_claro: #fee8be;
+    --atencao_escuro: #ffa743;
 }
 
 * {
@@ -19,83 +20,125 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
-body {
-    display: flex;
+.header-agenda {
+    padding: 20px;
+    display: flex; 
+    justify-content: space-between;
 }
 
-header {
-    width: 100%;
+.header-agenda .calendar-control {
+    display: flex;
+}
+.header-agenda .calendar-control .control {
+    background-color: var(--background_color);
+    border: 1px solid rgba(0, 0, 0, 0.148);
+    padding: 15px;
+    cursor: pointer;
+    font-weight: bolder;
+    transition: 0.2s;
+    font-size: 1em;
+}
+
+.header-agenda .calendar-control .control:last-child {
+    border-radius: 10px;
+    margin-left: 15px;
+}
+
+.header-agenda .calendar-control .control:first-child {
+    border-radius: 10px 0 0 10px;
+}
+
+.header-agenda .calendar-control .control:nth-child(3) {
+    border-radius: 0 10px 10px 0;
+}
+
+.header-agenda .calendar-control .control:hover {
+    background-color: var(--sidebar_text);
+}
+
+.header-agenda button {
+    border: none;
+    outline: none;
     display: flex;
     align-items: center;
-    padding: 0 40px;
-    justify-content: space-between;
-    
+    gap: 5px;
 }
 
-header h1 {
-    flex: 1;
+.agenda {
+    padding: 20px;
 }
 
-header .mensagens-container img {
-    width: 34px;
+.agenda .card {
+    padding: 10px;
+    width: 300px;
+    min-height: 200px;
+    background-color: var(--atencao_claro);
+    border-left: 5px solid var(--atencao_escuro);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+    border-radius: 5px;
 }
 
-header .conta-container img {
-    margin-left: 10px;
-    width: 35px;
-    height: 35px;
+.agenda .card .card-image img {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    background-color: var(--background_color);
+    border-radius: 50%;
+}
+.agenda .card .card-image {
+    width: 70px;
+    height: 70px;
+    background-color: var(--background_color);
     border-radius: 50%;
 }
 
-header .conta-container {
-    margin-left: 40px;
+.agenda .card .pet-info {
     display: flex;
-    text-align: center;
+    gap: 10px;
+    align-items: center;
 }
 
-header .conta-nome {
+.agenda .card .agendamento-info {
+    display: flex;
+    justify-content: space-around;
+    margin: 10px 0;
+}
+
+.agenda .card .agendamento-horario {
+    font-size: 1.1em;
+    letter-spacing: 1px;
+    color: white;
+    display: block;
+    margin-bottom: 5px;
+    text-align: center;
+    background-color: var(--atencao_escuro);
+    padding: 5px;
     font-weight: bolder;
+    border-radius: 5px;
 }
 
-header .conta-email {
-    font-size: 0.9em;
+.agenda .card .icon {
+    font-size: 30px;
+    background-color: rgba(255, 255, 255, 0.43);
+    padding: 1px 10px;
+    border-radius: 10px;
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.073);
+    color: #a9a9a9;
+
+    font-variation-settings:
+    'FILL' 1,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
 }
 
-.sidebar {
-    background-color: var(--sidebar_color);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100vh;
-    padding: 30px;
+.agenda .card .icon.active {
+    color: var(--destaque_color);
 }
 
-.sidebar> img {
-    width: 200px;
-}
-
-.sidebar nav {
-    flex: 1;
-}
-
-.sidebar ul {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 20px;
-    list-style: none;
-}
-
-.sidebar .link {
-    font-size: 1.4em;
-    text-decoration: none;
-    color: var(--sidebar_text);
-}
-
-.sidebar .creditos {
-    margin-top: 20px;
+.agenda .card .agendamento-status {
     text-align: center;
-    font-size: .8em;
-    color: var(--sidebar_text);
+    font-weight: bolder;
+    padding: 5px;
+    color: var(--atencao_escuro);
 }
