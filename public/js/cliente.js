@@ -81,8 +81,8 @@ function criarModalCadastro() {
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="nome">Nome</label>
-                        <input type="text" name="nome" id="nome">
+                        <label for="nome">Nome *</label>
+                        <input type="text" name="nome" id="nome" required>
                     </div>
 
                     <div class="form-row">
@@ -100,8 +100,8 @@ function criarModalCadastro() {
                     </div>
 
                     <div class="form-group">
-                        <label for="telefone">Telefone</label>
-                        <input type="tel" name="telefone" id="telefone">
+                        <label for="telefone">Telefone *</label>
+                        <input type="tel" name="telefone" id="telefone" required>
                     </div>
 
                     <div class="form-group">
@@ -148,18 +148,81 @@ function criarModalCadastro() {
         </div>`;
 
     document.body.appendChild(modal);
+
+    const inputTelefone = modal.querySelector("#telefone");
+    inputTelefone.value = '+55 ';
+
+    inputTelefone.addEventListener("input", function () {
+        let numeros = inputTelefone.value.replace(/\D/g, "");
+
+        if (numeros.startsWith("55")) {
+            numeros = numeros.slice(2);
+        }
+
+        numeros = numeros.slice(0, 11);
+
+        let valorFormatado = "+55 ";
+
+        if (numeros.length > 0) {
+            valorFormatado += `(${numeros.slice(0, 2)}`;
+
+            if (numeros.length >= 2) {
+                valorFormatado += ") ";
+            }
+        }
+
+        if (numeros.length > 2) {
+            valorFormatado += numeros.slice(2, 7);
+        }
+
+        if (numeros.length > 7) {
+            valorFormatado += "-" + numeros.slice(7, 11);
+        }
+
+        inputTelefone.value = valorFormatado;
+    });
+
     const buttonCadastrarCliente = document.getElementById("cadastrar-button");
+
     buttonCadastrarCliente.addEventListener('click', function () {
-        const nome = document.getElementById('nome').value;
-        const cpf = document.getElementById('cpf').value;
-        const datanasc = document.getElementById('datanasc').value;
-        const telefone = document.getElementById('telefone').value;
-        const obs = document.getElementById('obs').value;
-        const cep = document.getElementById('cep').value;
-        const uf = document.getElementById('uf').value;
-        const endereco = document.getElementById('endereco').value;
-        const bairro = document.getElementById('bairro').value;
-        const cidade = document.getElementById('cidade').value;
+        const inputs = modal.querySelectorAll('input, textarea');
+
+        let formularioValido = true;
+
+        const dadosFormulario = {};
+
+        inputs.forEach(input => {
+            const valor = input.value.trim();
+            const campo = input.id;
+            
+            dadosFormulario[campo] = valor;
+
+            let campoInvalido = false;
+
+            if (input.hasAttribute("required") && valor === "") {
+                formularioValido = false;
+                campoInvalido = true;
+            }
+
+            if (campo === "telefone" && valor === "+55") {
+                formularioValido = false;
+                campoInvalido = true;
+            }
+
+            if (campoInvalido) {
+                input.style.border = "1px solid red";
+            } else {
+                input.style.border = "";
+            }
+        });
+
+        if (!formularioValido) {
+            sendAlertModal('warning', 'Preencha os campos obrigatórios');
+
+            return;
+        }
+        
+        console.log(dadosFormulario)
         
         fetch("/api/clientes", {
             method: "POST",
@@ -167,15 +230,15 @@ function criarModalCadastro() {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                nome: nome,
-                cpf: cpf,
-                datanasc: datanasc,
-                numero: telefone,
-                obs: obs,
-                logradouro: endereco,
-                bairro: bairro,
-                cidade: cidade,
-                uf: uf
+                nome: dadosFormulario.nome,
+                cpf: dadosFormulario.cpf,
+                datanasc: dadosFormulario.datanasc,
+                numero: dadosFormulario.telefone.replace(/\D/g, ''),
+                obs: dadosFormulario.obs,
+                logradouro: dadosFormulario.endereco,
+                bairro: dadosFormulario.bairro,
+                cidade: dadosFormulario.cidade,
+                uf: dadosFormulario.uf
             }),
         }).then(resposta => {
             return resposta.json()
