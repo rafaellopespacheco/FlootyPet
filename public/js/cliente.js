@@ -1,6 +1,7 @@
 // FILTER BUTTONS
 const filterButtons = document.querySelectorAll('.filter-button');
 const filterTodos = document.getElementById('filter-todos');
+import { sendAlertModal } from './modal-alert.js';
 
 
 function toggleFilter(event) {
@@ -53,6 +54,7 @@ fetch('/api/clientes')
                 <td>${formatarTelefone(cliente.numero)}</td>
                 <td>Em breve</td>
                 <td class="td-acoes">
+                    <a href="/clientes/${cliente.id}"></a>
                     <button type="button"><span class="material-symbols-rounded">calendar_add_on</span></button>
                     <button type="button"><span class="material-symbols-rounded">person</span></button>
                 </td>
@@ -159,7 +161,31 @@ function criarModalCadastro() {
         const endereco = document.getElementById('endereco').value;
         const bairro = document.getElementById('bairro').value;
         const cidade = document.getElementById('cidade').value;
-        console.log(nome, cpf, datanasc, telefone, obs, cep, uf, endereco, bairro, cidade)
+        
+        fetch("/api/clientes", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                nome: nome,
+                cpf: cpf,
+                datanasc: datanasc,
+                numero: telefone,
+                obs: obs,
+                logradouro: endereco,
+                bairro: bairro,
+                cidade: cidade,
+                uf: uf
+            }),
+        }).then(resposta => {
+            return resposta.json()
+        }).then(dados => {
+            modal.remove()
+            sendAlertModal('sucess', dados.mensagem)
+        }).catch(err => {
+            sendAlertModal('error', 'Erro ao cadastrar cliente.')
+        });
     })
 
     const fecharModalCadastro = document.getElementById("fechar-modal");
@@ -169,10 +195,3 @@ function criarModalCadastro() {
 }   
 
 abrirModalCadastro.addEventListener("click", criarModalCadastro);
-// fetch('/api/clientes', {
-//     method: 'POST',
-//     headers: {
-//         'Content-Type': 'application/json'
-//     },
-//     body: JSON.stringify()
-// })
