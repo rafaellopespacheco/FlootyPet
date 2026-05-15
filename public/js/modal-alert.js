@@ -18,7 +18,7 @@ export function sendAlertModal(tipo, text = '') {
     const icons = {
         error: "cancel",
         sucess: "check_circle",
-        alert: "error",
+        warning: "error",
     };
 
     const style = document.createElement("style");
@@ -34,6 +34,7 @@ export function sendAlertModal(tipo, text = '') {
     position: fixed;
     bottom: 15px;
     right: 15px;
+    z-index: 9999;
 }
 
 .material-symbols-rounded {
@@ -56,7 +57,7 @@ export function sendAlertModal(tipo, text = '') {
     background-color: #2e7d32;   
 }
 
-.container-modal-alert.alert {
+.container-modal-alert.warning {
     background-color: #ed6c02; 
 }
 
@@ -83,7 +84,7 @@ export function sendAlertModal(tipo, text = '') {
     background-color: #145a1f;
 }
 
-.alert-cooldown.alert {
+.alert-cooldown.warning {
     background-color: #b45300;
 }`;
     document.head.appendChild(style);
