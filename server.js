@@ -63,6 +63,13 @@ app.use(express.json());
 
 app.use(express.static('public'))
 
+// PAGES
+
+app.get("/clientes/:id", function (req, res) {
+    res.sendFile(__dirname + '/view/info-clientes.html')
+})
+
+
 // API
 
 app.get("/api/clientes", function (req, res) {
