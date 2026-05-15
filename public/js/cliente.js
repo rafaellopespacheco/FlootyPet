@@ -54,9 +54,8 @@ fetch('/api/clientes')
                 <td>${formatarTelefone(cliente.numero)}</td>
                 <td>Em breve</td>
                 <td class="td-acoes">
-                    <a href="/clientes/${cliente.id}"></a>
-                    <button type="button"><span class="material-symbols-rounded">calendar_add_on</span></button>
-                    <button type="button"><span class="material-symbols-rounded">person</span></button>
+                <button type="button"><span class="material-symbols-rounded">calendar_add_on</span></button>
+                <a href="/clientes/${cliente.id}"><span class="material-symbols-rounded">person</span></a>
                 </td>
             `;
             clientesContainer.appendChild(tr);
