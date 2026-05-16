@@ -150,13 +150,24 @@ function criarModalCadastro() {
     document.body.appendChild(modal);
 
     const inputTelefone = modal.querySelector("#telefone");
-    inputTelefone.value = '+55 ';
+    inputTelefone.value = "+55 ";
+
+    let apagando = false;
+
+    inputTelefone.addEventListener("keydown", function (e) {
+        apagando = e.key === "Backspace";
+    });
 
     inputTelefone.addEventListener("input", function () {
         let numeros = inputTelefone.value.replace(/\D/g, "");
 
         if (numeros.startsWith("55")) {
             numeros = numeros.slice(2);
+        }
+
+        if (apagando && numeros.length === 0) {
+            inputTelefone.value = "+55 ";
+            return;
         }
 
         numeros = numeros.slice(0, 11);
@@ -166,7 +177,7 @@ function criarModalCadastro() {
         if (numeros.length > 0) {
             valorFormatado += `(${numeros.slice(0, 2)}`;
 
-            if (numeros.length >= 2) {
+            if (numeros.length > 2 || (numeros.length === 2 && !apagando)) {
                 valorFormatado += ") ";
             }
         }
