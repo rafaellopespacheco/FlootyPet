@@ -1,0 +1,87 @@
+main .container-agenda {
+    flex: 1;
+    background-color: #efefef;
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.container-modal-addcliente {
+    width: 100%;
+    max-width: 700px;
+}
+
+.modal-addcliente {
+    background-color: var(--background_color);
+    border-radius: 12px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.05);
+    padding: 30px;
+    width: 100%;
+}
+
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+.modal-body label {
+    font-size: 1em;
+    font-weight: bold;
+    color: var(--sidebar_color);
+}
+
+.modal-body input, 
+.modal-body textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cccccc;
+    border-radius: 8px;
+    font-size: 1em;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.modal-body input:focus, 
+.modal-body textarea:focus {
+    border-color: var(--destaque_color);
+}
+
+.modal-body textarea {
+    height: 100px;
+    resize: vertical;
+}
+
+.modal-footer {
+    margin-top: 30px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+@media (max-width: 768px) {
+    main .container-agenda {
+        padding: 20px;
+    }
+    .form-row {
+        flex-direction: column;
+        gap: 20px;
+    }
+}
