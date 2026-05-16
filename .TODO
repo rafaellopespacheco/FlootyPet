@@ -1,5 +1,12 @@
-- NÃO ESTA DANDO PARA DAR BACKSPACE NO DDD DO INPUT TELEFONE DO NOVO CADASTRO DE CLIENTE
 - ESTA SALVANDO NO BANCO COM FORMATAÇÃO DE TELEFNE
 
-PARA ADICIONAR
-- API de CEP para preencher automaticamente dados de endereço
+PARA ADICIONAR - CADASTRO
+- Pode postar fotos nas redes sociais por padrão sim
+- Input de indicação
+- Tirar obrigatoriedade do ano na data de nascimento do cliente
+- Adicionar número e complemento no endereço do cliente
+- Não permitir dois clientes com o mesmo número
+- Adicionar mais de um telefone no cadastro
+
+
+
