@@ -1,4 +1,3 @@
-- ESTA SALVANDO NO BANCO COM FORMATAÇÃO DE TELEFNE
 
 PARA ADICIONAR - CADASTRO
 - Pode postar fotos nas redes sociais por padrão sim
@@ -8,5 +7,9 @@ PARA ADICIONAR - CADASTRO
 - Não permitir dois clientes com o mesmo número
 - Adicionar mais de um telefone no cadastro
 
+TELA DE CLIENTE
+- Quando salvar as alterações, alterar o nome do cliente lá encima
+- Mostrar CEP
 
-
+TABELA CLIENTES
+- Cores alternadas por linhas

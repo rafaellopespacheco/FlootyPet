@@ -229,6 +229,16 @@ body, main {
     cursor: text;
 }
 
+.container-clientes table td a {
+    font-family: Arial, Helvetica, sans-serif;
+    text-decoration: none;
+    color: black;
+}
+
+.container-clientes table td a:hover {
+    text-decoration: underline;
+}
+
 .container-clientes table td:first-child {
     font-weight: bolder;
 }

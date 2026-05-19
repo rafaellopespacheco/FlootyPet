@@ -6,6 +6,19 @@ const app = express();
 
 const db = new sqlite3.Database("./dados.db");
 
+app.use(express.json());
+
+app.use(express.static("public"));
+
+db.run(`CREATE TABLE IF NOT EXISTS changelogs(
+        id INTEGER PRIMARY KEY,
+        versao TEXT,
+        titulo TEXT,
+        resumo TEXT,
+        descricao TEXT,
+        data DATE
+)`)
+
 db.run(`CREATE TABLE IF NOT EXISTS config(
         id INTEGER PRIMARY KEY,
         nome_empresa TEXT        
@@ -59,11 +72,20 @@ db.run(`CREATE TABLE IF NOT EXISTS agendamentos(
     taxi REAL
 )`);
 
-app.use(express.json());
-
-app.use(express.static('public'))
 
 // PAGES
+
+app.get("/agenda", function (req, res) {
+    res.sendFile(__dirname + '/view/agenda.html')
+})
+
+app.get("/clientes", function (req, res) {
+    res.sendFile(__dirname + '/view/clientes.html')
+})
+
+app.get("/atualizacoes", function (req, res) {
+    res.sendFile(__dirname + '/view/atualizacoes.html')
+})
 
 app.get("/clientes/:id", function (req, res) {
     res.sendFile(__dirname + '/view/info-clientes.html')
@@ -71,7 +93,6 @@ app.get("/clientes/:id", function (req, res) {
 
 
 // API
-
 app.get("/api/clientes", function (req, res) {
     db.all(`SELECT * FROM clientes`, [], (err, rows) => {
         if (err) {
@@ -79,29 +100,6 @@ app.get("/api/clientes", function (req, res) {
         }
         res.json(rows);
     });
-});
-
-app.get("/api/clientes/:id", function (req, res) {
-    db.get(
-        `
-        SELECT * FROM clientes
-        WHERE id = ?`,
-        [req.params.id],
-        (err, rows) => {
-            if (err) {
-                return res.status(500).json({
-                    erro: err.message,
-                });
-            }
-            if (!rows) {
-                return res.status(404).json({
-                    erro: "Este usuário não existe.",
-                });
-            }
-
-            res.json(rows);
-        },
-    );
 });
 
 app.post("/api/clientes", function (req, res) {
@@ -139,6 +137,77 @@ app.post("/api/clientes", function (req, res) {
             });
         },
     );
+});
+
+app.get("/api/clientes/:id", function (req, res) {
+    db.get(
+        `
+        SELECT * FROM clientes
+        WHERE id = ?`,
+        [req.params.id],
+        (err, rows) => {
+            if (err) {
+                return res.status(500).json({
+                    erro: err.message,
+                });
+            }
+            if (!rows) {
+                return res.status(404).json({
+                    erro: "Este usuário não existe.",
+                });
+            }
+
+            res.json(rows);
+        },
+    );
+});
+
+app.put("/api/clientes/:id", function (req, res) {
+    let id = req.params.id;
+    let nome = req.body.nome;
+    let numero = req.body.numero;
+    if (!nome || !numero) {
+        return res.status(400).json({
+            erro: `Preencha os campos obrigatórios.`
+        })
+    }
+    let cpf = req.body.cpf;
+    let datanasc = req.body.datanasc;
+    let cep = req.body.cep;
+    let uf = req.body.uf;
+    let logradouro = req.body.logradouro;
+    let bairro = req.body.bairro;
+    let cidade = req.body.cidade;
+    let notificacao = req.body.notificacao;
+    let obs = req.body.obs;
+    
+    db.run(`
+        UPDATE clientes
+        SET nome = ?, cpf = ?, datanasc = ?, numero = ?, obs = ?, logradouro = ?, bairro = ?, cidade = ?, uf = ?, notificacao = ?
+        WHERE id = ?  
+    `, [
+        nome,
+        cpf,
+        datanasc,
+        numero,
+        obs,
+        logradouro,
+        bairro,
+        cidade,
+        uf,
+        notificacao,
+        id
+    ], err => {
+        if (err) {
+            return res.status(400).json({
+                erro: `Falha ao atualizar o cliente.`
+            })
+        }
+
+        res.json({
+            mensagem: 'Usuário atualizado com sucesso.'
+        })
+    });
 });
 
 app.get("/api/clientes/:id/pets", function (req, res) {
@@ -276,7 +345,7 @@ app.get('/api/agenda', function (req, res) {
             WHERE data = ?`, [req.body.data], (err, rows) => {
         if (err) {
             return res.status(500).json({
-                mensagem: `Erro ao exibir a agenda. ${err}`
+                mensagem: `Erro ao exibir a agenda.`
             });
         };
 
@@ -284,6 +353,40 @@ app.get('/api/agenda', function (req, res) {
     });
 });
 
-app.listen(3000, function () {
+app.get('/api/atualizacoes', (req, res) => {
+    db.all(`SELECT * FROM changelogs`, (err, rows) => {
+        if (err) {
+            return res.status(500).json({
+                erro: `Erro ao procurar os changelogs`
+            })
+        }
+
+        res.json(rows);
+    })   
+})
+
+app.post('/api/atualizacoes', (req, res) => {
+    db.run(`INSERT INTO changelogs ( titulo, versao, resumo, descricao, data )
+            VALUES ( ?, ?, ?, ?, ?)`,
+        [
+        req.body.titulo,
+        req.body.versao,
+        req.body.resumo,
+        JSON.stringify(req.body.descricao),
+        req.body.data
+        ], err => {
+        if (err) {
+            return res.status(500).json({
+                erro: 'Erro ao cadastrar uma changelog'
+            })
+        }
+
+        res.json({
+            mensagem: 'Changelog cadastrada com sucesso!'
+        })
+    })
+})
+
+app.listen(3000, () => {
     console.log("Estou rodando.");
 });

@@ -1,0 +1,178 @@
+@charset 'UTF-8';
+
+:root {
+    --sidebar_color: #151a2d;
+    --sidebar_text: #e2e2e2;
+    --background_color: #fefefe;
+    --destaque_color: #7c5cfa;
+    --sucesso_claro: #d0f5df;
+    --sucesso_escuro: #77cda0;
+    --danger_claro: #feced9;
+    --danger_escuro: #f799b5;
+    --atencao_claro: #fee8be;
+    --atencao_escuro: #ffa743;
+    --acoes_button: #5a5a5a;
+}
+
+html, body {
+    overflow: hidden;
+}
+
+body, main {
+    height: 100vh;
+}
+
+.container-agenda {
+    flex: 1;
+    overflow: hidden;
+}
+
+.container-changelogs {
+    height: 100%;
+    min-height: 0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    padding: 40px;
+}
+
+/* CARD */
+
+.card-change {
+    position: relative;
+    background-color: var(--background_color);
+    border-radius: 16px;
+    padding: 30px;
+    overflow: hidden;
+    flex-shrink: 0;
+
+    border: 1px solid rgba(0,0,0,0.06);
+
+    box-shadow:
+        0 4px 12px rgba(0,0,0,0.05),
+        0 0 0 rgba(124, 92, 250, 0);
+
+    transition:
+        transform .2s,
+        box-shadow .2s;
+}
+
+.card-change:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 8px 24px rgba(0,0,0,0.08),
+        0 0 20px rgba(124, 92, 250, 0.08);
+}
+
+/* LINHA LATERAL */
+
+.card-change::before {
+    content: '';
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 6px;
+    height: 100%;
+
+    background: linear-gradient(
+        180deg,
+        var(--sidebar_color),
+        #1a009a
+    );
+}
+
+/* TOPO */
+
+.card-change .change-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 20px;
+}
+
+.card-change h2 {
+    font-size: 1.4em;
+    color: var(--sidebar_color);
+}
+
+/* BADGE VERSÃO */
+
+.card-change .version {
+    background-color: rgba(124, 92, 250, 0.1);
+    color: var(--sidebar_color);
+
+    padding: 8px 14px;
+    border-radius: 999px;
+
+    font-size: 0.85em;
+    font-weight: bold;
+}
+
+/* DATA */
+
+.card-change h3 {
+    color: #888;
+    font-size: 0.9em;
+    margin-bottom: 20px;
+    font-weight: normal;
+}
+
+/* DESCRIÇÃO */
+
+.card-change p {
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+/* LISTA */
+
+.card-change ul {
+    list-style: none;
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.card-change li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+
+    color: #444;
+    line-height: 1.5;
+}
+
+/* BULLET CUSTOM */
+
+.card-change li::before {
+    content: '✦';
+
+    color: var(--sidebar_color);
+    font-size: 0.9em;
+    margin-top: 2px;
+}
+
+/* RESPONSIVO */
+
+@media (max-width: 768px) {
+    .container-changelogs {
+        padding: 20px;
+    }
+
+    .card-change {
+        padding: 20px;
+    }
+
+    .card-change .change-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+}
