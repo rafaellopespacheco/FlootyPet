@@ -50,7 +50,7 @@ fetch('/api/clientes')
             const tr = document.createElement("tr");
 
             tr.innerHTML = `
-                <td>${cliente.nome}</td>
+                <td><a href="/clientes/${cliente.id}">${cliente.nome}</a></td>
                 <td>${formatarTelefone(cliente.numero)}</td>
                 <td>Em breve</td>
                 <td class="td-acoes">
