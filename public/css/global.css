@@ -66,11 +66,16 @@ main {
     display: flex;
     flex-direction: column;
     width: 100%;
+    min-height: 0;
+    min-width: 0;
 }
 
 main .container-agenda {
     flex: 1;
+    display: flex;
+    flex-direction: column;
     background-color: #efefef;
+    min-height: 0;
 }
 
 .sidebar {
@@ -154,4 +159,24 @@ main .container-agenda {
 .button-outline:hover {
     background-color: var(--sidebar_color);
     color: var(--background_color);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--destaque_color);
 }
