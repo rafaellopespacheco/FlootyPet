@@ -1,20 +1,29 @@
 const express = require("express");
 const path = require("path");
 const router = express.Router();
+const authPage = require("../middlewares/authPage");
 
-router.get("/agenda", function (req, res) {
+
+router.get("/", function (req, res) {
+    if (req.session.userId) {
+        return res.redirect("/agenda")
+    }
+    res.sendFile(path.join(__dirname, "/../view/index.html"));
+});
+
+router.get("/agenda", authPage, (req, res) => {
     res.sendFile(path.join(__dirname, "/../view/agenda.html"));
 });
 
-router.get("/clientes", function (req, res) {
+router.get("/clientes", authPage, (req, res) => {
     res.sendFile(path.join(__dirname, "../view/clientes.html"));
 });
 
-router.get("/atualizacoes", function (req, res) {
+router.get("/atualizacoes", authPage, (req, res) => {
     res.sendFile(path.join(__dirname, "../view/atualizacoes.html"));
 });
 
-router.get("/clientes/:id", function (req, res) {
+router.get("/clientes/:id", authPage, (req, res) => {
     res.sendFile(path.join(__dirname, "../view/info-clientes.html"));
 });
 

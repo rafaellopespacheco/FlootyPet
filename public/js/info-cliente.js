@@ -200,9 +200,6 @@ async function carregarCliente() {
 
         const cliente = await resposta.json();
 
-        document.getElementById("cliente-header").textContent =
-            cliente.nome || "Cliente";
-
         document.getElementById("cliente-nome-top").textContent =
             cliente.nome || "Cliente";
 
@@ -210,23 +207,14 @@ async function carregarCliente() {
             `Cliente #${cliente.id}`;
 
         inputNome.value = cliente.nome || "";
-
-        inputTelefone.value = formatarTelefone(cliente.numero || "");
-
+        inputTelefone.value = formatarTelefone(cliente.telefone || "");
         inputCpf.value = formatarCPF(cliente.cpf || "");
-
         inputDataNasc.value = cliente.datanasc || "";
-
         inputCep.value = formatarCEP(cliente.cep || "");
-
         inputUf.value = cliente.uf || "";
-
         inputEndereco.value = cliente.logradouro || "";
-
         inputBairro.value = cliente.bairro || "";
-
         inputCidade.value = cliente.cidade || "";
-
         inputObs.value = cliente.obs || "";
     } catch (err) {
         console.error(err);
@@ -238,6 +226,64 @@ async function carregarCliente() {
 carregarCliente();
 
 // =========================
+// FETCH PET PERFIL DO CLIENTE
+// =========================
+
+const petContainer = document.querySelector(".pets-grid");
+fetch(`/api/clientes/${clienteId}/pets`)
+    .then(resposta => resposta.json())
+    .then(dados => {
+        dados.forEach(pet => {
+            const card = document.createElement("div");
+            card.classList.add("pet-card");
+            card.innerHTML = `
+            <div class="pet-header">
+                <img src="/assets/icons/dog.png">
+                <div>
+                    <h3>${pet.nome}</h3>
+                    <p>${pet.raca}</p>
+                </div>
+            </div>
+            <div class="pet-main">
+                <div class="pet-badge">
+                    ${pet.sexo}
+                </div>
+                <div class="pet-control">   
+                    <button class="button control-button control-edit" data-id="${pet.id}">Editar</button>
+                    <button class="button control-button control-remove" data-id="${pet.id}">Remover</button>
+                </div>
+            </div>`;
+            const addPetCard = document.getElementById("add-pet");
+            petContainer.insertBefore(card, addPetCard);
+            
+            card.addEventListener("click", () => {
+                const controlContainer = card.querySelector(".pet-control");
+                controlContainer.classList.add("active");
+            })
+
+            const buttonEdit = card.querySelector(".control-edit");
+            const buttonRemove = card.querySelector(".control-remove");
+        
+            buttonRemove.addEventListener("click", async () => {
+                const confirm = await confirmacaoModal(`Você está prestes a apagar o pet ${pet.nome}, tem certeza que deseja apagar? Essa ação será irreversível.`)
+                if (!confirm) return
+
+                fetch(`/api/clientes/${clienteId}/pets`, {
+                    method: "DELETE"
+                })
+                    .then(resposta => resposta.json())
+                    .then(dado => {
+                        if (dado.erro) return sendAlertModal("error", dado.erro);
+                        card.remove()
+                        sendAlertModal("sucess", dado.mensagem)
+                })
+            })
+        })
+
+        
+})
+
+// =========================
 // SALVAR
 // =========================
 
@@ -246,58 +292,45 @@ const buttonSalvar = document.getElementById("salvar-cliente");
 buttonSalvar.addEventListener("click", async function () {
     const dados = {
         nome: inputNome.value.trim(),
-
-        numero: inputTelefone.value.replace(/\D/g, ""),
-
+        telefone: inputTelefone.value.replace(/\D/g, ""),
         cpf: inputCpf.value.replace(/\D/g, ""),
-
         datanasc: inputDataNasc.value,
-
         cep: inputCep.value.replace(/\D/g, ""),
-
         uf: inputUf.value.trim(),
-
         logradouro: inputEndereco.value.trim(),
-
         bairro: inputBairro.value.trim(),
-
         cidade: inputCidade.value.trim(),
-
         obs: inputObs.value.trim(),
     };
 
     if (!dados.nome) {
         sendAlertModal("warning", "Nome obrigatório.");
-
         return;
     }
 
     if (dados.telefone?.length < 12) {
         sendAlertModal("warning", "Telefone inválido.");
-
         return;
     }
 
     if (dados.cpf && !validarCPF(dados.cpf)) {
         sendAlertModal("warning", "CPF inválido.");
-
         return;
     }
 
     try {
         const resposta = await fetch(`/api/clientes/${clienteId}`, {
             method: "PUT",
-
             headers: {
                 "Content-Type": "application/json",
             },
-
             body: JSON.stringify(dados),
         });
 
         const resultado = await resposta.json();
-
         sendAlertModal("sucess", resultado.mensagem || "Cliente atualizado.");
+        document.getElementById("cliente-nome-top").textContent =
+            dados.nome || "Cliente";
     } catch {
         sendAlertModal("error", "Erro ao salvar alterações.");
     }
@@ -307,14 +340,17 @@ buttonSalvar.addEventListener("click", async function () {
 // REMOVER CLIENTE
 // =========================
 
-document
-    .getElementById("remover-cliente")
-    .addEventListener("click", async function () {
-        const confirm = await confirmacaoModal(
-            "Atenção! Você está prestes a remover um cliente do seu sistema, essa ação é irreversível, tem certeza que deseja continuar?",
-        );
+document.getElementById("remover-cliente").addEventListener("click", async function () {
+    const confirm = await confirmacaoModal(
+        "Atenção! Você está prestes a remover um cliente do seu sistema, essa ação é irreversível, tem certeza que deseja continuar?",
+    );
 
-        if (!confirm) return;
+    if (!confirm) return;
 
-        console.log("Vou remover o cliente aksdkaksd");
-    });
+    fetch(`/api/clientes/${clienteId}`, {
+        method: 'DELETE'
+    })
+
+    window.location.href = "/clientes";
+    sendAlertModal('sucess', 'Cliente deletado com sucesso!')
+});

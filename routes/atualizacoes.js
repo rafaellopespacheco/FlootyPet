@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const db = require('../database/db');
+const authApi = require("../middlewares/authApi");
 
-router.get("/api/atualizacoes", (req, res) => {
+router.get("/api/atualizacoes", authApi, (req, res) => {
     db.all(`SELECT * FROM changelogs
         ORDER BY id DESC`, (err, rows) => {
         if (err) {
@@ -15,7 +16,7 @@ router.get("/api/atualizacoes", (req, res) => {
     });
 });
 
-router.post("/api/atualizacoes", (req, res) => {
+router.post("/api/atualizacoes", authApi, (req, res) => {
     db.run(
         `INSERT INTO changelogs ( titulo, versao, resumo, descricao, data )
             VALUES ( ?, ?, ?, ?, ?)`,

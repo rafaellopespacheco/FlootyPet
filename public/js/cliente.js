@@ -43,7 +43,6 @@ function formatarTelefone(numero) {
 fetch('/api/clientes')
     .then(resposta => resposta.json())
     .then(clientes => {
-        console.log(clientes);
         const clientesContainer = document.getElementById('clientes');
         
         clientes.forEach(cliente => {
@@ -51,7 +50,7 @@ fetch('/api/clientes')
 
             tr.innerHTML = `
                 <td><a href="/clientes/${cliente.id}">${cliente.nome}</a></td>
-                <td>${formatarTelefone(cliente.numero)}</td>
+                <td>${formatarTelefone(cliente.telefone)}</td>
                 <td>Em breve</td>
                 <td class="td-acoes">
                 <button type="button"><span class="material-symbols-rounded">calendar_add_on</span></button>
@@ -117,6 +116,16 @@ function criarModalCadastro() {
                         </div>
                     </div>
 
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="numero">Número</label>
+                            <input type="text" name="numero" id="numero">
+                        </div>
+                        <div class="form-group">
+                            <label for="complemento">Complemento</label>
+                            <input type="text" name="complemento" id="complemento">
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label for="endereco">Endereço</label>
                         <input type="text" name="endereco" id="endereco">
@@ -144,6 +153,8 @@ function criarModalCadastro() {
     const inputTelefone = modal.querySelector("#telefone");
     const inputCpf = modal.querySelector("#cpf");
     const inputCep = modal.querySelector("#cep");
+    const inputNumero = modal.querySelector("#numero");
+    const inputComplemento = modal.querySelector("#complemento");
     const inputEndereco = modal.querySelector("#endereco");
     const inputBairro = modal.querySelector("#bairro");
     const inputCidade = modal.querySelector("#cidade");
@@ -351,6 +362,7 @@ function criarModalCadastro() {
 
         const numeroLimpo = dadosFormulario.telefone.replace(/\D/g, "");
         const cpfLimpo = dadosFormulario.cpf.replace(/\D/g, "");
+        const cepLimpo = inputCep.value.replace(/\D/g, "")
 
         fetch("/api/clientes", {
             method: "POST",
@@ -361,8 +373,11 @@ function criarModalCadastro() {
                 nome: dadosFormulario.nome,
                 cpf: cpfLimpo,
                 datanasc: dadosFormulario.datanasc,
-                numero: numeroLimpo,
+                telefone: numeroLimpo,
                 obs: dadosFormulario.obs,
+                cep: cepLimpo,
+                numero: dadosFormulario.numero,
+                complemento: dadosFormulario.complemento,
                 logradouro: dadosFormulario.endereco,
                 bairro: dadosFormulario.bairro,
                 cidade: dadosFormulario.cidade,
@@ -375,6 +390,19 @@ function criarModalCadastro() {
             .then((dados) => {
                 modal.remove();
                 sendAlertModal("sucess", dados.mensagem);
+                const clientesContainer = document.getElementById("clientes");
+                const tr = document.createElement("tr");
+
+                tr.innerHTML = `
+                    <td><a href="/clientes/${dados.id}">${dados.nome}</a></td>
+                    <td>${formatarTelefone(dados.telefone)}</td>
+                    <td>Em breve</td>
+                    <td class="td-acoes">
+                    <button type="button"><span class="material-symbols-rounded">calendar_add_on</span></button>
+                    <a href="/clientes/${dados.id}"><span class="material-symbols-rounded">person</span></a>
+                    </td>
+                `;
+                clientesContainer.appendChild(tr);
             })
             .catch((err) => {
                 sendAlertModal("error", "Erro ao cadastrar cliente.");

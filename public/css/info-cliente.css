@@ -1,3 +1,15 @@
+:root {
+    --sidebar_color: #151a2d;
+    --sidebar_text: #e2e2e2;
+    --background_color: #fefefe;
+    --destaque_color: #7c5cfa;
+    --sucesso_claro: #d0f5df;
+    --sucesso_escuro: #77cda0;
+    --danger_claro: #feced9;
+    --danger_escuro: #f799b5;
+    --atencao_claro: #fee8be;
+    --atencao_escuro: #fdd981;
+}
 
 main {
     background-color: #efefef;
@@ -149,16 +161,36 @@ header {
 }
 
 .pets-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
     gap: 20px;
 }
 
 .pet-card {
     background-color: white;
+    width: 350px;
+    height: 180px;
     border-radius: 16px;
     padding: 20px;
     box-shadow: 0 2px 10px rgba(0,0,0,.08);
+}
+
+.add-pet-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#add-pet {
+    user-select: none;
+    cursor: pointer;
+    color: #acacac;
+    border: none;
+    background-color: transparent;
+}
+
+.add-pet-card .material-symbols-rounded {
+    font-size: 85px;
 }
 
 .pet-header {
@@ -182,4 +214,37 @@ header {
     border-radius: 8px;
     margin-top: 12px;
     font-size: .9em;
+}
+
+.pet-card .pet-control {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.pet-card .pet-control.active {
+    display: flex;
+}
+
+.pet-card .pet-control .control-button {
+    border: none;
+    padding: 10px;
+    font-weight: normal;
+    border-radius: 5px;
+    color: white;
+}
+
+.pet-card .pet-control .control-remove {
+    background-color: #ff3636;
+}
+
+.pet-card .pet-control .control-remove:hover {
+    background-color: #b71c1c;
+}
+
+.pet-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }

@@ -12,20 +12,20 @@
         <img src="assets/login/loginbanner-horizontal2.png" alt="Imagem que fala sobre o sistema e as suas funções.">
     </aside>
     <main>
-        <form method="get" id="form-login" action="/agenda">
+        <form method="post" id="form-login">
         </div>
             <h2>Bem-vindo!</h2>
             <p>Faça login para acessar o sistema</p>
 
             <label for="email">E-mail</label>
             <div class="container-input">
-                <input type="email" class="input" name="email" id="email" placeholder="seu@email.com">
+                <input type="email" class="input" name="email" id="email" placeholder="seu@email.com" required>
                 <img src="assets/login/icon_mail.png" alt="simbolo de email" class="iconinput">
             </div>
 
             <label for="senha">Senha</label>
             <div class="container-input">
-                <input type="password" name="senha" id="senha" placeholder="Sua senha">
+                <input type="password" name="senha" id="senha" placeholder="Sua senha" required>
                 <img src="assets/login/icon_lock.png" alt="simbolo de email" class="iconinput">
             </div>
 
@@ -48,6 +48,7 @@
             <button type="button" class="button button-outline">Conhecer sistema</button>
         </form>
     </main>
-    <script src="js/login.js"></script>
+    <script src="js/global.js"></script>
+    <script type="module" src="js/login.js"></script>
 </body>
 </html>
