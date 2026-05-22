@@ -1,5 +1,12 @@
 const db = require('./db')
 
+db.run(`CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY,
+        email TEXT,
+        password_hash TEXT,
+        role INTEGER
+)`)
+
 db.run(`CREATE TABLE IF NOT EXISTS changelogs(
         id INTEGER PRIMARY KEY,
         versao TEXT,
@@ -14,12 +21,6 @@ db.run(`CREATE TABLE IF NOT EXISTS config(
         nome_empresa TEXT        
 )`);
 
-db.run(`CREATE TABLE IF NOT EXISTS login(
-    nome TEXT,
-    email TEXT,
-    senha TEXT
-)`);
-
 db.run(`CREATE TABLE IF NOT EXISTS clientes(
     id INTEGER PRIMARY KEY,
     nome TEXT,
@@ -27,6 +28,7 @@ db.run(`CREATE TABLE IF NOT EXISTS clientes(
     datanasc DATE,
     numero TEXT,
     obs TEXT,
+    cep TEXT,
     logradouro TEXT,
     bairro TEXT,
     cidade TEXT,

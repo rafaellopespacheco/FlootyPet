@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../database/db');
+const authApi = require("../middlewares/authApi");
 
 
-router.get("/api/agendamentos", function (req, res) {
+router.get("/api/agendamentos", authApi, (req, res) => {
     db.all(`SELECT * FROM agendamentos`, [], (err, rows) => {
         if (err) {
             return res.status(500).json({
@@ -14,7 +15,7 @@ router.get("/api/agendamentos", function (req, res) {
     });
 });
 
-router.post("/api/agendamentos", function (req, res) {
+router.post("/api/agendamentos", authApi, (req, res) => {
     let data = req.body.data;
     let cliente_id = req.body.cliente_id;
     let pet_id = req.body.pet_id;

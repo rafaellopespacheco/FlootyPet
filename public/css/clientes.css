@@ -229,7 +229,8 @@ body, main {
     cursor: text;
 }
 
-.container-clientes table td a {
+.container-clientes table td a, table td button {
+    background-color: transparent;
     font-family: Arial, Helvetica, sans-serif;
     text-decoration: none;
     color: black;
@@ -251,6 +252,14 @@ body, main {
     display: flex;
     justify-content: right;
     gap: 5px;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f5f5f5;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #ffffff;
 }
 
 .container-clientes table .td-acoes button, .container-clientes table .td-acoes a {

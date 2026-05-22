@@ -1,15 +1,28 @@
+CHANGELOGS
+
+- Agora o cep é salvo no banco de dados ao cadastrar um cliente e ao consultar ele é retornado.
+- Melhorado a aparência de como os pets são dispostos na tela através do perfil do cliente.
+- Adicionado um botão para adicionar pets na aba de pets do perfil do cliente.
+- Criado imagem padrão para pets.
+- Adicionado FETCH para buscar pets dos clientes, agora os pets que aparecem no perfil do clientes são os reais cadastrados para ele.
+- Adicionado botão de editar e remover ao clicar no pet.
+- Criado lógica para deletar pets e modal de confirmação.
+- Alterado nome da coluna de telefone que antes se chamava "numero" para "telefone".
+- Criado uma nova coluna "numero" na tabela clientes para o número da casa.
+- Lógica ajustada para buscar o número pelo novo nome da coluna.
+- Criado uma nova coluna "complemento" na tabela clientes para o complemento do endereço.
+- Adicionado novos campos no formulário de cadastro, complemento e número.
+- Adicionado validação no backend na rota POST /api/clientes, agora é verificado pelo backend também se tem os campos obrigatórios.
+- Adicionado cores alternadas nas linhas da tabela de cadastro.
+- Agora ao salvar alterações de um cliente ao editar ele automaticamente troca o título para o novo nome não sendo mais necessário recarregar a página.
+
+PRECISA FAZER
+- Adicionar campo de numero e complemento no ver perfil
 
 PARA ADICIONAR - CADASTRO
 - Pode postar fotos nas redes sociais por padrão sim
 - Input de indicação
-- Tirar obrigatoriedade do ano na data de nascimento do cliente
-- Adicionar número e complemento no endereço do cliente
 - Não permitir dois clientes com o mesmo número
+
+FUTURO
 - Adicionar mais de um telefone no cadastro
-
-TELA DE CLIENTE
-- Quando salvar as alterações, alterar o nome do cliente lá encima
-- Mostrar CEP
-
-TABELA CLIENTES
-- Cores alternadas por linhas

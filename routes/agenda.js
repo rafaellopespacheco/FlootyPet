@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../database/db');
+const authApi = require('../middlewares/authApi');
 
-router.get("/api/agenda", function (req, res) {
+
+router.get("/api/agenda", authApi, (req, res) => {
     db.all(
         `SELECT * FROM agendamentos
             WHERE data = ?`,

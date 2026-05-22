@@ -1,4 +1,5 @@
 const express = require("express");
+const session = require("express-session");
 const app = express();
 
 app.use(express.json());
@@ -7,6 +8,14 @@ app.use(express.static("public"));
 
 require('./database/init')
 
+app.use(session({
+    secret: "flooty-pet-secret",
+    resave: false,
+    saveUninitialized: false
+}))
+
+app.use(require('./routes/login'))
+app.use(require('./routes/me'))
 app.use(require('./routes/pages'))
 app.use(require('./routes/clientes'))
 app.use(require('./routes/agendamentos'))

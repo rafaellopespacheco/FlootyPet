@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../database/db');
+const authApi = require('../middlewares/authApi');
 
 
-router.get("/api/clientes", function (req, res) {
+router.get("/api/clientes", authApi, (req, res) => {
     db.all(`SELECT * FROM clientes`, [], (err, rows) => {
         if (err) {
             return res.status(500).json({ erro: err.message });
@@ -12,44 +13,55 @@ router.get("/api/clientes", function (req, res) {
     });
 });
 
-router.post("/api/clientes", function (req, res) {
+router.post("/api/clientes", authApi, function (req, res) {
     let nome = req.body.nome;
     let cpf = req.body.cpf;
     let datanasc = req.body.datanasc;
-    let numero = req.body.numero;
+    let telefone = req.body.telefone;
     let obs = req.body.obs;
+    let cep = req.body.cep;
+    let numero = req.body.numero;
+    let complemento = req.body.complemento;
     let logradouro = req.body.logradouro;
     let bairro = req.body.bairro;
     let cidade = req.body.cidade;
     let uf = req.body.uf;
     let notificacao = req.body.notificacao ?? 1;
 
+    if (!nome || !telefone) return res.status(400).json({ erro: "Você precisa preencher os campos obrigatórios" })
+
     db.run(
         `
-        INSERT INTO clientes (nome, cpf, datanasc, numero, obs, logradouro, bairro, cidade, uf, notificacao)
-        VALUES(?, ?, ?, ?, ?,? , ?, ?, ?, ?)`,
+        INSERT INTO clientes (nome, cpf, datanasc, telefone, obs, cep, logradouro, numero, complemento, bairro, cidade, uf, notificacao)
+        VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
             nome,
             cpf,
             datanasc,
-            numero,
+            telefone,
             obs,
+            cep,
             logradouro,
+            numero,
+            complemento,
             bairro,
             cidade,
             uf,
-            notificacao,
+            notificacao
         ],
         function (err) {
+            if (err) return res.status(500).json({ erro: "Erro ao cadastrar um novo cliente." })
             res.json({
                 mensagem: "Cliente cadastrado com sucesso.",
-                id: this.lastID,
+                nome: nome,
+                telefone: telefone,
+                id: this.lastID
             });
         },
     );
 });
 
-router.get("/api/clientes/:id", function (req, res) {
+router.get("/api/clientes/:id", authApi, (req, res) => {
     db.get(
         `
         SELECT * FROM clientes
@@ -72,11 +84,11 @@ router.get("/api/clientes/:id", function (req, res) {
     );
 });
 
-router.put("/api/clientes/:id", function (req, res) {
+router.put("/api/clientes/:id", authApi, (req, res) => {
     let id = req.params.id;
     let nome = req.body.nome;
-    let numero = req.body.numero;
-    if (!nome || !numero) {
+    let telefone = req.body.telefone;
+    if (!nome || !telefone) {
         return res.status(400).json({
             erro: `Preencha os campos obrigatórios.`,
         });
@@ -94,15 +106,16 @@ router.put("/api/clientes/:id", function (req, res) {
     db.run(
         `
         UPDATE clientes
-        SET nome = ?, cpf = ?, datanasc = ?, numero = ?, obs = ?, logradouro = ?, bairro = ?, cidade = ?, uf = ?, notificacao = ?
+        SET nome = ?, cpf = ?, datanasc = ?, telefone = ?, obs = ?, cep = ?, logradouro = ?, bairro = ?, cidade = ?, uf = ?, notificacao = ?
         WHERE id = ?  
     `,
         [
             nome,
             cpf,
             datanasc,
-            numero,
+            telefone,
             obs,
+            cep,
             logradouro,
             bairro,
             cidade,
@@ -124,7 +137,23 @@ router.put("/api/clientes/:id", function (req, res) {
     );
 });
 
-router.get("/api/clientes/:id/pets", function (req, res) {
+router.delete("/api/clientes/:id", authApi, (req, res) => {
+    let id = req.params.id;
+    db.run(`DELETE FROM clientes WHERE id = ?`, [id], (err) => {
+        if (err) {
+            return res.status(500).json({
+                erro: 'Erro ao deletar usuário'
+            })
+        }
+
+        res.json({
+            mensagem: 'Usuário deletado com sucesso',
+            linhasAfetadas: this.changes
+        })
+    })
+})
+
+router.get("/api/clientes/:id/pets", authApi, (req, res) => {
     let id = req.params.id;
     db.all(
         `
@@ -149,7 +178,7 @@ router.get("/api/clientes/:id/pets", function (req, res) {
     );
 });
 
-router.post("/api/clientes/:id/pets", function (req, res) {
+router.post("/api/clientes/:id/pets", authApi, (req, res) => {
     let cliente_id = req.params.id;
     db.get(
         `SELECT * FROM clientes
@@ -213,5 +242,12 @@ router.post("/api/clientes/:id/pets", function (req, res) {
         },
     );
 });
+
+router.delete("/api/clientes/:id/pets", authApi, (req, res) => {
+    db.run(`DELETE FROM pets WHERE id = ?`, [req.params.id], (err) => {
+        if (err) return res.status(500).json({ erro: "Erro ao apagar pet." })
+        res.json({ mensagem: "Pet apagado com sucesso!" })
+    })
+})
 
 module.exports = router;
