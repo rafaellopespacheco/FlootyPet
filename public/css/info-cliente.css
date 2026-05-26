@@ -179,6 +179,18 @@ header {
     display: flex;
     align-items: center;
     justify-content: center;
+    border: 2px dashed #dcdcdc !important;
+    background-color: #fafafa !important;
+    box-shadow: none !important;
+    transition: all 0.2s ease-in-out;
+}
+
+.add-pet-card:hover {
+    border-color: var(--destaque_color) !important;
+    background-color: #f8f6ff !important;
+    color: var(--destaque_color) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(124, 92, 250, 0.12) !important;
 }
 
 #add-pet {
@@ -187,10 +199,21 @@ header {
     color: #acacac;
     border: none;
     background-color: transparent;
+    transition: transform 0.2s;
+}
+
+#add-pet:hover {
+    transform: translateY(-2px);
 }
 
 .add-pet-card .material-symbols-rounded {
-    font-size: 85px;
+    font-size: 60px;
+    color: #b0b0b0;
+    transition: color 0.2s;
+}
+
+.add-pet-card:hover .material-symbols-rounded {
+    color: var(--destaque_color);
 }
 
 .pet-header {
@@ -448,3 +471,197 @@ header {
     background-color: #fff5f5 !important;
     box-shadow: 0 0 0 3px rgba(255, 54, 54, 0.15) !important;
 }
+
+/* ==========================================================================
+   ESTILOS PREMIUM DO CARD DE PET
+   ========================================================================== */
+.pet-card {
+    background-color: white;
+    width: 360px;
+    height: auto;
+    min-height: 180px;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,.05);
+    border: 1px solid #f0f0f0;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+}
+
+.pet-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,.08);
+}
+
+.pet-card-inner {
+    display: flex;
+    gap: 15px;
+    height: 100%;
+    position: relative;
+}
+
+.pet-avatar-container {
+    position: relative;
+    width: 70px;
+    height: 70px;
+    flex-shrink: 0;
+}
+
+.pet-avatar-main {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #efefef;
+    background-color: #fcfcfc;
+    padding: 3px;
+}
+
+.pet-gender-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85em;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    background-color: white;
+}
+
+.pet-gender-badge.femea {
+    border: 1.5px solid #ff9ebb;
+}
+
+.pet-gender-badge.macho {
+    border: 1.5px solid #6bb5ff;
+}
+
+.pet-details-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.pet-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pet-title-row h3 {
+    font-size: 1.25em;
+    color: #151a2d;
+    margin: 0;
+}
+
+.pet-status-pill {
+    font-size: 0.7em;
+    background-color: #d0f5df;
+    color: #145a1f;
+    padding: 3px 8px;
+    border-radius: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.pet-subtitle-raca {
+    font-size: 0.9em;
+    color: #666;
+    margin: 2px 0 10px 0;
+}
+
+.pet-meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 10px;
+    margin-bottom: 10px;
+}
+
+.pet-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.8em;
+    color: #666;
+}
+
+.pet-meta-item .material-symbols-rounded {
+    font-size: 16px;
+    color: var(--destaque_color);
+}
+
+.pet-checklist-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 8px;
+    border-top: 1px solid #f3f3f3;
+    padding-top: 8px;
+}
+
+.chk-badge {
+    background-color: #f0f0f3;
+    color: #444;
+    padding: 3px 6px;
+    border-radius: 6px;
+    font-size: 0.75em;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-weight: 500;
+}
+
+.pet-card-actions {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    gap: 5px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.pet-card:hover .pet-card-actions {
+    opacity: 1;
+}
+
+.button-icon-edit, .button-icon-delete {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.1s;
+}
+
+.button-icon-edit:hover, .button-icon-delete:hover {
+    transform: scale(1.1);
+}
+
+.button-icon-edit {
+    color: var(--destaque_color);
+}
+
+.button-icon-edit .material-symbols-rounded, .button-icon-delete .material-symbols-rounded {
+    font-size: 16px;
+}
+
+/* Acabamento Premium nos Cards de Gênero */
+.pet-card.card-femea {
+    border-left: 4px solid #ff9ebb;
+}
+
+.pet-card.card-macho {
+    border-left: 4px solid #6bb5ff;
+}

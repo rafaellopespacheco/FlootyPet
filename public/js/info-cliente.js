@@ -233,55 +233,84 @@ const petContainer = document.querySelector(".pets-grid");
 fetch(`/api/clientes/${clienteId}/pets`)
     .then((resposta) => resposta.json())
     .then((dados) => {
-        dados.forEach((pet) => {
-            const card = document.createElement("div");
-            card.classList.add("pet-card");
-            card.innerHTML = `
-            <div class="pet-header">
-                <img src="/assets/icons/dog.png">
-                <div>
-                    <h3>${pet.nome}</h3>
-                    <p>${pet.raca}</p>
-                </div>
-            </div>
-            <div class="pet-main">
-                <div class="pet-badge">
-                    ${pet.sexo}
-                </div>
-                <div class="pet-control">   
-                    <button class="button control-button control-edit" data-id="${pet.id}">Editar</button>
-                    <button class="button control-button control-remove" data-id="${pet.id}">Remover</button>
-                </div>
-            </div>`;
-            const addPetCard = document.getElementById("add-pet");
-            petContainer.insertBefore(card, addPetCard);
+        if (dados && !dados.erro) {
+            dados.forEach((pet) => {
+                const card = document.createElement("div");
+                card.classList.add("pet-card");
+                card.classList.add(pet.sexo === 'fêmea' ? 'card-femea' : 'card-macho');
+                
+                const checklistHtml = (pet.perfume || pet.enfeites || pet.shampoo) 
+                    ? `<div class="pet-checklist-summary">
+                        ${pet.perfume ? `<span class="chk-badge" title="Perfume Padrão">🌸 ${pet.perfume}</span>` : ''}
+                        ${pet.enfeites ? `<span class="chk-badge" title="Enfeites Padrão">🎀 ${pet.enfeites}</span>` : ''}
+                        ${pet.shampoo ? `<span class="chk-badge" title="Shampoo Padrão">🧼 ${pet.shampoo}</span>` : ''}
+                       </div>`
+                    : '';
 
-            card.addEventListener("click", () => {
-                const controlContainer = card.querySelector(".pet-control");
-                controlContainer.classList.add("active");
+                card.innerHTML = `
+                <div class="pet-card-inner">
+                    <div class="pet-avatar-container">
+                        <img src="/assets/icons/${pet.especie === '2' ? 'cat.png' : 'dog.png'}" class="pet-avatar-main">
+                        <span class="pet-gender-badge ${pet.sexo === 'fêmea' ? 'femea' : 'macho'}">
+                            ${pet.sexo === 'fêmea' ? '🎀' : '👔'}
+                        </span>
+                    </div>
+                    <div class="pet-details-content">
+                        <div class="pet-title-row">
+                            <h3>${pet.nome}</h3>
+                            <span class="pet-status-pill">${pet.status || 'Ativo'}</span>
+                        </div>
+                        <p class="pet-subtitle-raca">${pet.raca || 'Sem raça definida'}</p>
+                        
+                        <div class="pet-meta-grid">
+                            <span class="pet-meta-item"><span class="material-symbols-rounded">straighten</span> ${pet.porte || '-'}</span>
+                            <span class="pet-meta-item"><span class="material-symbols-rounded">pets</span> ${pet.tamanhopelo || '-'}</span>
+                            ${pet.peso ? `<span class="pet-meta-item"><span class="material-symbols-rounded">monitor_weight</span> ${pet.peso.toFixed(2).replace('.', ',')} kg</span>` : ''}
+                            ${pet.cor ? `<span class="pet-meta-item"><span class="material-symbols-rounded">palette</span> ${pet.cor}</span>` : ''}
+                        </div>
+                        
+                        ${checklistHtml}
+                    </div>
+                    <div class="pet-card-actions">
+                        <button class="button-icon-edit control-edit" title="Editar Pet" data-id="${pet.id}">
+                            <span class="material-symbols-rounded">edit</span>
+                        </button>
+                        <button class="button-icon-delete control-remove" title="Excluir Pet" data-id="${pet.id}">
+                            <span class="material-symbols-rounded">delete</span>
+                        </button>
+                    </div>
+                </div>`;
+                const addPetCard = document.getElementById("add-pet");
+                petContainer.insertBefore(card, addPetCard);
+
+                const buttonEdit = card.querySelector(".control-edit");
+                const buttonRemove = card.querySelector(".control-remove");
+
+                buttonEdit.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    criarModalPet(pet.id);
+                });
+
+                buttonRemove.addEventListener("click", async (e) => {
+                    e.stopPropagation();
+                    const confirm = await confirmacaoModal(
+                        `Você está prestes a apagar o pet ${pet.nome}, tem certeza que deseja apagar? Essa ação será irreversível.`,
+                    );
+                    if (!confirm) return;
+
+                    fetch(`/api/clientes/${pet.id}/pets`, { 
+                        method: "DELETE",
+                    })
+                        .then((resposta) => resposta.json())
+                        .then((dado) => {
+                            if (dado.erro)
+                                return sendAlertModal("error", dado.erro);
+                            card.remove();
+                            sendAlertModal("success", dado.mensagem);
+                        });
+                });
             });
-
-            const buttonEdit = card.querySelector(".control-edit");
-            const buttonRemove = card.querySelector(".control-remove");
-
-            buttonRemove.addEventListener("click", async () => {
-                const confirm = await confirmacaoModal(
-                    `Você está prestes a apagar o pet ${pet.nome}, tem certeza que deseja apagar? Essa ação será irreversível.`,
-                );
-                if (!confirm) return;
-
-                fetch(`/api/clientes/${clienteId}/pets`, {
-                    method: "DELETE",
-                })
-                    .then((resposta) => resposta.json())
-                    .then((dado) => {
-                        if (dado.erro)
-                            return sendAlertModal("error", dado.erro);
-                        card.remove();
-                        sendAlertModal("sucess", dado.mensagem);
-                    });
-            });
-        });
+        }
     });
 
 // =========================
@@ -329,7 +358,7 @@ buttonSalvar.addEventListener("click", async function () {
         });
 
         const resultado = await resposta.json();
-        sendAlertModal("sucess", resultado.mensagem || "Cliente atualizado.");
+        sendAlertModal("success", resultado.mensagem || "Cliente atualizado.");
         document.getElementById("cliente-nome-top").textContent =
             dados.nome || "Cliente";
     } catch {
@@ -355,24 +384,43 @@ document
         });
 
         window.location.href = "/clientes";
-        sendAlertModal("sucess", "Cliente deletado com sucesso!");
+        sendAlertModal("success", "Cliente deletado com sucesso!");
     });
 
 // =========================
-// CADASTRAR PET
+// CADASTRAR/EDITAR PET (UNIFICADO)
 // =========================
 
 const abrirModalCadastroPet = document.getElementById("add-pet");
-const fecharModalCadastroPet = document.getElementById("fechar-modal");
 
-async function criarModalCadastroPet() {
+async function criarModalPet(petId = null) {
     let racas = [];
+    let checklistConfig = [];
+    let pet = null;
+
     try {
-        const resposta = await fetch("/api/racas");
-        racas = await resposta.json();
+        const fetchPromises = [
+            fetch("/api/racas"),
+            fetch("/api/config/checklist?checklist_tipo=agendado")
+        ];
+        if (petId) {
+            fetchPromises.push(fetch(`/api/pets/${petId}`));
+        }
+
+        const responses = await Promise.all(fetchPromises);
+        racas = await responses[0].json();
+        checklistConfig = await responses[1].json();
+        if (petId && responses[2]) {
+            pet = await responses[2].json();
+        }
     } catch (err) {
-        console.error("Erro ao buscar raças da API:", err);
+        console.error("Erro ao carregar dados para o modal:", err);
     }
+
+    const perfumes = checklistConfig.filter(c => c.categoria === 'perfume');
+    const enfeites = checklistConfig.filter(c => c.categoria === 'enfeites');
+    const shampoos = checklistConfig.filter(c => c.categoria === 'shampoo');
+    const cores = checklistConfig.filter(c => c.categoria === 'cores');
 
     const modal = document.createElement("div");
 
@@ -380,7 +428,7 @@ async function criarModalCadastroPet() {
         <div class="container-modal-addcliente">
             <div class="modal-addcliente">
                 <div class="modal-header">
-                    <h2>Cadastrar novo pet</h2>
+                    <h2>${pet ? 'Editar pet' : 'Cadastrar novo pet'}</h2>
                     <button type="button" id="fechar-modal">&times;</button>
                 </div>
                 <div class="modal-body">
@@ -437,9 +485,19 @@ async function criarModalCadastroPet() {
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="peso">Peso *</label>
-                            <input type="text" name="peso" id="peso" placeholder="0,00 kg" required>
+                            <label for="peso">Peso</label>
+                            <input type="text" name="peso" id="peso" placeholder="0,00 kg">
                         </div>
+                        <div class="form-group">
+                            <label for="cor">Cor</label>
+                            <select name="cor" id="cor">
+                                <option value="">Selecione...</option>
+                                ${cores.map(opt => `<option value="${opt.valor}">${opt.valor}</option>`).join('')}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
                         <div class="form-group">
                             <label>Sexo *</label>
                             <div class="radio-container-group" id="grupo-sexo">
@@ -448,11 +506,45 @@ async function criarModalCadastroPet() {
                             </div>
                         </div>
                         <div class="form-group">
-                            <label>Castrado? *</label>
+                            <label>Castrado?</label>
                             <div class="radio-container-group" id="grupo-castrado">
-                                <label><input type="radio" name="castrado" value="sim" required> Sim</label>
-                                <label><input type="radio" name="castrado" value="não" required> Não</label>
+                                <label><input type="radio" name="castrado" value="sim"> Sim</label>
+                                <label><input type="radio" name="castrado" value="não"> Não</label>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Checklist de Banho/Tosa Padrão -->
+                    <h3 style="margin-top: 15px; margin-bottom: 5px; color: var(--text-color); font-size: 1.1rem; border-bottom: 1px solid #eee; padding-bottom: 5px;">Checklist Padrão (Agendamento)</h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="perfume">Perfume</label>
+                            <select name="perfume" id="perfume">
+                                <option value="">Selecione...</option>
+                                ${perfumes.map(opt => `<option value="${opt.valor}">${opt.valor}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="enfeites">Adicionais (Enfeites)</label>
+                            <select name="enfeites" id="enfeites">
+                                <option value="">Selecione...</option>
+                                ${enfeites.map(opt => `<option value="${opt.valor}">${opt.valor}</option>`).join('')}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="shampoo">Shampoo</label>
+                            <select name="shampoo" id="shampoo">
+                                <option value="">Selecione...</option>
+                                ${shampoos.map(opt => `<option value="${opt.valor}">${opt.valor}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="cuidados_especiais">Cuidados Especiais (Interno)</label>
+                            <input type="text" name="cuidados_especiais" id="cuidados_especiais" placeholder="Ex: Cuidado com a orelha direita">
                         </div>
                     </div>
 
@@ -462,7 +554,7 @@ async function criarModalCadastroPet() {
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="button" id="cadastrar-button">Cadastrar pet</button>
+                    <button type="button" class="button" id="cadastrar-button">${pet ? 'Salvar alterações' : 'Cadastrar pet'}</button>
                 </div>
             </div>
         </div>`;
@@ -525,21 +617,64 @@ async function criarModalCadastroPet() {
     });
 
     // 3. Máscara de Peso com Backspace Funcional
-    let apagandoPeso = false;
-    inputPeso.addEventListener("keydown", function (e) {
-        apagandoPeso = e.key === "Backspace";
-    });
-
     inputPeso.addEventListener("input", function () {
-        let valor = inputPeso.value.replace(/\D/g, "");
-        if (apagandoPeso && (valor.length === 0 || valor === "0")) {
+        let cleanValue = inputPeso.value.replace(/\D/g, "");
+        if (cleanValue === "" || cleanValue === "0" || cleanValue === "00") {
             inputPeso.value = "";
             return;
         }
-        if (valor === "") return;
-        let numero = (parseInt(valor) / 100).toFixed(2);
+        let numero = (parseInt(cleanValue) / 100).toFixed(2);
         inputPeso.value = `${numero.replace(".", ",")} kg`;
     });
+
+    // Preencher campos se for edição
+    if (pet) {
+        modal.querySelector("#nome").value = pet.nome || "";
+        modal.querySelector("#datanasc").value = pet.datanasc || "";
+        
+        if (pet.especie) {
+            const radioEspecie = modal.querySelector(`input[name="especie"][value="${pet.especie}"]`);
+            if (radioEspecie) {
+                radioEspecie.checked = true;
+                selectRaca.innerHTML = '<option value="">Selecione a raça...</option>';
+                selectRaca.disabled = false;
+                const racasFiltradas = racas.filter(r => r.especie_id === parseInt(pet.especie));
+                racasFiltradas.forEach((raca) => {
+                    const option = document.createElement("option");
+                    option.value = raca.id;
+                    option.textContent = raca.nome;
+                    selectRaca.appendChild(option);
+                });
+            }
+        }
+
+        if (pet.raca_id) {
+            selectRaca.value = pet.raca_id;
+        }
+        if (pet.porte) {
+            selectPorte.value = pet.porte;
+        }
+        if (pet.tamanhopelo) {
+            selectPelo.value = pet.tamanhopelo;
+        }
+        if (pet.peso) {
+            inputPeso.value = `${pet.peso.toFixed(2).replace(".", ",")} kg`;
+        }
+        if (pet.sexo) {
+            const radioSexo = modal.querySelector(`input[name="sexo"][value="${pet.sexo}"]`);
+            if (radioSexo) radioSexo.checked = true;
+        }
+        if (pet.castrado !== null && pet.castrado !== undefined) {
+            const radioCastrado = modal.querySelector(`input[name="castrado"][value="${pet.castrado === 1 ? 'sim' : 'não'}"]`);
+            if (radioCastrado) radioCastrado.checked = true;
+        }
+        modal.querySelector("#perfume").value = pet.perfume || "";
+        modal.querySelector("#enfeites").value = pet.enfeites || "";
+        modal.querySelector("#shampoo").value = pet.shampoo || "";
+        modal.querySelector("#cor").value = pet.cor || "";
+        modal.querySelector("#cuidados_especiais").value = pet.cuidados_especiais || "";
+        modal.querySelector("#obs").value = pet.obs || "";
+    }
 
     // Remove erro visual ao digitar/mudar campos comuns
     modal
@@ -556,17 +691,17 @@ async function criarModalCadastroPet() {
         });
 
     // 4. Validação e Envio
-    const buttonCadastrarPet = document.getElementById("cadastrar-button");
+    const buttonCadastrarPet = modal.querySelector("#cadastrar-button");
     buttonCadastrarPet.addEventListener("click", function () {
         let formularioValido = true;
 
         const inputsTexto = modal.querySelectorAll(
-            "input[type='text'], input[type='date'], select",
+            "input[type='text'][required], select[required]",
         );
 
         // Validação de inputs padrão e selects
         inputsTexto.forEach((input) => {
-            if (input.hasAttribute("required") && input.value.trim() === "") {
+            if (input.value.trim() === "") {
                 input.classList.add("input-error");
                 formularioValido = false;
             } else {
@@ -574,8 +709,8 @@ async function criarModalCadastroPet() {
             }
         });
 
-        // Validação Inteligente dos Radio Groups Customizados
-        const gruposRadio = ["especie", "sexo", "castrado"];
+        // Validação de Radio Groups
+        const gruposRadio = ["especie", "sexo"];
         gruposRadio.forEach((grupo) => {
             const checked = modal.querySelector(
                 `input[name="${grupo}"]:checked`,
@@ -602,11 +737,15 @@ async function criarModalCadastroPet() {
             return;
         }
 
-        // Fluxo de envio caso esteja tudo OK
         const pesoRaw = modal.querySelector("#peso").value;
-        const pesoNumerico = parseFloat(
-            pesoRaw.replace(" kg", "").replace(",", "."),
-        );
+        const pesoNumerico = pesoRaw
+            ? parseFloat(pesoRaw.replace(" kg", "").replace(",", "."))
+            : null;
+
+        const castradoSelecionado = modal.querySelector('input[name="castrado"]:checked');
+        const castradoVal = castradoSelecionado
+            ? (castradoSelecionado.value === "sim" ? 1 : 0)
+            : null;
 
         const dadosProntos = {
             nome: modal.querySelector("#nome").value.trim(),
@@ -617,14 +756,20 @@ async function criarModalCadastroPet() {
             tamanhopelo: selectPelo.value,
             peso: pesoNumerico,
             sexo: modal.querySelector('input[name="sexo"]:checked').value,
-            castrado:
-                modal.querySelector('input[name="castrado"]:checked').value ===
-                "sim",
+            castrado: castradoVal,
             obs: modal.querySelector("#obs").value.trim(),
+            perfume: modal.querySelector("#perfume").value,
+            enfeites: modal.querySelector("#enfeites").value,
+            shampoo: modal.querySelector("#shampoo").value,
+            cor: modal.querySelector("#cor").value,
+            cuidados_especiais: modal.querySelector("#cuidados_especiais").value.trim()
         };
 
-        fetch(`/api/clientes/${clienteId}/pets`, {
-            method: "POST",
+        const url = pet ? `/api/pets/${pet.id}` : `/api/clientes/${clienteId}/pets`;
+        const method = pet ? "PUT" : "POST";
+
+        fetch(url, {
+            method: method,
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(dadosProntos),
         })
@@ -633,22 +778,36 @@ async function criarModalCadastroPet() {
                 modal.remove();
                 if (typeof sendAlertModal === "function") {
                     sendAlertModal(
-                        "sucess",
-                        dados.mensagem || "Pet cadastrado com sucesso!",
+                        "success",
+                        dados.mensagem || "Salvo com sucesso!",
                     );
                 }
+                setTimeout(() => {
+                    window.location.href = window.location.pathname;
+                }, 1000);
             })
             .catch((err) => {
                 console.error(err);
                 if (typeof sendAlertModal === "function") {
-                    sendAlertModal("error", "Erro ao cadastrar o pet.");
+                    sendAlertModal("error", "Erro ao salvar o pet.");
                 }
             });
     });
 
     modal.querySelector("#fechar-modal").addEventListener("click", function () {
         modal.remove();
+        if (window.location.search.includes("pet_edit")) {
+            const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+            window.history.replaceState({ path: cleanUrl }, "", cleanUrl);
+        }
     });
 }
 
-abrirModalCadastroPet.addEventListener("click", criarModalCadastroPet);
+abrirModalCadastroPet.addEventListener("click", () => criarModalPet());
+
+// Verificar se há parâmetro pet_edit na URL para abrir automaticamente o modal
+const urlParams = new URLSearchParams(window.location.search);
+const petEditId = urlParams.get("pet_edit");
+if (petEditId) {
+    criarModalPet(parseInt(petEditId));
+}
