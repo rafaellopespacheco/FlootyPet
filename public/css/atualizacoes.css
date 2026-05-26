@@ -1,26 +1,45 @@
 @charset 'UTF-8';
 
 :root {
-    --sidebar_color: #151a2d;
-    --sidebar_text: #e2e2e2;
-    --background_color: #fefefe;
-    --destaque_color: #7c5cfa;
-    --sucesso_claro: #d0f5df;
-    --sucesso_escuro: #77cda0;
-    --danger_claro: #feced9;
-    --danger_escuro: #f799b5;
-    --atencao_claro: #fee8be;
-    --atencao_escuro: #ffa743;
-    --acoes_button: #5a5a5a;
+    --background: #f7f8fc;
+
+    --card: #ffffff;
+
+    --primary: #151a2d;
+
+    --secondary: #707789;
+
+    --muted: #9aa1b2;
+
+    --accent: #7c5cfa;
+
+    --border: #eceef5;
 }
 
-html, body {
+/* BASE */
+
+html,
+body {
     overflow: hidden;
 }
 
-body, main {
+body,
+main {
     height: 100vh;
 }
+
+body {
+    background: var(--background);
+
+    font-family:
+        Inter,
+        system-ui,
+        sans-serif;
+
+    color: var(--primary);
+}
+
+/* CONTAINER */
 
 .container-agenda {
     flex: 1;
@@ -28,106 +47,181 @@ body, main {
 }
 
 .container-changelogs {
+    position: relative;
+
+    width: 100%;
+    padding-right: 140px;
     height: 100%;
     min-height: 0;
+
     overflow-y: auto;
+
     display: flex;
     flex-direction: column;
-    gap: 25px;
-    padding: 40px;
+
+    gap: 80px;
+
+    padding:
+        70px
+        60px
+        100px
+        90px;
+
+    margin: 0;
+
+    scroll-behavior: smooth;
 }
 
-/* CARD */
+/* LINHA TIMELINE */
 
-.card-change {
-    position: relative;
-    background-color: var(--background_color);
-    border-radius: 16px;
-    padding: 30px;
-    overflow: hidden;
-    flex-shrink: 0;
-
-    border: 1px solid rgba(0,0,0,0.06);
-
-    box-shadow:
-        0 4px 12px rgba(0,0,0,0.05),
-        0 0 0 rgba(124, 92, 250, 0);
-
-    transition:
-        transform .2s,
-        box-shadow .2s;
-}
-
-.card-change:hover {
-    transform: translateY(-3px);
-
-    box-shadow:
-        0 8px 24px rgba(0,0,0,0.08),
-        0 0 20px rgba(124, 92, 250, 0.08);
-}
-
-/* LINHA LATERAL */
-
-.card-change::before {
+.container-changelogs::before {
     content: '';
+
     position: absolute;
 
     top: 0;
-    left: 0;
+    left: 36px;
 
-    width: 6px;
+    width: 2px;
     height: 100%;
 
-    background: linear-gradient(
-        180deg,
-        var(--sidebar_color),
-        #1a009a
-    );
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(124,92,250,.25),
+            rgba(124,92,250,.04)
+        );
 }
 
-/* TOPO */
+/* UPDATE */
 
-.card-change .change-header {
+.card-change {
+    position: relative;
+
+    padding-bottom: 10px;
+}
+
+/* BOLINHA */
+
+.card-change::before {
+    content: '';
+
+    position: absolute;
+
+    left: -60px;
+    top: 10px;
+
+    width: 12px;
+    height: 12px;
+
+    border-radius: 50%;
+
+    background: var(--accent);
+
+    border: 5px solid var(--background);
+}
+
+/* HEADER */
+
+.change-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
 
-    margin-bottom: 20px;
+    gap: 14px;
+
+    margin-bottom: 18px;
 }
+
+/* VERSÃO */
+
+.version {
+    font-size: .78rem;
+
+    font-weight: 700;
+
+    color: var(--accent);
+
+    letter-spacing: .08em;
+
+    text-transform: uppercase;
+
+    padding:
+        6px
+        12px;
+
+    background: rgba(124,92,250,.08);
+
+    border-radius: 999px;
+}
+
+/* TITULO */
 
 .card-change h2 {
-    font-size: 1.4em;
-    color: var(--sidebar_color);
+    font-size: 2.2rem;
+
+    line-height: 1.1;
+
+    letter-spacing: -1px;
+
+    font-weight: 750;
+
+    color: var(--primary);
+
+    max-width: 850px;
 }
 
-/* BADGE VERSÃO */
+/* BADGE MAIS RECENTE */
 
-.card-change .version {
-    background-color: rgba(124, 92, 250, 0.1);
-    color: var(--sidebar_color);
+.card-change:first-child h2::after {
+    content: 'Mais recente';
 
-    padding: 8px 14px;
+    display: inline-flex;
+
+    margin-left: 14px;
+
+    padding:
+        6px
+        12px;
+
     border-radius: 999px;
 
-    font-size: 0.85em;
-    font-weight: bold;
+    background: rgba(124,92,250,.1);
+
+    color: var(--accent);
+
+    font-size: .72rem;
+
+    font-weight: 700;
+
+    vertical-align: middle;
+
+    letter-spacing: .03em;
 }
 
 /* DATA */
 
 .card-change h3 {
-    color: #888;
-    font-size: 0.9em;
-    margin-bottom: 20px;
-    font-weight: normal;
+    font-size: .9rem;
+
+    font-weight: 500;
+
+    color: var(--muted);
+
+    margin-bottom: 26px;
 }
 
-/* DESCRIÇÃO */
+/* RESUMO */
 
 .card-change p {
-    color: #555;
-    line-height: 1.6;
-    margin-bottom: 20px;
+    font-size: 1.02rem;
+
+    line-height: 1.9;
+
+    color: var(--secondary);
+
+    margin-bottom: 34px;
+
+    max-width: 820px;
 }
 
 /* LISTA */
@@ -137,42 +231,131 @@ body, main {
 
     display: flex;
     flex-direction: column;
-    gap: 12px;
+
+    gap: 14px;
 }
+
+/* ITEM */
 
 .card-change li {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
+    position: relative;
 
-    color: #444;
-    line-height: 1.5;
+    padding-left: 22px;
+
+    line-height: 1.7;
+
+    color: #3d4452;
+
+    font-size: .96rem;
+
+    max-width: 760px;
+
+    opacity: .92;
 }
 
-/* BULLET CUSTOM */
+/* BULLET */
 
 .card-change li::before {
-    content: '✦';
+    content: '';
 
-    color: var(--sidebar_color);
-    font-size: 0.9em;
-    margin-top: 2px;
+    position: absolute;
+
+    left: 0;
+    top: 11px;
+
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: var(--accent);
+}
+
+/* DIVISOR */
+
+.card-change::after {
+    content: '';
+
+    display: block;
+
+    width: 100%;
+
+    height: 1px;
+
+    background: var(--border);
+
+    margin-top: 50px;
+}
+
+/* REMOVE ÚLTIMO DIVISOR */
+
+.card-change:last-child::after {
+    display: none;
+}
+
+/* SCROLLBAR */
+
+.container-changelogs::-webkit-scrollbar {
+    width: 8px;
+}
+
+.container-changelogs::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.container-changelogs::-webkit-scrollbar-thumb {
+    background: rgba(124,92,250,.18);
+
+    border-radius: 999px;
+}
+
+.container-changelogs::-webkit-scrollbar-thumb:hover {
+    background: rgba(124,92,250,.35);
 }
 
 /* RESPONSIVO */
 
 @media (max-width: 768px) {
+
     .container-changelogs {
-        padding: 20px;
+        padding:
+            40px
+            22px
+            70px
+            58px;
+
+        gap: 55px;
     }
 
-    .card-change {
-        padding: 20px;
+    .container-changelogs::before {
+        left: 22px;
     }
 
-    .card-change .change-header {
+    .card-change::before {
+        left: -42px;
+    }
+
+    .change-header {
         flex-direction: column;
         align-items: flex-start;
-        gap: 10px;
+    }
+
+    .card-change h2 {
+        font-size: 1.5rem;
+    }
+
+    .card-change p {
+        font-size: .95rem;
+    }
+
+    .card-change li {
+        font-size: .92rem;
+    }
+
+    .card-change:first-child h2::after {
+        display: inline-flex;
+
+        margin-top: 10px;
+        margin-left: 0;
     }
 }

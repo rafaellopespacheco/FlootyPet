@@ -231,9 +231,9 @@ carregarCliente();
 
 const petContainer = document.querySelector(".pets-grid");
 fetch(`/api/clientes/${clienteId}/pets`)
-    .then(resposta => resposta.json())
-    .then(dados => {
-        dados.forEach(pet => {
+    .then((resposta) => resposta.json())
+    .then((dados) => {
+        dados.forEach((pet) => {
             const card = document.createElement("div");
             card.classList.add("pet-card");
             card.innerHTML = `
@@ -255,33 +255,34 @@ fetch(`/api/clientes/${clienteId}/pets`)
             </div>`;
             const addPetCard = document.getElementById("add-pet");
             petContainer.insertBefore(card, addPetCard);
-            
+
             card.addEventListener("click", () => {
                 const controlContainer = card.querySelector(".pet-control");
                 controlContainer.classList.add("active");
-            })
+            });
 
             const buttonEdit = card.querySelector(".control-edit");
             const buttonRemove = card.querySelector(".control-remove");
-        
+
             buttonRemove.addEventListener("click", async () => {
-                const confirm = await confirmacaoModal(`Você está prestes a apagar o pet ${pet.nome}, tem certeza que deseja apagar? Essa ação será irreversível.`)
-                if (!confirm) return
+                const confirm = await confirmacaoModal(
+                    `Você está prestes a apagar o pet ${pet.nome}, tem certeza que deseja apagar? Essa ação será irreversível.`,
+                );
+                if (!confirm) return;
 
                 fetch(`/api/clientes/${clienteId}/pets`, {
-                    method: "DELETE"
+                    method: "DELETE",
                 })
-                    .then(resposta => resposta.json())
-                    .then(dado => {
-                        if (dado.erro) return sendAlertModal("error", dado.erro);
-                        card.remove()
-                        sendAlertModal("sucess", dado.mensagem)
-                })
-            })
-        })
-
-        
-})
+                    .then((resposta) => resposta.json())
+                    .then((dado) => {
+                        if (dado.erro)
+                            return sendAlertModal("error", dado.erro);
+                        card.remove();
+                        sendAlertModal("sucess", dado.mensagem);
+                    });
+            });
+        });
+    });
 
 // =========================
 // SALVAR
@@ -340,17 +341,314 @@ buttonSalvar.addEventListener("click", async function () {
 // REMOVER CLIENTE
 // =========================
 
-document.getElementById("remover-cliente").addEventListener("click", async function () {
-    const confirm = await confirmacaoModal(
-        "Atenção! Você está prestes a remover um cliente do seu sistema, essa ação é irreversível, tem certeza que deseja continuar?",
-    );
+document
+    .getElementById("remover-cliente")
+    .addEventListener("click", async function () {
+        const confirm = await confirmacaoModal(
+            "Atenção! Você está prestes a remover um cliente do seu sistema, essa ação é irreversível, tem certeza que deseja continuar?",
+        );
 
-    if (!confirm) return;
+        if (!confirm) return;
 
-    fetch(`/api/clientes/${clienteId}`, {
-        method: 'DELETE'
-    })
+        fetch(`/api/clientes/${clienteId}`, {
+            method: "DELETE",
+        });
 
-    window.location.href = "/clientes";
-    sendAlertModal('sucess', 'Cliente deletado com sucesso!')
-});
+        window.location.href = "/clientes";
+        sendAlertModal("sucess", "Cliente deletado com sucesso!");
+    });
+
+// =========================
+// CADASTRAR PET
+// =========================
+
+const abrirModalCadastroPet = document.getElementById("add-pet");
+const fecharModalCadastroPet = document.getElementById("fechar-modal");
+
+async function criarModalCadastroPet() {
+    let racas = [];
+    try {
+        const resposta = await fetch("/api/racas");
+        racas = await resposta.json();
+    } catch (err) {
+        console.error("Erro ao buscar raças da API:", err);
+    }
+
+    const modal = document.createElement("div");
+
+    modal.innerHTML = `
+        <div class="container-modal-addcliente">
+            <div class="modal-addcliente">
+                <div class="modal-header">
+                    <h2>Cadastrar novo pet</h2>
+                    <button type="button" id="fechar-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="nome">Nome do pet *</label>
+                            <input type="text" name="nome" id="nome" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="datanasc">Data de nascimento</label>
+                            <input type="date" name="datanasc" id="datanasc">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Espécie *</label>
+                            <div class="radio-container-group" id="grupo-especie">
+                                <label><input type="radio" name="especie" value="1" required> Cachorro</label>
+                                <label><input type="radio" name="especie" value="2" required> Gato</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="raca">Raça *</label>
+                            <select name="raca" id="raca" required disabled>
+                                <option value="">Selecione a espécie primeiro</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="porte">Porte *</label>
+                            <select name="porte" id="porte" required>
+                                <option value="">Selecione...</option>
+                                <option value="micro">Micro</option>
+                                <option value="pequeno">Pequeno</option>
+                                <option value="médio">Médio</option>
+                                <option value="grande">Grande</option>
+                                <option value="gigante">Gigante</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="tamanhopelo">Tamanho do Pelo *</label>
+                            <select name="tamanhopelo" id="tamanhopelo" required>
+                                <option value="">Selecione...</option>
+                                <option value="curto">Curto</option>
+                                <option value="médio">Médio</option>
+                                <option value="longo">Longo</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="peso">Peso *</label>
+                            <input type="text" name="peso" id="peso" placeholder="0,00 kg" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Sexo *</label>
+                            <div class="radio-container-group" id="grupo-sexo">
+                                <label><input type="radio" name="sexo" value="macho" required> Macho</label>
+                                <label><input type="radio" name="sexo" value="fêmea" required> Fêmea</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Castrado? *</label>
+                            <div class="radio-container-group" id="grupo-castrado">
+                                <label><input type="radio" name="castrado" value="sim" required> Sim</label>
+                                <label><input type="radio" name="castrado" value="não" required> Não</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="obs">Observação</label>
+                        <textarea name="obs" id="obs" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="button" id="cadastrar-button">Cadastrar pet</button>
+                </div>
+            </div>
+        </div>`;
+
+    document.body.appendChild(modal);
+
+    const selectRaca = modal.querySelector("#raca");
+    const selectPorte = modal.querySelector("#porte");
+    const selectPelo = modal.querySelector("#tamanhopelo");
+    const inputPeso = modal.querySelector("#peso");
+    const radiosEspecie = modal.querySelectorAll('input[name="especie"]');
+
+    // 1. Alternador de Espécie
+    radiosEspecie.forEach((radio) => {
+        radio.addEventListener("change", function () {
+            const especieSelecionada = parseInt(this.value);
+            selectRaca.innerHTML =
+                '<option value="">Selecione a raça...</option>';
+            selectRaca.disabled = false;
+
+            const racasFiltradas = racas.filter(r => r.especie_id === especieSelecionada);
+            racasFiltradas.forEach((raca) => {
+                const option = document.createElement("option");
+                option.value = raca.id;
+                option.textContent = raca.nome;
+                selectRaca.appendChild(option);
+            });
+
+            // Remove o erro visual se houver ao selecionar
+            modal
+                .querySelector("#grupo-especie")
+                .classList.remove("input-error");
+        });
+    });
+
+    // Limpeza de erro em tempo real para os outros grupos de rádio
+    modal.querySelectorAll(".radio-container-group input").forEach((radio) => {
+        radio.addEventListener("change", function () {
+            this.closest(".radio-container-group").classList.remove(
+                "input-error",
+            );
+        });
+    });
+
+    // 2. Auto-preenchimento por Raça
+    selectRaca.addEventListener("change", function () {
+        const racaSelecionadaId = parseInt(this.value);
+
+        const racaSelecionada = racas.find(r => r.id === racaSelecionadaId);
+        if (racaSelecionada) {
+            if (racaSelecionada.tamanho) {
+                selectPorte.value = racaSelecionada.tamanho;
+                selectPorte.classList.remove("input-error");
+            }
+            if (racaSelecionada.tamanhopelo) {
+                selectPelo.value = racaSelecionada.tamanhopelo;
+                selectPelo.classList.remove("input-error");
+            }
+        }
+    });
+
+    // 3. Máscara de Peso com Backspace Funcional
+    let apagandoPeso = false;
+    inputPeso.addEventListener("keydown", function (e) {
+        apagandoPeso = e.key === "Backspace";
+    });
+
+    inputPeso.addEventListener("input", function () {
+        let valor = inputPeso.value.replace(/\D/g, "");
+        if (apagandoPeso && (valor.length === 0 || valor === "0")) {
+            inputPeso.value = "";
+            return;
+        }
+        if (valor === "") return;
+        let numero = (parseInt(valor) / 100).toFixed(2);
+        inputPeso.value = `${numero.replace(".", ",")} kg`;
+    });
+
+    // Remove erro visual ao digitar/mudar campos comuns
+    modal
+        .querySelectorAll(
+            "input[type='text'], input[type='date'], select, textarea",
+        )
+        .forEach((input) => {
+            input.addEventListener("input", function () {
+                this.classList.remove("input-error");
+            });
+            input.addEventListener("change", function () {
+                this.classList.remove("input-error");
+            });
+        });
+
+    // 4. Validação e Envio
+    const buttonCadastrarPet = document.getElementById("cadastrar-button");
+    buttonCadastrarPet.addEventListener("click", function () {
+        let formularioValido = true;
+
+        const inputsTexto = modal.querySelectorAll(
+            "input[type='text'], input[type='date'], select",
+        );
+
+        // Validação de inputs padrão e selects
+        inputsTexto.forEach((input) => {
+            if (input.hasAttribute("required") && input.value.trim() === "") {
+                input.classList.add("input-error");
+                formularioValido = false;
+            } else {
+                input.classList.remove("input-error");
+            }
+        });
+
+        // Validação Inteligente dos Radio Groups Customizados
+        const gruposRadio = ["especie", "sexo", "castrado"];
+        gruposRadio.forEach((grupo) => {
+            const checked = modal.querySelector(
+                `input[name="${grupo}"]:checked`,
+            );
+            const containerGrupo = modal.querySelector(`#grupo-${grupo}`);
+
+            if (!checked) {
+                containerGrupo.classList.add("input-error");
+                formularioValido = false;
+            } else {
+                containerGrupo.classList.remove("input-error");
+            }
+        });
+
+        if (!formularioValido) {
+            if (typeof sendAlertModal === "function") {
+                sendAlertModal(
+                    "warning",
+                    "Preencha os campos obrigatórios corretamente.",
+                );
+            } else {
+                alert("Preencha todos os campos obrigatórios.");
+            }
+            return;
+        }
+
+        // Fluxo de envio caso esteja tudo OK
+        const pesoRaw = modal.querySelector("#peso").value;
+        const pesoNumerico = parseFloat(
+            pesoRaw.replace(" kg", "").replace(",", "."),
+        );
+
+        const dadosProntos = {
+            nome: modal.querySelector("#nome").value.trim(),
+            datanasc: modal.querySelector("#datanasc").value,
+            especie: modal.querySelector('input[name="especie"]:checked').value,
+            raca_id: parseInt(selectRaca.value),
+            porte: selectPorte.value,
+            tamanhopelo: selectPelo.value,
+            peso: pesoNumerico,
+            sexo: modal.querySelector('input[name="sexo"]:checked').value,
+            castrado:
+                modal.querySelector('input[name="castrado"]:checked').value ===
+                "sim",
+            obs: modal.querySelector("#obs").value.trim(),
+        };
+
+        fetch(`/api/clientes/${clienteId}/pets`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(dadosProntos),
+        })
+            .then((res) => res.json())
+            .then((dados) => {
+                modal.remove();
+                if (typeof sendAlertModal === "function") {
+                    sendAlertModal(
+                        "sucess",
+                        dados.mensagem || "Pet cadastrado com sucesso!",
+                    );
+                }
+            })
+            .catch((err) => {
+                console.error(err);
+                if (typeof sendAlertModal === "function") {
+                    sendAlertModal("error", "Erro ao cadastrar o pet.");
+                }
+            });
+    });
+
+    modal.querySelector("#fechar-modal").addEventListener("click", function () {
+        modal.remove();
+    });
+}
+
+abrirModalCadastroPet.addEventListener("click", criarModalCadastroPet);

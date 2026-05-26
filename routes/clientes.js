@@ -153,12 +153,30 @@ router.delete("/api/clientes/:id", authApi, (req, res) => {
     })
 })
 
+router.get("/api/racas", authApi, (req, res) => {
+    const especie_id = req.query.especie_id;
+    let query = `SELECT * FROM racas`;
+    const params = [];
+    if (especie_id) {
+        query += ` WHERE especie_id = ?`;
+        params.push(especie_id);
+    }
+    db.all(query, params, (err, rows) => {
+        if (err) {
+            return res.status(500).json({ erro: err.message });
+        }
+        res.json(rows);
+    });
+});
+
 router.get("/api/clientes/:id/pets", authApi, (req, res) => {
     let id = req.params.id;
     db.all(
         `
-        SELECT * FROM pets
-        WHERE cliente_id = ?`,
+        SELECT pets.*, COALESCE(racas.nome, pets.raca) AS raca
+        FROM pets
+        LEFT JOIN racas ON pets.raca_id = racas.id
+        WHERE pets.cliente_id = ?`,
         [id],
         (err, rows) => {
             if (err) {
@@ -200,7 +218,7 @@ router.post("/api/clientes/:id/pets", authApi, (req, res) => {
             let datanasc = req.body.datanasc;
             let status = req.body.status;
             let especie = req.body.especie;
-            let raca = req.body.raca;
+            let raca_id = req.body.raca_id;
             let porte = req.body.porte;
             let tamanhopelo = req.body.tamanhopelo;
             let peso = req.body.peso;
@@ -210,7 +228,7 @@ router.post("/api/clientes/:id/pets", authApi, (req, res) => {
 
             db.run(
                 `
-        INSERT INTO pets (cliente_id, nome, datanasc, status, especie, raca, porte, tamanhopelo, peso, sexo, castrado, obs)
+        INSERT INTO pets (cliente_id, nome, datanasc, status, especie, raca_id, porte, tamanhopelo, peso, sexo, castrado, obs)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
                 [
                     cliente_id,
@@ -218,7 +236,7 @@ router.post("/api/clientes/:id/pets", authApi, (req, res) => {
                     datanasc,
                     status,
                     especie,
-                    raca,
+                    raca_id,
                     porte,
                     tamanhopelo,
                     peso,
