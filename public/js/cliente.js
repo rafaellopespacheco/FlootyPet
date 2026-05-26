@@ -48,10 +48,28 @@ fetch('/api/clientes')
         clientes.forEach(cliente => {
             const tr = document.createElement("tr");
 
+            const petsHtml = cliente.pets && cliente.pets.length > 0
+                ? `<div class="pet-list-container">
+                    ${cliente.pets.map(pet => `
+                        <div class="pet-item-list">
+                            <a href="/clientes/${cliente.id}?pet_edit=${pet.id}" class="pet-item-link" title="Editar ${pet.nome}">
+                                <div class="pet-avatar-wrapper">
+                                    <img src="/assets/icons/${pet.especie === '2' ? 'cat.png' : 'dog.png'}" class="pet-avatar-img">
+                                    <span class="pet-badge-gender ${pet.sexo === 'fêmea' ? 'femea' : 'macho'}">
+                                        ${pet.sexo === 'fêmea' ? '🎀' : '👔'}
+                                    </span>
+                                </div>
+                                <span class="pet-name-list">${pet.nome}</span>
+                            </a>
+                        </div>
+                    `).join('')}
+                   </div>`
+                : '<span class="sem-pets">Sem pets</span>';
+
             tr.innerHTML = `
                 <td><a href="/clientes/${cliente.id}">${cliente.nome}</a></td>
                 <td>${formatarTelefone(cliente.telefone)}</td>
-                <td>Em breve</td>
+                <td>${petsHtml}</td>
                 <td class="td-acoes">
                 <button type="button"><span class="material-symbols-rounded">calendar_add_on</span></button>
                 <a href="/clientes/${cliente.id}"><span class="material-symbols-rounded">person</span></a>
@@ -389,14 +407,14 @@ function criarModalCadastro() {
             })
             .then((dados) => {
                 modal.remove();
-                sendAlertModal("sucess", dados.mensagem);
+                sendAlertModal("success", dados.mensagem);
                 const clientesContainer = document.getElementById("clientes");
                 const tr = document.createElement("tr");
 
                 tr.innerHTML = `
                     <td><a href="/clientes/${dados.id}">${dados.nome}</a></td>
                     <td>${formatarTelefone(dados.telefone)}</td>
-                    <td>Em breve</td>
+                    <td><span class="sem-pets">Sem pets</span></td>
                     <td class="td-acoes">
                     <button type="button"><span class="material-symbols-rounded">calendar_add_on</span></button>
                     <a href="/clientes/${dados.id}"><span class="material-symbols-rounded">person</span></a>

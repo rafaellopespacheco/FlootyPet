@@ -5,11 +5,27 @@ const authApi = require('../middlewares/authApi');
 
 
 router.get("/api/clientes", authApi, (req, res) => {
-    db.all(`SELECT * FROM clientes`, [], (err, rows) => {
+    db.all(`SELECT * FROM clientes`, [], (err, clientes) => {
         if (err) {
             return res.status(500).json({ erro: err.message });
         }
-        res.json(rows);
+        db.all(`SELECT id, cliente_id, nome, sexo, especie, cor FROM pets`, [], (err, pets) => {
+            if (err) {
+                return res.json(clientes.map(c => ({ ...c, pets: [] })));
+            }
+            const petsByCliente = {};
+            pets.forEach(pet => {
+                if (!petsByCliente[pet.cliente_id]) {
+                    petsByCliente[pet.cliente_id] = [];
+                }
+                petsByCliente[pet.cliente_id].push(pet);
+            });
+            const result = clientes.map(c => ({
+                ...c,
+                pets: petsByCliente[c.id] || []
+            }));
+            res.json(result);
+        });
     });
 });
 
@@ -153,22 +169,6 @@ router.delete("/api/clientes/:id", authApi, (req, res) => {
     })
 })
 
-router.get("/api/racas", authApi, (req, res) => {
-    const especie_id = req.query.especie_id;
-    let query = `SELECT * FROM racas`;
-    const params = [];
-    if (especie_id) {
-        query += ` WHERE especie_id = ?`;
-        params.push(especie_id);
-    }
-    db.all(query, params, (err, rows) => {
-        if (err) {
-            return res.status(500).json({ erro: err.message });
-        }
-        res.json(rows);
-    });
-});
-
 router.get("/api/clientes/:id/pets", authApi, (req, res) => {
     let id = req.params.id;
     db.all(
@@ -193,6 +193,70 @@ router.get("/api/clientes/:id/pets", authApi, (req, res) => {
 
             res.json(rows);
         },
+    );
+});
+
+router.get("/api/pets/:id", authApi, (req, res) => {
+    let id = req.params.id;
+    db.get(`SELECT * FROM pets WHERE id = ?`, [id], (err, row) => {
+        if (err) {
+            return res.status(500).json({ erro: err.message });
+        }
+        if (!row) {
+            return res.status(404).json({ erro: "Pet não encontrado." });
+        }
+        res.json(row);
+    });
+});
+
+router.put("/api/pets/:id", authApi, (req, res) => {
+    let id = req.params.id;
+    let nome = req.body.nome;
+    let datanasc = req.body.datanasc;
+    let status = req.body.status;
+    let especie = req.body.especie;
+    let raca_id = req.body.raca_id;
+    let porte = req.body.porte;
+    let tamanhopelo = req.body.tamanhopelo;
+    let peso = req.body.peso;
+    let sexo = req.body.sexo;
+    let castrado = req.body.castrado;
+    let obs = req.body.obs;
+    let perfume = req.body.perfume;
+    let enfeites = req.body.enfeites;
+    let shampoo = req.body.shampoo;
+    let cuidados_especiais = req.body.cuidados_especiais;
+    let cor = req.body.cor;
+
+    db.run(
+        `UPDATE pets
+         SET nome = ?, datanasc = ?, status = ?, especie = ?, raca_id = ?, porte = ?, tamanhopelo = ?, peso = ?, sexo = ?, castrado = ?, obs = ?, perfume = ?, enfeites = ?, shampoo = ?, cuidados_especiais = ?, cor = ?
+         WHERE id = ?`,
+        [
+            nome,
+            datanasc,
+            status,
+            especie,
+            raca_id,
+            porte,
+            tamanhopelo,
+            peso,
+            sexo,
+            castrado,
+            obs,
+            perfume,
+            enfeites,
+            shampoo,
+            cuidados_especiais,
+            cor,
+            id
+        ],
+        (err) => {
+            if (err) {
+                return res.status(500).json({ erro: `Erro ao atualizar pet: ${err.message}` });
+            }
+            res.json({ mensagem: "Pet atualizado com sucesso." });
+        }
     );
 });
 
@@ -225,11 +289,16 @@ router.post("/api/clientes/:id/pets", authApi, (req, res) => {
             let sexo = req.body.sexo;
             let castrado = req.body.castrado;
             let obs = req.body.obs;
+            let perfume = req.body.perfume;
+            let enfeites = req.body.enfeites;
+            let shampoo = req.body.shampoo;
+            let cuidados_especiais = req.body.cuidados_especiais;
+            let cor = req.body.cor;
 
             db.run(
                 `
-        INSERT INTO pets (cliente_id, nome, datanasc, status, especie, raca_id, porte, tamanhopelo, peso, sexo, castrado, obs)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        INSERT INTO pets (cliente_id, nome, datanasc, status, especie, raca_id, porte, tamanhopelo, peso, sexo, castrado, obs, perfume, enfeites, shampoo, cuidados_especiais, cor)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
                 [
                     cliente_id,
                     nome,
@@ -243,6 +312,11 @@ router.post("/api/clientes/:id/pets", authApi, (req, res) => {
                     sexo,
                     castrado,
                     obs,
+                    perfume,
+                    enfeites,
+                    shampoo,
+                    cuidados_especiais,
+                    cor
                 ],
                 function (err) {
                     if (err) {
@@ -266,6 +340,6 @@ router.delete("/api/clientes/:id/pets", authApi, (req, res) => {
         if (err) return res.status(500).json({ erro: "Erro ao apagar pet." })
         res.json({ mensagem: "Pet apagado com sucesso!" })
     })
-})
+});
 
 module.exports = router;

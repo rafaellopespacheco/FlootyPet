@@ -17,7 +17,7 @@ export function sendAlertModal(tipo, text = '') {
 
     const icons = {
         error: "cancel",
-        sucess: "check_circle",
+        success: "check_circle",
         warning: "error",
     };
 
@@ -53,7 +53,7 @@ export function sendAlertModal(tipo, text = '') {
     transition: opacity .2s;
 }
 
-.container-modal-alert.sucess {
+.container-modal-alert.success {
     background-color: #2e7d32;   
 }
 
@@ -80,7 +80,7 @@ export function sendAlertModal(tipo, text = '') {
     animation: cooldown 5s linear forwards;
 }
 
-.alert-cooldown.sucess {
+.alert-cooldown.success {
     background-color: #145a1f;
 }
 
