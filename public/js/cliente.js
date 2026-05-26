@@ -2,6 +2,7 @@
 const filterButtons = document.querySelectorAll('.filter-button');
 const filterTodos = document.getElementById('filter-todos');
 import { sendAlertModal } from './modal-alert.js';
+import { abrirModalPet } from './modal-pet.js';
 
 
 function toggleFilter(event) {
@@ -88,6 +89,7 @@ const abrirModalCadastro = document.getElementById("abrir-modal-cadastro");
 const fecharModalCadastro = document.getElementById("fechar-modal");
 
 function criarModalCadastro() {
+    let petsAdicionados = [];
     const modal = document.createElement("div");
     modal.innerHTML = `
         <div class="container-modal-addcliente">
@@ -159,6 +161,15 @@ function criarModalCadastro() {
                             <input type="text" name="cidade" id="cidade">
                         </div>
                     </div>
+
+                    <!-- Seção de Pets no Cadastro de Cliente -->
+                    <h3 style="margin-top: 20px; margin-bottom: 5px; color: #444; font-size: 1.1rem; border-bottom: 1px solid #eee; padding-bottom: 5px;">Pets deste Cliente</h3>
+                    <div class="pets-list-cadastro" id="pets-list-cadastro" style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 15px; margin-top: 5px;">
+                        <span class="sem-pets-temp" style="color: #999; font-style: italic; font-size: 0.9em;">Nenhum pet adicionado ainda.</span>
+                    </div>
+                    <button type="button" class="button" id="btn-add-pet-cadastro" style="display: flex; align-items: center; gap: 5px; align-self: flex-start; background-color: #f0f0f3; color: #333; border: 1px solid #ccc; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                        <span class="material-symbols-rounded" style="font-size: 18px;">add_circle</span> Adicionar Pet
+                    </button>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="button" id="cadastrar-button">Cadastrar</button>
@@ -177,6 +188,72 @@ function criarModalCadastro() {
     const inputBairro = modal.querySelector("#bairro");
     const inputCidade = modal.querySelector("#cidade");
     const inputUf = modal.querySelector("#uf");
+
+    // Pets adicionados no cadastro
+    const petsListCadastro = modal.querySelector("#pets-list-cadastro");
+    const btnAddPetCadastro = modal.querySelector("#btn-add-pet-cadastro");
+
+    function renderizarPetsTemporarios() {
+        petsListCadastro.innerHTML = "";
+        if (petsAdicionados.length === 0) {
+            petsListCadastro.innerHTML = `<span class="sem-pets-temp" style="color: #999; font-style: italic; font-size: 0.9em;">Nenhum pet adicionado ainda.</span>`;
+            return;
+        }
+
+        petsAdicionados.forEach((pet, index) => {
+            const card = document.createElement("div");
+            card.className = "pet-temp-card";
+            card.innerHTML = `
+                <div class="pet-temp-avatar-wrapper">
+                    <img src="/assets/icons/${pet.especie === '2' ? 'cat.png' : 'dog.png'}" class="pet-temp-avatar-img">
+                    <span class="pet-temp-badge-gender ${pet.sexo === 'fêmea' ? 'femea' : 'macho'}">
+                        ${pet.sexo === 'fêmea' ? '🎀' : '👔'}
+                    </span>
+                </div>
+                <div class="pet-temp-info">
+                    <span class="pet-temp-name">${pet.nome}</span>
+                    <span class="pet-temp-raca">${pet.raca || 'Sem raça definida'}</span>
+                </div>
+                <div class="pet-temp-actions">
+                    <button type="button" class="btn-edit-temp" title="Editar Pet">
+                        <span class="material-symbols-rounded">edit</span>
+                    </button>
+                    <button type="button" class="btn-delete-temp" title="Remover Pet">
+                        <span class="material-symbols-rounded">delete</span>
+                    </button>
+                </div>
+            `;
+
+            // Clique em editar
+            card.querySelector(".btn-edit-temp").addEventListener("click", () => {
+                abrirModalPet({
+                    petData: pet,
+                    onSave: (dadosAtualizados) => {
+                        petsAdicionados[index] = dadosAtualizados;
+                        renderizarPetsTemporarios();
+                    }
+                });
+            });
+
+            // Clique em remover
+            card.querySelector(".btn-delete-temp").addEventListener("click", () => {
+                petsAdicionados.splice(index, 1);
+                renderizarPetsTemporarios();
+            });
+
+            petsListCadastro.appendChild(card);
+        });
+    }
+
+    btnAddPetCadastro.addEventListener("click", () => {
+        abrirModalPet({
+            onSave: (novoPet) => {
+                petsAdicionados.push(novoPet);
+                renderizarPetsTemporarios();
+            }
+        });
+    });
+
     inputTelefone.value = "+55 ";
 
     let apagandoTelefone = false;
@@ -406,21 +483,38 @@ function criarModalCadastro() {
                 return resposta.json();
             })
             .then((dados) => {
-                modal.remove();
-                sendAlertModal("success", dados.mensagem);
-                const clientesContainer = document.getElementById("clientes");
-                const tr = document.createElement("tr");
+                if (dados.erro) {
+                    throw new Error(dados.erro);
+                }
 
-                tr.innerHTML = `
-                    <td><a href="/clientes/${dados.id}">${dados.nome}</a></td>
-                    <td>${formatarTelefone(dados.telefone)}</td>
-                    <td><span class="sem-pets">Sem pets</span></td>
-                    <td class="td-acoes">
-                    <button type="button"><span class="material-symbols-rounded">calendar_add_on</span></button>
-                    <a href="/clientes/${dados.id}"><span class="material-symbols-rounded">person</span></a>
-                    </td>
-                `;
-                clientesContainer.appendChild(tr);
+                const clienteId = dados.id;
+
+                if (petsAdicionados.length > 0) {
+                    const petPromises = petsAdicionados.map(pet => {
+                        return fetch(`/api/clientes/${clienteId}/pets`, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify(pet),
+                        }).then((r) => r.json());
+                    });
+
+                    return Promise.all(petPromises)
+                        .then(() => {
+                            modal.remove();
+                            sendAlertModal("success", "Cliente e pets cadastrados com sucesso!");
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 1000);
+                        });
+                } else {
+                    modal.remove();
+                    sendAlertModal("success", dados.mensagem);
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                }
             })
             .catch((err) => {
                 sendAlertModal("error", "Erro ao cadastrar cliente.");
