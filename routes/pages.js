@@ -27,4 +27,8 @@ router.get("/clientes/:id", authPage, (req, res) => {
     res.sendFile(path.join(__dirname, "../view/info-clientes.html"));
 });
 
+router.get("/config", authPage, (req, res) => {
+    res.sendFile(path.join(__dirname, "../view/config.html"));
+});
+
 module.exports = router;

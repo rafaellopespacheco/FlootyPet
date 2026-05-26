@@ -63,28 +63,6 @@ db.serialize(() => {
         FOREIGN KEY(raca_id) REFERENCES racas(id)
     )`);
 
-    // Tentar adicionar raca_id à tabela pets caso ela já existisse sem a coluna
-    db.run(`ALTER TABLE pets ADD COLUMN raca_id INTEGER`, (err) => {
-        // Ignora erro se a coluna já existir
-    });
-
-    // Popular a tabela de raças se estiver vazia
-    db.get("SELECT COUNT(*) AS count FROM racas", [], (err, row) => {
-        if (!err && row && row.count === 0) {
-            const stmt = db.prepare("INSERT INTO racas (nome, especie_id, tamanho, tamanhopelo) VALUES (?, ?, ?, ?)");
-            stmt.run("Poodle", 1, "pequeno", "médio");
-            stmt.run("Labrador", 1, "grande", "curto");
-            stmt.run("Golden Retriever", 1, "grande", "longo");
-            stmt.run("Shih Tzu", 1, "pequeno", "longo");
-            stmt.run("SRD (Cachorro)", 1, "", "");
-            stmt.run("Persa", 2, "médio", "longo");
-            stmt.run("Siamês", 2, "médio", "curto");
-            stmt.run("Angorá", 2, "médio", "longo");
-            stmt.run("SRD (Gato)", 2, "", "");
-            stmt.finalize();
-        }
-    });
-
     db.run(`CREATE TABLE IF NOT EXISTS agendamentos(
         id INTEGER PRIMARY KEY,
         cliente_id INTEGER,
