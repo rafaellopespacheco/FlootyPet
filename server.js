@@ -1,10 +1,12 @@
 const express = require("express");
 const session = require("express-session");
 const app = express();
+const path = require('path')
 
 app.use(express.json());
 
 app.use(express.static("public"));
+app.use("/v2/assets", express.static(path.join(__dirname, "frontend/dist/assets")));
 
 require('./database/init')
 

@@ -1,0 +1,37 @@
+
+header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 10px 40px;
+    justify-content: space-between;
+}
+
+header h1 {
+    flex: 1;
+}
+
+header .mensagens-container img {
+    width: 34px;
+}
+
+header .conta-container img {
+    margin-left: 10px;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+}
+
+header .conta-container {
+    margin-left: 40px;
+    display: flex;
+    text-align: center;
+}
+
+header .conta-nome {
+    font-weight: bolder;
+}
+
+header .conta-email {
+    font-size: 0.9em;
+}

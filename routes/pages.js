@@ -15,6 +15,13 @@ router.get("/agenda", authPage, (req, res) => {
     res.sendFile(path.join(__dirname, "/../view/agenda.html"));
 });
 
+router.use("/v2", express.static(path.join(__dirname, "../frontend/dist")));
+
+router.use("/v2", authPage, (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
+});
+
+
 router.get("/clientes", authPage, (req, res) => {
     res.sendFile(path.join(__dirname, "../view/clientes.html"));
 });
