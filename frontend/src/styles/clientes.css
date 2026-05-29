@@ -1,0 +1,371 @@
+@charset 'UTF-8';
+
+:root {
+    --sidebar_color: #151a2d;
+    --sidebar_text: #e2e2e2;
+    --background_color: #fefefe;
+    --destaque_color: #7c5cfa;
+    --sucesso_claro: #d0f5df;
+    --sucesso_escuro: #77cda0;
+    --danger_claro: #feced9;
+    --danger_escuro: #f799b5;
+    --atencao_claro: #fee8be;
+    --atencao_escuro: #ffa743;
+    --acoes_button: #5a5a5a;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+html, body {
+    overflow: hidden;
+}
+
+body, main {
+    height: 100vh;
+}
+
+
+
+.header-clientes {
+    padding: 20px;
+    display: flex; 
+    justify-content: space-between;
+}
+
+.header-clientes .clientes-filter {
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+    background-color: var(--background_color);
+    border: 1px solid rgba(0, 0, 0, 0.148);
+    cursor: pointer;
+    font-weight: bolder;
+    transition: 0.2s;
+    font-size: 1em;
+}
+
+.header-clientes .clientes-filter .filter-input {
+    outline: none;
+    padding: 15px;
+    min-width: 300px;
+    border: none;
+    font-size: 1em;
+    padding-left: 10px;
+}
+
+.header-clientes .clientes-filter .filter-button {
+    padding: 10px;
+    border: none;
+    background-color: var(--sidebar_text);
+    font-size: 1em;
+    border-radius: 5px;
+    margin-right: 5px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.header-clientes .clientes-filter .filter-button.filter-active {
+    background-color: var(--destaque_color);
+    color: var(--background_color);
+}
+
+.header-clientes .button {
+    border: none;
+    outline: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.container-agenda {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.container-clientes {
+    flex: 1;
+    overflow-y: auto;
+    margin: 20px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.49);
+    min-height: 0;
+}
+
+.container-clientes table {
+    border-collapse: collapse;
+    width: 100%;
+    overflow: hidden;
+}
+
+.container-clientes table tr {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.49);
+}
+
+.container-clientes table tr:last-child {
+    border-bottom: 0;
+}
+
+.container-clientes table th:not(:last-child) {
+    border-right: 1px solid rgba(0, 0, 0, 0.49);
+}
+
+.container-clientes table th {
+    background-color: var(--sidebar_text);
+    font-size: 1.3em;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.49);
+    padding: 10px;
+}
+
+.container-clientes table td {
+    padding: 10px 15px;
+    cursor: text;
+}
+
+.container-clientes table td a, table td button {
+    background-color: transparent;
+    font-family: Arial, Helvetica, sans-serif;
+    text-decoration: none;
+    color: black;
+}
+
+.container-clientes table td a:hover {
+    text-decoration: underline;
+}
+
+.container-clientes table td:first-child {
+    font-weight: bolder;
+}
+
+.container-clientes table td:not(:last-child) {
+    border-right: 1px solid rgba(0, 0, 0, 0.185);
+}
+
+.container-clientes table .td-acoes {
+    display: flex;
+    justify-content: right;
+    gap: 5px;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f5f5f5;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+
+.container-clientes table .td-acoes button, .container-clientes table .td-acoes a {
+    border: none;
+    cursor: pointer;
+}
+.container-clientes table .td-acoes span {
+    color: var(--acoes_button);
+    padding: 5px 0;
+    font-size: 35px;
+}
+
+/* ESTILOS PARA OS PETS NA TABELA DE CLIENTES */
+.pet-list-container {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 4px 0;
+}
+
+.pet-item-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.pet-item-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none !important;
+    color: inherit;
+    transition: transform 0.2s;
+}
+
+.pet-item-link:hover {
+    transform: translateY(-2px);
+    text-decoration: none !important;
+}
+
+.pet-avatar-wrapper {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: #f5f5f7;
+    border: 1.5px solid #e2e2e8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    margin-bottom: 2px;
+}
+
+.pet-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 50%;
+}
+
+.pet-badge-gender {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    font-size: 10px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+}
+
+.pet-badge-gender.femea {
+    border: 1px solid #ff9ebb;
+}
+
+.pet-badge-gender.macho {
+    border: 1px solid #6bb5ff;
+}
+
+.pet-name-list {
+    font-size: 0.8em;
+    font-weight: 600;
+    color: #444;
+    max-width: 70px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sem-pets {
+    color: #999;
+    font-style: italic;
+    font-size: 0.9em;
+}
+
+/* Card de pet temporário no modal de cadastro */
+.pet-temp-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #f5f6f9;
+    border: 1px solid #e2e2e8;
+    border-radius: 10px;
+    padding: 8px 12px;
+    position: relative;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.pet-temp-avatar-wrapper {
+    position: relative;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background-color: white;
+    border: 1px solid #dcdcdc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    flex-shrink: 0;
+}
+
+.pet-temp-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 50%;
+}
+
+.pet-temp-badge-gender {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    font-size: 8px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.pet-temp-badge-gender.femea {
+    border: 1px solid #ff9ebb;
+}
+
+.pet-temp-badge-gender.macho {
+    border: 1px solid #6bb5ff;
+}
+
+.pet-temp-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.pet-temp-name {
+    font-size: 0.85em;
+    font-weight: bold;
+    color: #333;
+}
+
+.pet-temp-raca {
+    font-size: 0.7em;
+    color: #666;
+}
+
+.pet-temp-actions {
+    display: flex;
+    gap: 4px;
+    margin-left: 10px;
+}
+
+.pet-temp-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.pet-temp-actions .btn-edit-temp {
+    color: var(--destaque_color);
+}
+.pet-temp-actions .btn-edit-temp:hover {
+    background-color: #f0ecff;
+}
+
+.pet-temp-actions .btn-delete-temp {
+    color: #ff3636;
+}
+.pet-temp-actions .btn-delete-temp:hover {
+    background-color: #fff0f0;
+}
+
+.pet-temp-actions .material-symbols-rounded {
+    font-size: 16px;
+}
