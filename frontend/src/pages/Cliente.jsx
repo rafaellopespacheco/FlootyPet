@@ -15,7 +15,6 @@ export default function () {
         async function carregarClientes() {
             const dados = await buscarClientes();
             setClientes(dados);
-            toast.success('Clientes carregados com sucesso!')
         }
 
         carregarClientes();
