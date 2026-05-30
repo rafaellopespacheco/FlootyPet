@@ -1,5 +1,9 @@
+import { useEffect } from "react"
+import { toast } from "sonner"
+
 export default function () {
-    return (
-        <div>Agenda</div>
-    )
+    useEffect(() => {
+        toast.warning("Esta página se encontra em desenvolvimento.")
+    }, []) 
+
 }

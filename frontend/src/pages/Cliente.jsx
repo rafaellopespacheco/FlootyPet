@@ -4,22 +4,30 @@ import Header from "../components/Header";
 import "../styles/global.css";
 import "../styles/clientes.css";
 import { buscarClientes, formatarTelefone } from "../services/clientes";
+import { toast } from 'sonner';
+import ModalCadastroCliente from "../components/ModalCadastroCliente";
 
 export default function () {
     const [clientes, setClientes] = useState([]);
+    const [modalAberto, setModalAberto] = useState(false);
 
     useEffect(() => {
         async function carregarClientes() {
             const dados = await buscarClientes();
             setClientes(dados);
+            toast.success('Clientes carregados com sucesso!')
         }
 
         carregarClientes();
-    });
+    }, []);
 
     return (
         <>
-            <div classNameName="container-main">
+            <ModalCadastroCliente
+                aberto={modalAberto}
+                onClose={() => setModalAberto(false)}
+            />
+            <div className="container-main">
                 <div className="header-clientes">
                     <div className="clientes-filter">
                         <span className="material-symbols-rounded">search</span>
@@ -51,6 +59,7 @@ export default function () {
                         type="button"
                         className="button"
                         id="abrir-modal-cadastro"
+                        onClick={() => setModalAberto(true)}
                     >
                         <span className="material-symbols-rounded">
                             person_add

@@ -49,7 +49,6 @@
 
 .sidebar .desativado {
     opacity: 0.3;
-    cursor: not-allowed;
 }
 
 .sidebar .desativado:hover {
