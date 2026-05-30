@@ -5,5 +5,8 @@ export default function () {
     useEffect(() => {
         toast.warning("Esta página se encontra em desenvolvimento.")
     }, []) 
-
+    
+    return (
+        <div className="container-main"></div>
+    )
 }
