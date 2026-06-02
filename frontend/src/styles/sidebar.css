@@ -29,6 +29,7 @@
 }
 
 .sidebar .link {
+    transform: translateX(0);
     background-color: transparent;
     border: none;
     cursor: pointer;
@@ -44,7 +45,11 @@
 }
 
 .sidebar .link:hover {
-    background-color: #29335a;
+    transform: translateX(5px);
+}
+
+.sidebar .link.active {
+    background-color: #101424;
 }
 
 .sidebar .desativado {
