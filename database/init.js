@@ -14,7 +14,7 @@ db.serialize(() => {
             titulo TEXT,
             resumo TEXT,
             descricao TEXT,
-            data DATE
+            data DATETIME 
     )`);
 
     db.run(`CREATE TABLE IF NOT EXISTS config(
