@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import buscarAtualizacoes from "../services/atualizacoes";
+import { buscarAtualizacoes } from "../services/atualizacoes";
 import '../styles/atualizacoes.css';
+import { Link } from "react-router-dom";
 
 export default function () {
     const [atualizacoes, setAtualizacoes] = useState([]);
@@ -17,6 +18,7 @@ export default function () {
 
     return (
         <div className="container-main">
+            <Link to={"/addatualizacoes"}>Nova Changelog</Link>
             <div className="container-changelogs">
                 {atualizacoes.map((changelog) => {
                     let descricao = []
@@ -32,7 +34,7 @@ export default function () {
                                 <h2>{changelog.titulo}</h2>
                                 <span className="version">{changelog.versao}</span>
                             </div>
-                            <h3>{changelog.data?.split("-").reverse().join("/") || ""}</h3>
+                            <h3>{new Date(changelog.data).toLocaleString("pt-BR")}</h3>
                             <p>{changelog.resumo}</p>
                             <ul className="lista">
                                 {descricao.map(dado => (
