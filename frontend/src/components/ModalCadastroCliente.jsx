@@ -1,4 +1,6 @@
-import '../styles/modalCadastroCliente.css'
+import '../styles/modalCadastroCliente.css';
+import '../services/mocalCadastroCliente';
+import { handleSubmit } from '../services/mocalCadastroCliente';
 
 export default function ModalCadastroCliente({
     aberto,
@@ -14,7 +16,7 @@ export default function ModalCadastroCliente({
                     <h2>Cadastrar novo cliente</h2>
                     <button type="button" id="fechar-modal" onClick={onClose}>&times;</button>
                 </div>
-                <div className="modal-body">
+                <form className="modal-body" onSubmit={handleSubmit}>
                     <div className="form-group">
                         <label htmlFor="nome">Nome *</label>
                         <input type="text" name="nome" id="nome" required></input>
@@ -116,9 +118,9 @@ export default function ModalCadastroCliente({
                         }}>
                         <span className="material-symbols-rounded" style={{fontSize: "18px"}}>add_circle</span> Adicionar Pet
                     </button>
-                </div>
+                </form>
                 <div className="modal-footer">
-                    <button type="button" className="button" id="cadastrar-button">Cadastrar</button>
+                    <button type="submit" className="button" id="cadastrar-button">Cadastrar</button>
                 </div>
             </div>
             </div>
