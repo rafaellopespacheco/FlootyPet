@@ -22,7 +22,7 @@ form.addEventListener('submit', (event) => {
             if (dados.erro) {
                 sendAlertModal('error', dados.erro)
             } else {
-                window.location.href = "/agenda";
+                window.location.href = "/clientes";
             }
 
         })

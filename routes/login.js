@@ -44,9 +44,9 @@ router.post("/api/login", (req, res) => {
     })
 });
 
-router.post("/api/logout", (req, res) => {
+router.get("/api/logout", (req, res) => {
     req.session.destroy(() => {
-        res.json({ message: 'Deslogado com sucesso' })
+        res.json({ mensagem: 'Deslogado com sucesso' })
     })
 })
 
