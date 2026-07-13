@@ -1,4 +1,5 @@
 
+
 header {
     width: 100%;
     display: flex;
@@ -34,4 +35,17 @@ header .conta-nome {
 
 header .conta-email {
     font-size: 0.9em;
+}
+
+header .buttonAbrirNotificacao {
+    font-size: 2em;
+    display: flex;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
+header .buttonAbrirNotificacao span {
+    font-size: 1.1em;
 }
