@@ -13,7 +13,26 @@
     --atencao_escuro: #FDD981;
 } */
 
-aside .imglogin {
+.buttonEsqueciSenha {
+    background-color: transparent;
+    border: none;
+    font-size: 1em;
+    text-decoration: underline;
+    color: #674ABD;
+    cursor: pointer;
+}
+
+.toast-recuperar {
+    width: 450px !important;
+    max-width: 450px !important;
+}
+
+aside {
+    height: 100vh;
+    overflow-y: hidden;
+}
+
+.imagelogin {
     height: 100vh;
     width: 100%;
     object-fit: cover;

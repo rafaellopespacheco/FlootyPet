@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import '../styles/login.css';
 
@@ -8,7 +8,18 @@ export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
-
+    async function handleEsqueciSenha() {
+        toast.info("Esqueceu sua senha?", {
+            className: "toast-recuperar",
+            description: "Nossa equipe pode ajudar você.",
+            action: {
+                label: "WhatsApp",
+                onClick: () =>
+                    window.open("https://wa.me/5522988364659", "_blank"),
+            },
+        });
+        
+    }
     async function handleSubmit(event) {
         event.preventDefault();
         setLoading(true);
@@ -100,7 +111,7 @@ export default function Login() {
                             <label htmlFor="lembrar">Lembrar-me</label>
                         </div>
 
-                        <a href="#">Esqueci minha senha</a>
+                        <button type='button' onClick={handleEsqueciSenha} className='buttonEsqueciSenha'>Esqueci minha senha</button>
                     </div>
                     <button
                         type="submit"
@@ -117,12 +128,11 @@ export default function Login() {
                         <div className="linhaou"></div>
                     </div>
 
-                    <button
-                        type="button"
-                        className="buttonLogin button-outline"
+                    <NavLink to='/sobre'
+                        className="buttonLogin button-outline" style={{textAlign: 'center', textDecoration: 'none'}}
                     >
                         Conhecer sistema
-                    </button>
+                    </NavLink>
                 </form>
             </main>
         </>
