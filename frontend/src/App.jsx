@@ -7,6 +7,7 @@ import Login from './pages/Login';
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import NotFound from './pages/NotFound';
 import { Toaster } from 'sonner';
+import Sobre from './pages/Sobre';
 
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
                 </Route>
                 <Route path="/" element={<Login />}></Route>
                 <Route path="/login" element={<Login />}></Route>
+                <Route path="/sobre" element={<Sobre />}></Route>
                 <Route path="*" element={<NotFound />}></Route>
             </Routes>
         </BrowserRouter>
