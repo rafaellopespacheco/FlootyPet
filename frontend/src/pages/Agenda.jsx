@@ -3,7 +3,7 @@ import { toast } from "sonner"
 
 export default function () {
     useEffect(() => {
-        toast.warning("Esta página se encontra em desenvolvimento.")
+        toast.dismiss("Esta página se encontra em desenvolvimento.")
     }, []) 
     
     return (

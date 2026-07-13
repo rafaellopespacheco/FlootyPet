@@ -11,12 +11,12 @@ export default function () {
     const [clientes, setClientes] = useState([]);
     const [modalAberto, setModalAberto] = useState(false);
 
-    useEffect(() => {
-        async function carregarClientes() {
-            const dados = await buscarClientes();
-            setClientes(dados);
-        }
+    async function carregarClientes() {
+        const dados = await buscarClientes();
+        setClientes(dados);
+    }
 
+    useEffect(() => {
         carregarClientes();
     }, []);
 
@@ -25,6 +25,7 @@ export default function () {
             <ModalCadastroCliente
                 aberto={modalAberto}
                 onClose={() => setModalAberto(false)}
+                onSuccess={carregarClientes}
             />
             <div className="container-main">
                 <div className="header-clientes">

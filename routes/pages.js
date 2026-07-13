@@ -5,12 +5,12 @@ const authPage = require("../middlewares/authPage");
 
 // router.use(express.static(path.join(__dirname, "../frontend/dist")));
 
-router.get("/", (req, res) => {
-    if (req.session.userId) {
-        return res.redirect("/clientes");
-    }
-    res.sendFile(path.join(__dirname, "/../view/index.html"));
-});
+// router.get("/", (req, res) => {
+//     if (req.session.userId) {
+//         return res.redirect("/clientes");
+//     }
+//     res.sendFile(path.join(__dirname, "/../view/index.html"));
+// });
 
 router.get("/old/agenda", authPage, (req, res) => {
     res.sendFile(path.join(__dirname, "/../view/agenda.html"));
@@ -30,6 +30,16 @@ router.get("/clientes/:id", authPage, (req, res) => {
 
 router.get("/old/configuracao", authPage, (req, res) => {
     res.sendFile(path.join(__dirname, "../view/config.html"));
+});
+
+router.get(["/", "/login"], (req, res) => {
+    res.set(
+        "Cache-Control",
+        "no-store, no-cache, must-revalidate, proxy-revalidate",
+    );
+    res.set("Pragma", "no-cache");
+    res.set("Expires", "0");
+    res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
 });
 
 router.use(authPage, (req, res) => {

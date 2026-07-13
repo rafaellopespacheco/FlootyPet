@@ -1,0 +1,70 @@
+.container-notfound {
+    min-height: 100vh;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+    padding: 40px 20px;
+
+    background: linear-gradient(180deg, #f8f9fc 0%, #eef1f7 100%);
+}
+
+.container-notfound img {
+    width: 220px;
+    margin-bottom: 25px;
+    user-select: none;
+}
+
+.container-notfound h1 {
+    font-size: 4rem;
+    color: var(--sidebar_color);
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.container-notfound h2 {
+    max-width: 550px;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #6b7280;
+    font-weight: 400;
+    margin-bottom: 35px;
+}
+
+.container-notfound .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 14px 28px;
+
+    border-radius: 12px;
+
+    text-decoration: none;
+
+    box-shadow: 0 8px 20px rgba(124, 92, 250, 0.25);
+    transition: all .25s ease;
+}
+
+.container-notfound .button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 28px rgba(124, 92, 250, 0.35);
+}
+
+@media (max-width: 600px) {
+    .container-notfound img {
+        width: 170px;
+    }
+
+    .container-notfound h1 {
+        font-size: 3rem;
+    }
+
+    .container-notfound h2 {
+        font-size: 1rem;
+    }
+}

@@ -6,7 +6,7 @@ const logoutButton = document.getElementById('logout');
 
 logoutButton.addEventListener("click", () => {
     fetch("/api/logout", {
-        method: "POST",
+        method: "GET",
     })
         .then((res) => res.json())
         .then((data) => window.location.href = "/");
