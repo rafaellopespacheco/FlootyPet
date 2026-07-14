@@ -6,6 +6,7 @@ import "../styles/clientes.css";
 import { buscarClientes, formatarTelefone } from "../services/clientes";
 import { toast } from 'sonner';
 import ModalCadastroCliente from "../components/ModalCadastroCliente";
+import { Link } from "react-router-dom";
 
 export default function () {
     const [clientes, setClientes] = useState([]);
@@ -81,9 +82,9 @@ export default function () {
                             {clientes.map((cliente) => (
                                 <tr key={cliente.id}>
                                     <td>
-                                        <a href={`/clientes/${cliente.id}`}>
+                                        <Link to={`/clientes/${cliente.id}`}>
                                             {cliente.nome}
-                                        </a>
+                                        </Link>
                                     </td>
                                     <td>
                                         {formatarTelefone(cliente.telefone)}
@@ -131,11 +132,11 @@ export default function () {
                                                 calendar_add_on
                                             </span>
                                         </button>
-                                        <a href={`/clientes/${cliente.id}`}>
+                                        <Link to={`/clientes/${cliente.id}`}>
                                             <span className="material-symbols-rounded">
                                                 person
                                             </span>
-                                        </a>
+                                        </Link>
                                     </td>
                                 </tr>
                             ))}
