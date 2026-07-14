@@ -2,6 +2,7 @@ const db = require('./db')
 
 db.serialize(() => {
     db.run(`CREATE TABLE IF NOT EXISTS users (
+            name TEXT,
             id INTEGER PRIMARY KEY,
             email TEXT,
             password_hash TEXT,
@@ -27,10 +28,12 @@ db.serialize(() => {
         nome TEXT,
         cpf TEXT,
         datanasc DATE,
-        numero TEXT,
+        telefone TEXT,
         obs TEXT,
         cep TEXT,
         logradouro TEXT,
+        numero TEXT,
+        complemento TEXT,
         bairro TEXT,
         cidade TEXT,
         uf TEXT,
