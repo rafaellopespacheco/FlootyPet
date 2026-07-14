@@ -3,7 +3,7 @@ const path = require("path");
 const router = express.Router();
 const authPage = require("../middlewares/authPage");
 
-router.get("/clientes/:id", authPage, (req, res) => {
+router.get("/clientess/:id", authPage, (req, res) => {
     res.sendFile(path.join(__dirname, "../view/info-clientes.html"));
 });
 

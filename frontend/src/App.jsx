@@ -8,6 +8,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import NotFound from './pages/NotFound';
 import { Toaster } from 'sonner';
 import Sobre from './pages/Sobre';
+import InfoCliente from './pages/InfoCliente';
 
 
 function App() {
@@ -26,14 +27,9 @@ function App() {
                 <Route element={<Layout />}>
                     <Route path="/agenda" element={<Agenda />}></Route>
                     <Route path="/clientes" element={<Clientes />}></Route>
-                    <Route
-                        path="/atualizacoes"
-                        element={<Atualizacoes />}
-                    ></Route>
-                    <Route
-                        path="/addatualizacoes"
-                        element={<AddAtualizacoes />}
-                    ></Route>
+                    <Route path="/atualizacoes" element={<Atualizacoes />}></Route>
+                    <Route path="/addatualizacoes" element={<AddAtualizacoes />}></Route>
+                    <Route path="/clientes/:id" element={<InfoCliente />}></Route>
                 </Route>
                 <Route path="/" element={<Login />}></Route>
                 <Route path="/login" element={<Login />}></Route>
