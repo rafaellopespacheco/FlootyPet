@@ -171,12 +171,14 @@ router.delete("/api/clientes/:id", authApi, (req, res) => {
 
 router.get("/api/clientes/:id/pets", authApi, (req, res) => {
     let id = req.params.id;
+
     db.all(
         `
-        SELECT pets.*, COALESCE(racas.nome, pets.raca) AS raca
+        SELECT pets.*, racas.nome AS raca
         FROM pets
         LEFT JOIN racas ON pets.raca_id = racas.id
-        WHERE pets.cliente_id = ?`,
+        WHERE pets.cliente_id = ?
+        `,
         [id],
         (err, rows) => {
             if (err) {
@@ -185,14 +187,8 @@ router.get("/api/clientes/:id/pets", authApi, (req, res) => {
                 });
             }
 
-            if (rows.length === 0) {
-                return res.status(404).json({
-                    erro: "Nenhum pet encontrado para esse cliente.",
-                });
-            }
-
             res.json(rows);
-        },
+        }
     );
 });
 
