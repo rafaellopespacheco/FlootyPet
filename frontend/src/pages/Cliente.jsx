@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 export default function () {
     const [clientes, setClientes] = useState([]);
     const [modalAberto, setModalAberto] = useState(false);
+    const [pesquisa, setPesquisa] = useState("")
 
     async function carregarClientes() {
         const dados = await buscarClientes();
@@ -21,6 +22,11 @@ export default function () {
         carregarClientes();
     }, []);
 
+    const clientesFiltrados = clientes.filter((cliente) =>
+        cliente.nome.toLowerCase().includes(pesquisa.toLowerCase()) || cliente.telefone.includes(pesquisa) ||
+        cliente.pets?.some((pet) =>
+            pet.nome.toLowerCase().includes(pesquisa.toLocaleLowerCase()))
+    )
     return (
         <>
             <ModalCadastroCliente
@@ -36,6 +42,8 @@ export default function () {
                             type="text"
                             className="filter-input"
                             placeholder="Buscar"
+                            value={pesquisa}
+                            onChange={(e) => setPesquisa(e.target.value)}
                         ></input>
                         <button
                             className="filter-button filter-active"
@@ -79,7 +87,7 @@ export default function () {
                             </tr>
                         </thead>
                         <tbody id="clientes">
-                            {clientes.map((cliente) => (
+                            {clientesFiltrados.map((cliente) => (
                                 <tr key={cliente.id}>
                                     <td>
                                         <Link to={`/clientes/${cliente.id}`}>
