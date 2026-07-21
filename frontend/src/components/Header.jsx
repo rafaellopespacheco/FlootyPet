@@ -16,12 +16,24 @@ export default function () {
         "/atualizacoes": "Atualizações",
     }
     
+    function getTitulo() {
+        if (titulos[location.pathname]) {
+            return titulos[location.pathname];
+        }
+
+        if (location.pathname.startsWith("/clientes/")) {
+            return "Informações do cliente";
+        }
+
+        return "Flooty Pet";
+    }
+
     return (
         <header>
-            <h1>{titulos[location.pathname]}</h1>
+            <h1>{getTitulo()}</h1>
             <div className="mensagens-container">
                 <button className='buttonAbrirNotificacao' title='Central de Notificações' onClick={handleAbrirNotificacao}>
-                    <span class="material-symbols-rounded">notifications</span>
+                    <span className="material-symbols-rounded">notifications</span>
                 </button>
             </div>
             <div className="conta-container">

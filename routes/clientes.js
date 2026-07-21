@@ -45,36 +45,54 @@ router.post("/api/clientes", authApi, function (req, res) {
     let notificacao = req.body.notificacao ?? 1;
 
     if (!nome || !telefone) return res.status(400).json({ erro: "Você precisa preencher os campos obrigatórios" })
+    
+    db.get("SELECT * FROM clientes WHERE telefone = ?", [telefone], function (err, row) {
+        if (err) {
+            return res.status(400).json({ erro: "Houve um erro ao verificar duplicatas de clientes" })
+        }
+        if (row) {
+            return res.status(400).json({
+                erro: "Já existe um cliente cadastrado com esse número!",
+                nome: row.nome,
+                id: row.id
+            })
+        }
 
-    db.run(
-        `
+        db.run(
+            `
         INSERT INTO clientes (nome, cpf, datanasc, telefone, obs, cep, logradouro, numero, complemento, bairro, cidade, uf, notificacao)
         VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [
-            nome,
-            cpf,
-            datanasc,
-            telefone,
-            obs,
-            cep,
-            logradouro,
-            numero,
-            complemento,
-            bairro,
-            cidade,
-            uf,
-            notificacao
-        ],
-        function (err) {
-            if (err) return res.status(500).json({ erro: "Erro ao cadastrar um novo cliente." })
-            res.json({
-                mensagem: "Cliente cadastrado com sucesso.",
-                nome: nome,
-                telefone: telefone,
-                id: this.lastID
-            });
-        },
-    );
+            [
+                nome,
+                cpf,
+                datanasc,
+                telefone,
+                obs,
+                cep,
+                logradouro,
+                numero,
+                complemento,
+                bairro,
+                cidade,
+                uf,
+                notificacao,
+            ],
+            function (err) {
+                if (err)
+                    return res
+                        .status(500)
+                        .json({ erro: "Erro ao cadastrar um novo cliente." });
+                res.json({
+                    mensagem: "Cliente cadastrado com sucesso.",
+                    nome: nome,
+                    telefone: telefone,
+                    id: this.lastID,
+                });
+            },
+        );
+
+    })
+
 });
 
 router.get("/api/clientes/:id", authApi, (req, res) => {

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { toast } from "sonner";
 import ModalCadastroPet from "./ModalCadastroPet";
 import "../styles/modalCadastroCliente.css";
+import { useNavigate } from "react-router-dom";
 
 export default function ModalCadastroCliente({ aberto, onClose, onSuccess }) {
     const [formData, setFormData] = useState({
@@ -19,6 +20,7 @@ export default function ModalCadastroCliente({ aberto, onClose, onSuccess }) {
         cidade: ""
     });
 
+    const navigate = useNavigate();
     const [petsAdicionados, setPetsAdicionados] = useState([]);
     const [petModalAberto, setPetModalAberto] = useState(false);
     const [editingPetIndex, setEditingPetIndex] = useState(null);
@@ -258,7 +260,20 @@ export default function ModalCadastroCliente({ aberto, onClose, onSuccess }) {
             const dadosCliente = await response.json();
 
             if (dadosCliente.erro) {
-                throw new Error(dadosCliente.erro);
+                if (dadosCliente.id) {
+                    toast.error(dadosCliente.erro, {
+                        action: {
+                            label: "Abrir cadastro",
+                            onClick: () => {
+                                navigate(`/clientes/${dadosCliente.id}`);
+                            },
+                        },
+                    });
+                } else {
+                    toast.error(dadosCliente.erro);
+                }
+
+                return;
             }
 
             const clienteId = dadosCliente.id;
