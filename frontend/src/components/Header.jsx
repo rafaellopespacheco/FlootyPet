@@ -36,13 +36,7 @@ export default function () {
                     <span className="material-symbols-rounded">notifications</span>
                 </button>
             </div>
-            <div className="conta-container">
-                <Profile />
-                <img
-                    src="https://s2.glbimg.com/yrFgwzwrwxxpO7pJoejZxwxpRx0=/620x620/smart/e.glbimg.com/og/ed/f/original/2022/03/11/mister_mainer.jpeg"
-                    alt=""
-                ></img>
-            </div>
+            <Profile />
         </header>
     );
 }

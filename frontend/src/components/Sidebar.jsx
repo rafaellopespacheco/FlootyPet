@@ -1,24 +1,7 @@
 import '../styles/sidebar.css';
-import { NavLink, useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
+import { NavLink } from 'react-router-dom';
 
 export default function Sidebar () {
-    const navigate = useNavigate();
-
-    async function logoutButton() {
-        const response = await fetch("/api/logout");
-        const dado = await response.json();
-
-        if (dado.erro) {
-            toast.error(dado.erro);
-            return;
-        }
-        toast.warning(dado.message)
-        navigate("/", {
-            replace: true
-        })
-        
-    }
 
     return (
         <aside className='sidebar'>
@@ -36,7 +19,6 @@ export default function Sidebar () {
                     <li><NavLink to='/atualizacoes' className='link'><span className='material-symbols-rounded'>update</span>Atualizações</NavLink></li>
                 </ul>
             </nav>
-            <button type='button' className='link' onClick={logoutButton}><span className='material-symbols-rounded'>logout</span>Sair</button>
             <p className='creditos'>&copy; Direitos reservados. 2026</p>
         </aside>
     )
