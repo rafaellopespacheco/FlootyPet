@@ -24,9 +24,58 @@ header .conta-container img {
 }
 
 header .conta-container {
+    position: relative;
     margin-left: 40px;
     display: flex;
     text-align: center;
+}
+
+header .conta-container button {
+    display: flex;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+header .conta-container .dropdown button {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px;
+    border-radius: 5px;
+    transition: .3;
+}
+
+header .conta-container .dropdown button:hover {
+    background-color: rgb(241, 241, 241);
+}
+
+header .conta-container .dropdown {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    right: 0;
+    top: calc(100% + 9px);
+    background-color: white;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.241);
+    width: 150px;
+}
+
+header .conta-container .dropdown .material-symbols-rounded {
+    font-size: 16px;
+    font-variation-settings:
+    'FILL' 1,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24
+}
+
+header .conta-container hr {
+    border: none;
+    border-top: 1px solid #e5e7eb;
+    margin: 8px 0;
 }
 
 header .conta-nome {
@@ -49,3 +98,4 @@ header .buttonAbrirNotificacao {
 header .buttonAbrirNotificacao span {
     font-size: 1.1em;
 }
+
