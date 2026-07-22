@@ -3,6 +3,7 @@ import buscarUsuario from "../services/profile";
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import ModalPerfilUser from "./ModalPerfilUser";
 
 export default function Profile() {
     const navigate = useNavigate();
@@ -23,7 +24,8 @@ export default function Profile() {
     }
 
     const [usuario, setUsuario] = useState(null);
-    const [open, setOpen] = useState(false)
+    const [open, setOpen] = useState(false);
+    const [openProfile, setOpenProfile] = useState(false);
 
     useEffect(() => {
         async function carregar() {
@@ -49,23 +51,33 @@ export default function Profile() {
     }, [])
 
     return (
-        <div className="conta-container" ref={ref}>
-            <button onClick={() => setOpen(!open)}>
-                <div>
-                    <p className="conta-nome">{usuario?.nome}</p>
-                    <p className="conta-email">{usuario?.email}</p>
-                </div>
+        <>
+            <div className="conta-container" ref={ref}>
+                <button onClick={() => setOpen(!open)}>
+                    <div>
+                        <p className="conta-nome">{usuario?.nome}</p>
+                        <p className="conta-email">{usuario?.email}</p>
+                    </div>
 
-                <img src="https://s2.glbimg.com/yrFgwzwrwxxpO7pJoejZxwxpRx0=/620x620/smart/e.glbimg.com/og/ed/f/original/2022/03/11/mister_mainer.jpeg" alt=""></img>
-            </button>
-            {open && (
-                <div className="dropdown">
-                    <button><span className="material-symbols-rounded">account_circle</span> Meu Perfil</button>
-                    <button disabled><span className="material-symbols-rounded">settings</span> Configuração</button>
-                    <hr />
-                    <button onClick={logoutButton}><span className="material-symbols-rounded">logout</span> Sair</button>
-                </div>
+                    <img src="https://i.pinimg.com/originals/31/ec/2c/31ec2ce212492e600b8de27f38846ed7.jpg" alt=""></img>
+                </button>
+                {open && (
+                    <div className="dropdown">
+                        <button onClick={() => {
+                            setOpen(false)
+                            setOpenProfile(true)
+                        }}><span className="material-symbols-rounded">account_circle</span> Meu Perfil</button>
+                        <button disabled><span className="material-symbols-rounded">settings</span> Configuração</button>
+                        <hr />
+                        <button onClick={logoutButton}><span className="material-symbols-rounded">logout</span> Sair</button>
+                    </div>
+                )}
+            </div>
+            {openProfile && (
+                <ModalPerfilUser 
+                    onClose={() => {setOpenProfile(false)}}
+                />
             )}
-        </div>
+        </>
     );
 }
