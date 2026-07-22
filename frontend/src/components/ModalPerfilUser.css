@@ -1,0 +1,81 @@
+.container-modalperfiluser {
+   top: 0;
+   left: 0;
+   position: fixed;
+   width: 100vw;
+   height: 100vh;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   background-color: rgba(0, 0, 0, 0.337);
+   z-index: 2;
+}
+
+.modalperfiluser {
+   gap: 5px;
+   padding: 20px;
+   width: 500px;
+   background-color: white;
+   display: flex;
+   flex-direction: column;
+   border-radius: 10px;
+}
+
+.modalperfiluser img {
+   margin-bottom: 30px;
+   display: block;
+   margin: auto;
+   width: 100px;
+   border-radius: 50%;
+}
+
+.modalperfiluser input {
+   padding: 10px;
+   outline: none;
+   border: none;
+   border-radius: 5px;
+   box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.542);
+   margin-bottom: 15px;
+}
+
+.modalperfiluser .button {
+   padding: 10px;
+   outline: none;
+   border: none;
+   border-radius: 5px;
+   background-color: #7c5cfa;
+   font-weight: bold;
+   color: white;
+   cursor: not-allowed;
+}
+
+.closeButton {
+   background-color: transparent;
+   border: none;
+   font-size: 34px;
+   color: rgb(125, 125, 125);
+   cursor: pointer;
+   text-align: end;
+}
+
+.closeButton:hover {
+   color: rgb(84, 84, 84);
+}
+
+hr {
+   border: none;
+   border-top: 1px solid rgb(230, 230, 230);
+   margin-top: 5px;
+   margin-bottom: 5px;
+}
+
+.headermodal {
+   align-items: center;
+   display: flex;
+   justify-content: space-between;
+}
+
+.headermodal p {
+   color: gray;
+   font-weight: bolder;
+}
