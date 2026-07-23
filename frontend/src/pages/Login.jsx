@@ -70,6 +70,7 @@ export default function Login() {
                             name="email"
                             id="email"
                             placeholder="seu@email.com"
+                            autocomplete="username"
                             required
                             value={email}
                             onChange={(event) => setEmail(event.target.value)}
@@ -89,6 +90,7 @@ export default function Login() {
                             id="senha"
                             placeholder="Sua senha"
                             required
+                            autocomplete="current-password"
                             value={password}
                             onChange={(event) =>
                                 setPassword(event.target.value)

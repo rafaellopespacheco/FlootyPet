@@ -14,7 +14,7 @@ export default function ModalCadastroPet({ aberto, onClose, onSave, petData }) {
     const [formData, setFormData] = useState({
         nome: "",
         datanasc: "",
-        especie: "", // "1" = Cão, "2" = Gato
+        especie: "",
         raca_id: "",
         porte: "",
         tamanhopelo: "",
@@ -31,7 +31,6 @@ export default function ModalCadastroPet({ aberto, onClose, onSave, petData }) {
 
     const [errors, setErrors] = useState({});
 
-    // Carregar dados de raças e checklists do backend
     useEffect(() => {
         if (!aberto) return;
 
@@ -63,7 +62,6 @@ export default function ModalCadastroPet({ aberto, onClose, onSave, petData }) {
         carregarDados();
     }, [aberto]);
 
-    // Preencher dados se for edição
     useEffect(() => {
         if (aberto && petData) {
             let castradoVal = "";
@@ -91,7 +89,6 @@ export default function ModalCadastroPet({ aberto, onClose, onSave, petData }) {
                 obs: petData.obs || ""
             });
         } else {
-            // Resetar formulário se for cadastro novo
             setFormData({
                 nome: "",
                 datanasc: "",
@@ -115,7 +112,6 @@ export default function ModalCadastroPet({ aberto, onClose, onSave, petData }) {
 
     if (!aberto) return null;
 
-    // Handler de alteração dos inputs comuns
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({
@@ -127,7 +123,6 @@ export default function ModalCadastroPet({ aberto, onClose, onSave, petData }) {
         }
     };
 
-    // Handler de espécie (reseta raça ao alterar espécie)
     const handleEspecieChange = (value) => {
         setFormData(prev => ({
             ...prev,
@@ -143,7 +138,6 @@ export default function ModalCadastroPet({ aberto, onClose, onSave, petData }) {
         }));
     };
 
-    // Handler de Raça (preenche porte/pelo padrão)
     const handleRacaChange = (e) => {
         const racaId = e.target.value;
         const racaSelecionada = racas.find(r => r.id === parseInt(racaId));
@@ -168,7 +162,6 @@ export default function ModalCadastroPet({ aberto, onClose, onSave, petData }) {
         }));
     };
 
-    // Handler de Peso (Mascara)
     const handlePesoChange = (e) => {
         let cleanValue = e.target.value.replace(/\D/g, "");
         if (cleanValue === "" || cleanValue === "0" || cleanValue === "00") {
@@ -181,13 +174,11 @@ export default function ModalCadastroPet({ aberto, onClose, onSave, petData }) {
         setFormData(prev => ({ ...prev, peso: formatado }));
     };
 
-    // Validação e Envio
     const handleFormSubmit = (e) => {
         e.preventDefault();
         let formularioValido = true;
         const novosErros = {};
 
-        // Validar campos obrigatórios
         const obrigatorios = ["nome", "especie", "raca_id", "porte", "tamanhopelo", "sexo"];
         obrigatorios.forEach(campo => {
             if (!formData[campo] || String(formData[campo]).trim() === "") {
@@ -232,7 +223,6 @@ export default function ModalCadastroPet({ aberto, onClose, onSave, petData }) {
             cuidados_especiais: formData.cuidados_especiais.trim()
         };
 
-        // Preservar tempId se for edição local
         if (petData && petData.tempId !== undefined) {
             dadosProntos.tempId = petData.tempId;
         }
@@ -240,7 +230,6 @@ export default function ModalCadastroPet({ aberto, onClose, onSave, petData }) {
         onSave(dadosProntos);
     };
 
-    // Filtra as raças pela espécie selecionada
     const racasFiltradas = racas.filter(r => r.especie_id === parseInt(formData.especie));
 
     return (

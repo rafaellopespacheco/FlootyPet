@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
-import { toast } from "sonner"; // Sonner substituindo o antigo modal-alert
+import React, { useState, useEffect } from "react";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 import ModalPet from "../components/ModalCadastroPet"; 
-import ConfirmacaoModal from "../components/ConfirmacaoModal"; // Importação do novo modal
+import ConfirmacaoModal from "../components/ConfirmacaoModal";
 import '../styles/info-cliente.css';
-import { useNavigate } from "react-router-dom";
 
 // =========================
 // FORMATADORES & VALIDATORS
@@ -76,6 +76,7 @@ function validarCPF(cpf) {
 
 export default function InfoCliente() {
     const clienteId = window.location.pathname.split("/").pop();
+    const navigate = useNavigate();
 
     // Estados de UI
     const [activeTab, setActiveTab] = useState("informacoes");
@@ -105,7 +106,6 @@ export default function InfoCliente() {
         obs: ""
     });
 
-    // Função auxiliar que recria o comportamento com Promises em React
     const requisitarConfirmacao = (texto) => {
         return new Promise((resolve) => {
             setConfirmacao({
@@ -126,7 +126,6 @@ export default function InfoCliente() {
         setConfirmacao({ isOpen: false, texto: "", resolve: null });
     };
 
-    // Monitorar inputs e aplicar máscaras
     const handleChange = (e) => {
         const { id, value } = e.target;
         let valorFormatado = value;
@@ -138,7 +137,6 @@ export default function InfoCliente() {
         setForm(prev => ({ ...prev, [id]: valorFormatado }));
     };
 
-    // CEP API fetch
     const handleCepBlurAndFetch = async (cepDigitado) => {
         const cep = cepDigitado.replace(/\D/g, "");
         if (cep.length !== 8) return;
@@ -182,7 +180,6 @@ export default function InfoCliente() {
         }
     };
 
-    // Carregar dados iniciais
     useEffect(() => {
         async function carregarDados() {
             try {
@@ -224,7 +221,6 @@ export default function InfoCliente() {
         carregarDados();
     }, [clienteId]);
 
-    // Salvar Cliente
     const handleSalvarCliente = async () => {
         const dados = {
             nome: form.nome.trim(),
@@ -269,8 +265,6 @@ export default function InfoCliente() {
         }
     };
 
-    // Remover Cliente
-    const navigate = useNavigate()
     const handleRemoverCliente = async () => {
         const confirm = await requisitarConfirmacao(
             "Atenção! Você está prestes a remover um cliente do seu sistema, essa ação é irreversível, tem certeza que deseja continuar?"
@@ -281,9 +275,7 @@ export default function InfoCliente() {
         try {
             await fetch(`/api/clientes/${clienteId}`, { method: "DELETE" });
             toast.success("Cliente deletado com sucesso!");
-            navigate("/clientes", {
-            replace: true
-        })
+            navigate("/clientes", { replace: true });
         } catch {
             toast.error("Erro ao deletar cliente.");
         }
@@ -300,13 +292,41 @@ export default function InfoCliente() {
         setIsModalPetOpen(true);
     };
 
-    const handleSalvarModalPet = (dados) => {
-        toast.success(dados.mensagem || "Pet salvo com sucesso!");
-        setIsModalPetOpen(false);
-        atualizarListaPets();
+    // Salvar Pet no Banco de Dados via Fetch
+    const handleSalvarModalPet = async (dadosPet) => {
+        try {
+            let resposta;
+            if (selectedPetId) {
+                // Atualizar Pet Existente
+                resposta = await fetch(`/api/pets/${selectedPetId}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(dadosPet),
+                });
+            } else {
+                // Cadastrar Novo Pet
+                resposta = await fetch(`/api/clientes/${clienteId}/pets`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(dadosPet),
+                });
+            }
+
+            const resultado = await resposta.json();
+
+            if (!resposta.ok || resultado.erro) {
+                return toast.error(resultado.erro || "Erro ao salvar o pet.");
+            }
+
+            toast.success(resultado.mensagem || "Pet salvo com sucesso!");
+            setIsModalPetOpen(false);
+            atualizarListaPets();
+        } catch (error) {
+            console.error("Erro ao salvar pet:", error);
+            toast.error("Erro de conexão ao salvar pet.");
+        }
     };
 
-    // Excluir Pet
     const handleExcluirPet = async (e, pet) => {
         e.stopPropagation();
         const confirm = await requisitarConfirmacao(
@@ -492,17 +512,18 @@ export default function InfoCliente() {
                 </div>
             </div>
 
-            {/* Modal de Pets do React */}
+            {/* Modal de Cadastro/Edição de Pet */}
             {isModalPetOpen && (
                 <ModalPet 
+                    aberto={isModalPetOpen}
                     clienteId={clienteId}
-                    petId={selectedPetId}
+                    petData={selectedPetId ? pets.find(p => p.id === selectedPetId) : null}
                     onClose={() => setIsModalPetOpen(false)}
                     onSave={handleSalvarModalPet}
                 />
             )}
 
-            {/* Modal de Confirmação do React */}
+            {/* Modal de Confirmação */}
             {confirmacao.isOpen && (
                 <ConfirmacaoModal 
                     texto={confirmacao.texto}

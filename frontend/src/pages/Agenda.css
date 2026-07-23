@@ -1,154 +1,291 @@
+.agenda-wrapper {
+  padding: 20px;
+}
+
+.agenda-header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.filtro-data {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.filtro-data input {
+  padding: 6px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  outline: none;
+}
+
+.btn-novo-agendamento {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #6366f1;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-novo-agendamento:hover {
+  background-color: #4f46e5;
+}
+
 .container-main {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.agenda-card {
-    width: 320px;
-    background: #fff;
-    border-radius: 12px;
-    padding: 15px;
-    border-left: 5px solid;
-    box-shadow: 0 5px 15px #00000012;
-    transition: .2s;
+.agenda-empty {
+  width: 100%;
+  text-align: center;
+  padding: 40px;
+  color: #6b7280;
+  font-size: 14px;
 }
 
-.agenda-card:hover {
-    transform: translateY(-2px);
+/* Modais & Stepper */
+.modal-content.modal-agendamento {
+  max-width: 580px;
 }
 
-
-/* Status */
-
-.agenda-card.confirmado {
-    border-color: #2ec123;
+.stepper-bar {
+  display: flex;
+  justify-content: space-around;
+  padding: 12px 20px;
+  background-color: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
 }
 
-.agenda-card.agendado {
-    border-color: #ea6608;
+.step-item {
+  font-size: 12px;
+  font-weight: 600;
+  color: #9ca3af;
 }
 
-.agenda-card.finalizado {
-    border-color: #228cc5;
+.step-item.active {
+  color: #6366f1;
 }
 
-.agenda-card.cancelado {
-    border-color: #44e9ef;
+.step-body {
+  padding: 20px;
 }
 
-
-.card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
+.step-content h4 {
+  margin-top: 0;
+  margin-bottom: 14px;
+  font-size: 15px;
+  color: #111827;
 }
 
-
-.status {
-    background: #f1f5f9;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
+/* Input de Busca na Etapa 1 */
+.search-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
 }
 
-.status.confirmado {
-    background-color: #e7fedb;
-    color: #2e900a;
+.search-input-container .icon-search {
+  position: absolute;
+  left: 12px;
+  color: #9ca3af;
+  font-size: 20px;
 }
 
-.status.agendado {
-    background-color: #fef3c7;
-    color: #d97706;
+.search-input-container input {
+  width: 100%;
+  padding: 10px 36px 10px 40px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
 }
 
-.status.em-atendimento {
-    background-color: #ede9fe;
-    color: #7c3aed;
+.search-input-container input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
 }
 
-.status.finalizado {
-    background-color: #dcfce7;
-    color: #107a37;
+.btn-clear-search {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 
-.status.cancelado {
-    background-color: #fee2e2;
-    color: #dc2626;
+/* Lista de Clientes / Pets */
+.busca-clientes-list {
+  max-height: 260px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.horario {
-    font-size: 13px;
-    color: #64748b;
+.cliente-box-item {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 10px 14px;
 }
 
-
-/* Pet */
-
-.pet-info {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+.cliente-header-item {
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+  padding-bottom: 6px;
 }
 
-.pet-info img {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    object-fit: cover;
+.cliente-phone-badge {
+  font-size: 12px;
+  color: #6b7280;
+  margin-left: 8px;
+  background: #f3f4f6;
+  padding: 2px 6px;
+  border-radius: 4px;
 }
 
-.pet-info h3 {
-    margin: 0;
-    font-size: 18px;
+.pets-sublist {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 6px;
 }
 
-.pet-info p {
-    margin: 3px 0 0;
-    color: #64748b;
-    font-size: 14px;
+.btn-pet-chip {
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
-
-/* Ícones */
-
-.indicadores {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
-    padding-top: 12px;
-    border-top: 1px solid #eee;
+.btn-pet-chip.active,
+.btn-pet-chip:hover {
+  background: #e0e7ff;
+  border-color: #6366f1;
+  color: #4338ca;
+  font-weight: 600;
 }
 
-.indicadores span {
-    color: #b0b0b0;
-    display: flex;
-    align-items: center;
+.no-pets-text,
+.no-results-text {
+  font-size: 13px;
+  color: #9ca3af;
 }
 
-
-.indicadores .ativo {
-    color: #333;
+/* Lista de Serviços Etapa 2 */
+.servicos-selection-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 220px;
+  overflow-y: auto;
 }
 
-
-/* Pagamento */
-
-.pagamento.pendente {
-    color: #eab308;
+.servico-card-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  cursor: pointer;
 }
 
-.pagamento.pago {
-    color: #22c55e;
+.servico-card-item.selected {
+  border-color: #6366f1;
+  background-color: #e0e7ff;
 }
 
-.pagamento.atrasado {
-    color: #ef4444;
+.total-bar {
+  margin-top: 12px;
+  text-align: right;
+  font-size: 15px;
 }
 
-.pagamento.cortesia {
-    color: #9ca3af;
+/* Form Grid Etapa 3 */
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form-group label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.form-group input,
+.form-group textarea {
+  padding: 8px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+/* Resumo Etapa 4 */
+.resumo-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 14px;
+}
+
+.resumo-item {
+  display: flex;
+  justify-content: space-between;
+}
+
+.resumo-item.total {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 10px;
+  font-size: 16px;
+}
+
+.footer-stepper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn-secondary {
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
 }
