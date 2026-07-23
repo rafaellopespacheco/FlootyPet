@@ -3,11 +3,9 @@ import '../styles/header.css';
 import Profile from './Profile';
 import { useLocation } from 'react-router-dom';
 import { toast } from 'sonner';
+import NotificationCenter from './NotificationCenter';
 
 export default function () {
-    function handleAbrirNotificacao() {
-        toast.warning("A Central de Notificação está sendo desenvolvida.")
-    }
     const location = useLocation();
 
     const titulos = {
@@ -31,11 +29,7 @@ export default function () {
     return (
         <header>
             <h1>{getTitulo()}</h1>
-            <div className="mensagens-container">
-                <button className='buttonAbrirNotificacao' title='Central de Notificações' onClick={handleAbrirNotificacao}>
-                    <span className="material-symbols-rounded">notifications</span>
-                </button>
-            </div>
+            <NotificationCenter />
             <Profile />
         </header>
     );

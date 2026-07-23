@@ -9,6 +9,7 @@ import NotFound from './pages/NotFound';
 import { Toaster } from 'sonner';
 import Sobre from './pages/Sobre';
 import InfoCliente from './pages/InfoCliente';
+import CriarNotificacaoForm from './pages/CriarNotificacaoForm';
 
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
                     <Route path="/atualizacoes" element={<Atualizacoes />}></Route>
                     <Route path="/addatualizacoes" element={<AddAtualizacoes />}></Route>
                     <Route path="/clientes/:id" element={<InfoCliente />}></Route>
+                    <Route path="/admin/notificacoes/criar" element={<CriarNotificacaoForm />}></Route>
                 </Route>
                 <Route path="/" element={<Login />}></Route>
                 <Route path="/login" element={<Login />}></Route>

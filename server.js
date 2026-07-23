@@ -27,6 +27,7 @@ app.use(require("./routes/racas"));
 app.use(require("./routes/config"));
 app.use(require("./routes/agendamentos"));
 app.use(require("./routes/atualizacoes"));
+app.use(require("./routes/notificações"));
 app.use(require("./routes/agenda"));
 
 app.use(express.static("public"));

@@ -134,16 +134,69 @@ db.serialize(() => {
         }
     });
 
-    db.run(`CREATE TABLE IF NOT EXISTS agendamentos(
-        id INTEGER PRIMARY KEY,
-        cliente_id INTEGER,
-        pet_id INTEGER,
-        data DATE,
-        servicos TEXT,
-        valor REAL,
-        pago REAL,
-        status TEXT,
-        taxi REAL
-    )`);
+    db.run(`CREATE TABLE IF NOT EXISTS servicos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+    nome TEXT NOT NULL,
+    categoria TEXT NOT NULL,
+
+    preco_padrao REAL NOT NULL,
+    duracao INTEGER NOT NULL,
+
+    ativo INTEGER DEFAULT 1,
+
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);`)
+
+    db.run(`CREATE TABLE IF NOT EXISTS agendamento_servicos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+    agendamento_id INTEGER NOT NULL,
+    servico_id INTEGER NOT NULL,
+
+    valor_cobrado REAL NOT NULL,
+
+    FOREIGN KEY (agendamento_id)
+        REFERENCES agendamentos(id)
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (servico_id)
+        REFERENCES servicos(id)
+);`)
+
+    db.run(`CREATE TABLE IF NOT EXISTS agendamentos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+    cliente_id INTEGER NOT NULL,
+    pet_id INTEGER NOT NULL,
+
+    data DATE NOT NULL,
+    hora_inicio TIME NOT NULL,
+    hora_fim TIME NOT NULL,
+
+    status TEXT DEFAULT 'Agendado',
+
+    observacoes TEXT,
+
+    criado_por INTEGER,
+
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (cliente_id) REFERENCES clientes(id),
+    FOREIGN KEY (pet_id) REFERENCES pets(id),
+    FOREIGN KEY (criado_por) REFERENCES usuarios(id)
+);`)
+
+db.run(`
+    CREATE TABLE IF NOT EXISTS notificacoes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    titulo VARCHAR(150) NOT NULL,
+    descricao TEXT NOT NULL,
+    tipo VARCHAR(50) DEFAULT 'Aviso',
+    author VARCHAR(100) DEFAULT 'Equipe Flooty Pet',
+    lida TINYINT(1) DEFAULT 0,
+    created_at DATETIME DEFAULT (datetime('now', '-3 hours'))
+);`)
 });
 

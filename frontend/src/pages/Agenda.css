@@ -1,0 +1,154 @@
+.container-main {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+}
+
+.agenda-card {
+    width: 320px;
+    background: #fff;
+    border-radius: 12px;
+    padding: 15px;
+    border-left: 5px solid;
+    box-shadow: 0 5px 15px #00000012;
+    transition: .2s;
+}
+
+.agenda-card:hover {
+    transform: translateY(-2px);
+}
+
+
+/* Status */
+
+.agenda-card.confirmado {
+    border-color: #2ec123;
+}
+
+.agenda-card.agendado {
+    border-color: #ea6608;
+}
+
+.agenda-card.finalizado {
+    border-color: #228cc5;
+}
+
+.agenda-card.cancelado {
+    border-color: #44e9ef;
+}
+
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+
+.status {
+    background: #f1f5f9;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status.confirmado {
+    background-color: #e7fedb;
+    color: #2e900a;
+}
+
+.status.agendado {
+    background-color: #fef3c7;
+    color: #d97706;
+}
+
+.status.em-atendimento {
+    background-color: #ede9fe;
+    color: #7c3aed;
+}
+
+.status.finalizado {
+    background-color: #dcfce7;
+    color: #107a37;
+}
+
+.status.cancelado {
+    background-color: #fee2e2;
+    color: #dc2626;
+}
+
+.horario {
+    font-size: 13px;
+    color: #64748b;
+}
+
+
+/* Pet */
+
+.pet-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.pet-info img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.pet-info h3 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.pet-info p {
+    margin: 3px 0 0;
+    color: #64748b;
+    font-size: 14px;
+}
+
+
+/* Ícones */
+
+.indicadores {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    padding-top: 12px;
+    border-top: 1px solid #eee;
+}
+
+.indicadores span {
+    color: #b0b0b0;
+    display: flex;
+    align-items: center;
+}
+
+
+.indicadores .ativo {
+    color: #333;
+}
+
+
+/* Pagamento */
+
+.pagamento.pendente {
+    color: #eab308;
+}
+
+.pagamento.pago {
+    color: #22c55e;
+}
+
+.pagamento.atrasado {
+    color: #ef4444;
+}
+
+.pagamento.cortesia {
+    color: #9ca3af;
+}
