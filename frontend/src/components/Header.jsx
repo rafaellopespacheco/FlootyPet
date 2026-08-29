@@ -4,7 +4,6 @@ import Profile from './Profile';
 import { useLocation } from 'react-router-dom';
 import { toast } from 'sonner';
 import NotificationCenter from './NotificationCenter';
-import ConfigButton from './ConfigButton';
 
 export default function () {
     const location = useLocation();
@@ -30,9 +29,7 @@ export default function () {
     return (
         <header>
             <h1>{getTitulo()}</h1>
-            <NotificationCenter />
-            <ConfigButton />
-            
+            <NotificationCenter />           
             <Profile />
         </header>
     );

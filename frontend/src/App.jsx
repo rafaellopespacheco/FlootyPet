@@ -10,6 +10,7 @@ import { Toaster } from 'sonner';
 import Sobre from './pages/Sobre';
 import InfoCliente from './pages/InfoCliente';
 import CriarNotificacaoForm from './pages/CriarNotificacaoForm';
+import Config from './pages/Config';
 
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
                 <Route element={<Layout />}>
                     <Route path="/agenda" element={<Agenda />}></Route>
                     <Route path="/clientes" element={<Clientes />}></Route>
+                    <Route path="/config" element={<Config />}></Route>
                     <Route path="/atualizacoes" element={<Atualizacoes />}></Route>
                     <Route path="/addatualizacoes" element={<AddAtualizacoes />}></Route>
                     <Route path="/clientes/:id" element={<InfoCliente />}></Route>

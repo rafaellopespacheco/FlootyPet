@@ -5,9 +5,11 @@ const authApi = require("../middlewares/authApi");
 
 // 1. LISTAR AGENDAMENTOS POR DATA
 router.get("/api/agenda", authApi, (req, res) => {
-  const dataFiltro = req.query.data || new Date().toISOString().split("T")[0];
+  // Ajuste de data local (fallback seguro para fuso horário de Brasília)
+  const hojeLocal = new Date().toLocaleDateString("pt-BR").split("/").reverse().join("-");
+  const dataFiltro = req.query.data || hojeLocal;
 
-  // Query compatível usando GROUP_CONCAT
+  // Query ajustada com DATE() e LEFT JOINs
   const query = `
     SELECT 
       a.id,
@@ -21,11 +23,11 @@ router.get("/api/agenda", authApi, (req, res) => {
       p.nome AS pet_nome,
       GROUP_CONCAT(s.id || ':' || s.nome || ':' || s.categoria || ':' || ags.valor_cobrado, ';') AS servicos_str
     FROM agendamentos a
-    INNER JOIN clientes c ON a.cliente_id = c.id
-    INNER JOIN pets p ON a.pet_id = p.id
+    LEFT JOIN clientes c ON a.cliente_id = c.id
+    LEFT JOIN pets p ON a.pet_id = p.id
     LEFT JOIN agendamento_servicos ags ON a.id = ags.agendamento_id
     LEFT JOIN servicos s ON ags.servico_id = s.id
-    WHERE a.data = ?
+    WHERE DATE(a.data) = DATE(?)
     GROUP BY a.id
     ORDER BY a.hora_inicio ASC
   `;
@@ -36,7 +38,6 @@ router.get("/api/agenda", authApi, (req, res) => {
       return res.status(500).json({ erro: "Erro ao buscar os agendamentos da agenda." });
     }
 
-    // Trata a string concatenada do GROUP_CONCAT para virar um array de objetos limpo
     const agendamentos = rows.map((row) => {
       let servicos = [];
       
@@ -52,7 +53,7 @@ router.get("/api/agenda", authApi, (req, res) => {
         });
       }
 
-      delete row.servicos_str; // Remove a string temporária do retorno
+      delete row.servicos_str;
 
       return {
         ...row,
@@ -64,14 +65,54 @@ router.get("/api/agenda", authApi, (req, res) => {
   });
 });
 
-// GET /api/servicos (Listar todos os serviços ativos)
-router.get("/api/servicos", authApi, (req, res) => {
-  db.all("SELECT * FROM servicos WHERE ativo = 1 ORDER BY nome ASC", [], (err, rows) => {
-    if (err) {
-      return res.status(500).json({ erro: "Erro ao buscar serviços." });
+// 2. CRIAR NOVO AGENDAMENTO
+router.post("/api/agenda", authApi, (req, res) => {
+  const { cliente_id, pet_id, data, hora_inicio, hora_fim, observacoes, servicos } = req.body;
+
+  // Validação básica dos campos obrigatórios
+  if (!cliente_id || !pet_id || !data || !hora_inicio || !hora_fim) {
+    return res.status(400).json({ erro: "Preencha todos os campos obrigatórios." });
+  }
+
+  // 1. Insere o agendamento principal
+  const sqlAgendamento = `
+    INSERT INTO agendamentos (cliente_id, pet_id, data, hora_inicio, hora_fim, observacoes)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `;
+
+  db.run(
+    sqlAgendamento,
+    [cliente_id, pet_id, data, hora_inicio, hora_fim, observacoes || ""],
+    function (err) {
+      if (err) {
+        console.error("Erro ao salvar agendamento:", err);
+        return res.status(500).json({ erro: "Erro ao criar agendamento no banco." });
+      }
+
+      const agendamentoId = this.lastID;
+
+      // 2. Se houver serviços vinculados, insere na tabela pivot agendamento_servicos
+      if (servicos && servicos.length > 0) {
+        const sqlServico = `
+          INSERT INTO agendamento_servicos (agendamento_id, servico_id, valor_cobrado)
+          VALUES (?, ?, ?)
+        `;
+
+        // Prepara e executa cada inserção de serviço
+        const stmt = db.prepare(sqlServico);
+        servicos.forEach((s) => {
+          stmt.run([agendamentoId, s.servico_id, s.valor_cobrado]);
+        });
+        stmt.finalize();
+      }
+
+      return res.status(201).json({
+        mensagem: "Agendamento criado com sucesso!",
+        id: agendamentoId,
+      });
     }
-    res.json(rows);
-  });
+  );
 });
+
 
 module.exports = router;

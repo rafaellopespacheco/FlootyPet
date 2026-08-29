@@ -15,7 +15,8 @@ export default function Sidebar () {
                     <li><button className='link desativado' onClick={() => toast.warning("Em desenvolvimento.")}><span className='material-symbols-rounded'>document_search</span>Relatórios</button></li>
                     <li><button className='link desativado' onClick={() => toast.warning("Em desenvolvimento.")}><span className='material-symbols-rounded'>account_balance</span>Financeiro</button></li>
                     <li><button className='link desativado' onClick={() => toast.warning("Em desenvolvimento.")}><span className='material-symbols-rounded'>package_2</span>Estoque</button></li> */}
-                    <li><a href='/old/configuracao' className='link'><span className='material-symbols-rounded'>settings</span>Configuração</a></li>
+                    <li><NavLink to='/config' className='link'><span className='material-symbols-rounded'>settings</span>Configuração</NavLink></li>
+                    <li><a href='/old/configuracao' className='link'><span className='material-symbols-rounded'>instant_mix</span>Antiga Config</a></li>
                     <li><NavLink to='/atualizacoes' className='link'><span className='material-symbols-rounded'>update</span>Atualizações</NavLink></li>
                 </ul>
             </nav>

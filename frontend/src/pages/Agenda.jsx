@@ -179,29 +179,57 @@ export default function Agenda() {
       </div>
 
       {/* Cards da Agenda */}
-      <div className="container-main">
-        {loading ? (
-          <p className="agenda-empty">Carregando agendamentos...</p>
-        ) : agendamentos.length === 0 ? (
-          <p className="agenda-empty">Nenhum agendamento para esta data.</p>
-        ) : (
-          agendamentos.map((item) => (
-            <div className={`agenda-card ${item.status?.toLowerCase() || 'agendado'}`} key={item.id}>
-              <div className="card-header">
-                <span className={`status ${item.status?.toLowerCase()}`}>{item.status}</span>
-                <span className="horario">{item.hora_inicio} - {item.hora_fim}</span>
-              </div>
-              <div className="pet-info">
-                <img src="https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png" alt="Pet" />
-                <div>
-                  <h3>{item.pet_nome}</h3>
-                  <p>{item.cliente_nome}</p>
-                </div>
-              </div>
+<div className="agenda-grid">
+  {agendamentos.map((item) => (
+    <div className="tecpet-card" key={item.id}>
+      <div className="card-content-wrapper">
+        
+        {/* Bloco de Horário */}
+        <div className="time-block">
+          <span>{item.hora_inicio}</span>
+          <span>{item.hora_fim}</span>
+        </div>
+
+        {/* Conteúdo Principal */}
+        <div className="card-main-info">
+          
+          {/* Header com Dados do Pet e Etiqueta de Status */}
+          <div className="pet-header">
+            <img
+              src={item.pet_foto || "https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png"}
+              alt={item.pet_nome}
+              className="pet-avatar"
+            />
+            
+            <div className="pet-titles">
+              <h4 className="pet-name">{item.pet_nome}</h4>
+              <span className="pet-breed">{item.pet_raca || item.raca || "Raça não inf."}</span>
             </div>
-          ))
-        )}
+
+            {/* Etiqueta de Status (Pílula) */}
+            <span className={`status-badge status-${(item.status || 'Agendado').toLowerCase()}`}>
+              {item.status || "Agendado"}
+            </span>
+          </div>
+
+          {/* Nome do Tutor */}
+          <div className="tutor-divider">
+            <span className="tutor-name">{item.cliente_nome}</span>
+          </div>
+
+          {/* Rodapé com Ícones */}
+          <div className="card-footer-icons">
+            <div className="status-icons">
+              <span className="icon-badge icon-financeiro">$</span>
+            </div>
+            <span className="material-symbols-rounded service-icon">shower</span>
+          </div>
+
+        </div>
       </div>
+    </div>
+  ))}
+</div>
 
       {/* MODAL DE NOVO AGENDAMENTO */}
       {modalNovoAberto && (
