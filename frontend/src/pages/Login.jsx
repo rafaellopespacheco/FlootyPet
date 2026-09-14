@@ -59,7 +59,7 @@ export default function Login() {
             </aside>
             <main className="mainLogin">
                 <form onSubmit={handleSubmit} id="form-login">
-                    <h2>Bem-vindoo!</h2>
+                    <h2>Bem-vindo!</h2>
                     <p>Faça login para acessar o sistema</p>
 
                     <label htmlFor="email">E-mail</label>
