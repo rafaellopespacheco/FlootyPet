@@ -1,0 +1,249 @@
+.tabs {
+    display: flex;
+    background-color: #fff;
+    border-bottom: 2px solid #ddd;
+    padding: 10px 40px 0 40px;
+    gap: 20px;
+}
+
+.tab-button {
+    background: none;
+    border: none;
+    padding: 12px 20px;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #666;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: 0.3s;
+}
+
+.tab-button:hover {
+    color: var(--destaque_color);
+}
+
+.tab-button.active {
+    color: var(--destaque_color);
+    border-bottom-color: var(--destaque_color);
+}
+
+.tab-content {
+    display: none;
+    padding: 30px 40px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.config-section {
+    background-color: #fff;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+}
+
+.config-section h2 {
+    color: #151a2d;
+    margin-bottom: 5px;
+}
+
+.section-desc {
+    color: #777;
+    margin-bottom: 25px;
+}
+
+/* CHECKLIST GRID */
+.checklist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+}
+
+.checklist-card {
+    background: #fdfdfd;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+}
+
+.checklist-card h3 {
+    color: #333;
+    margin-bottom: 15px;
+    border-bottom: 1px dashed #ddd;
+    padding-bottom: 8px;
+}
+
+.add-option-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.add-option-form input {
+    flex: 1;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 0.95em;
+    outline: none;
+    transition: 0.3s;
+}
+
+.add-option-form input:focus {
+    border-color: var(--destaque_color);
+}
+
+.button-add {
+    padding: 8px 15px;
+    font-size: 0.9em;
+}
+
+.options-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 250px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.options-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f5f6f9;
+    padding: 8px 12px;
+    border-radius: 8px;
+    color: #444;
+}
+
+.btn-delete-option {
+    background: none;
+    border: none;
+    color: #ff6b6b;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    border-radius: 5px;
+    transition: 0.2s;
+}
+
+.btn-delete-option:hover {
+    background-color: #ffe8e8;
+}
+
+.btn-delete-option .material-symbols-rounded {
+    font-size: 20px;
+}
+
+/* RAÇAS LAYOUT */
+.racas-layout {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 30px;
+    align-items: start;
+}
+
+.raca-form-card, .raca-list-card {
+    background: #fdfdfd;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+}
+
+.raca-form-card h3, .raca-list-card h3 {
+    color: #333;
+    margin-bottom: 20px;
+    border-bottom: 1px dashed #ddd;
+    padding-bottom: 8px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    font-weight: bold;
+    color: #555;
+    font-size: 0.9em;
+}
+
+.form-group input[type="text"], .form-group select {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    outline: none;
+    font-size: 0.95em;
+    transition: 0.3s;
+}
+
+.form-group input[type="text"]:focus, .form-group select:focus {
+    border-color: var(--destaque_color);
+}
+
+.radio-group-horizontal {
+    display: flex;
+    gap: 15px;
+    padding: 5px 0;
+}
+
+.radio-group-horizontal label {
+    font-weight: normal;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+
+/* RAÇAS TABLE */
+.raca-filter-bar {
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.raca-filter-bar select {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 0.9em;
+    outline: none;
+}
+
+.raca-list-container {
+    max-height: 450px;
+    overflow-y: auto;
+}
+
+.raca-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.raca-table th, .raca-table td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.raca-table th {
+    background-color: #f5f6f9;
+    color: #555;
+    font-weight: bold;
+}
+
+.raca-table tbody tr:hover {
+    background-color: #fcfcfc;
+}
