@@ -1,48 +1,65 @@
 # 🐾 Flooty Pet
 
-Sistema de gestão para pet shops e centros de banho e tosa, desenvolvido para otimizar o gerenciamento de clientes, pets, agendamentos, estoque, financeiro e demais operações internas da empresa.
+Sistema de gestão desenvolvido para centralizar e otimizar as operações de um pet shop, com foco em clientes, pets, agendamentos e processos internos.
 
-> 🚧 Projeto em desenvolvimento ativo.
+O projeto está sendo desenvolvido a partir de necessidades reais da empresa, evoluindo continuamente conforme novos processos e funcionalidades são identificados.
+
+> 🚧 **Projeto em desenvolvimento ativo.**
+
+### Tela de Login
+
+<img width="1918" height="908" alt="Tela de Login" src="https://github.com/user-attachments/assets/5186e988-0cc0-4df1-9b0e-7144335d0432" />
+
+### Profile Dropdown
+
+<img width="388" height="230" alt="Profile Dropdown" src="https://github.com/user-attachments/assets/7955982d-15b0-48f2-91a9-573b49ad2ded" />
+
+### CRUD de Clientes
+
+<img width="1919" height="909" alt="CRUD de Clientes" src="https://github.com/user-attachments/assets/7e6de88a-ebec-4980-9414-13879dac0950" />
 
 ---
 
 ## 📋 Sobre o Projeto
 
-O Flooty Pet nasceu com o objetivo de centralizar toda a operação do banho e tosa em um único sistema, eliminando controles manuais e facilitando o acompanhamento de clientes, pets, atendimentos e processos internos.
+O Flooty Pet surgiu a partir da necessidade de substituir controles manuais utilizados na rotina do pet shop por uma solução centralizada.
 
-O sistema está sendo desenvolvido especificamente para uso interno da empresa e recebe atualizações frequentes conforme novas necessidades surgem.
+A proposta é reunir, em um único sistema, informações e processos relacionados a clientes, pets, agendamentos, serviços e operações administrativas, tornando o acesso aos dados mais rápido e reduzindo tarefas repetitivas.
+
+Por ser um projeto de uso interno, seu desenvolvimento acompanha as necessidades reais da empresa. Novas funcionalidades são implementadas e aprimoradas continuamente conforme os processos são analisados e novas demandas surgem.
 
 ---
 
 ## ✨ Funcionalidades
 
-### ✅ Disponíveis
+### ✅ Implementadas
 
-* Cadastro de clientes
-* Cadastro de pets
-* Perfil individual dos clientes
+* Cadastro e gerenciamento de clientes
+* Cadastro e gerenciamento de pets
+* Perfil individual do cliente
 * Associação entre clientes e pets
-* Listagem de clientes
+* Listagem e consulta de clientes
+* Sistema de autenticação por sessão
+* Proteção de rotas através de middleware
+* Validação de dados nas rotas da API
 * Página de atualizações (Changelog)
-* Sistema de autenticação com sessões
-* Middleware de proteção de rotas
-* Interface moderna em React
+* Interface desenvolvida com React
 
-### 🚧 Em Desenvolvimento
+### 🚧 Em desenvolvimento
 
-* Agenda e agendamentos
-* Financeiro
+* Agenda e gerenciamento de agendamentos
+* Histórico de atendimentos
+* Controle financeiro
 * Controle de estoque
 * Relatórios gerenciais
-* Notificações via WhatsApp
-* Controle de permissões e cargos
 * Dashboard administrativo
-* Histórico completo de atendimentos
-* Integrações externas
+* Controle de permissões e cargos
+* Notificações e automações via WhatsApp
+* Integrações com serviços externos
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
+## 🛠️ Tecnologias
 
 ### Frontend
 
@@ -62,9 +79,9 @@ O sistema está sendo desenvolvido especificamente para uso interno da empresa e
 
 ---
 
-## 📁 Estrutura do Projeto
+## 🏗️ Estrutura do Projeto
 
-```bash
+```text
 flooty-pet/
 │
 ├── frontend/
@@ -74,52 +91,81 @@ flooty-pet/
 │
 ├── backend/
 │   ├── routes/
-│   ├── middleware/
+│   ├── middlewares/
 │   ├── database/
 │   └── server.js
 │
 └── README.md
 ```
 
+---
+
 ## 🚀 Executando Localmente
 
-### Frontend
+### 1. Clone o repositório
 
 ```bash
-npm install
-npm run dev
+git clone <URL_DO_REPOSITORIO>
+cd flooty-pet
 ```
 
-### Backend
+### 2. Instale as dependências
+
+No frontend:
 
 ```bash
+cd frontend
 npm install
+```
+
+No backend:
+
+```bash
+cd ../backend
+npm install
+```
+
+### 3. Inicie o backend
+
+```bash
 node server.js
+```
+
+### 4. Inicie o frontend
+
+Em outro terminal:
+
+```bash
+cd frontend
+npm run dev
 ```
 
 ---
 
 ## 🔐 Segurança
 
-O sistema possui:
+O backend possui mecanismos para controlar o acesso às funcionalidades do sistema, incluindo:
 
-* Autenticação por sessão
-* Middleware de proteção de rotas
-* Verificações de acesso no backend
-* Validação de dados nas rotas da API
+* Autenticação baseada em sessão
+* Middleware para proteção de rotas
+* Verificação de acesso no backend
+* Validação dos dados recebidos pela API
 
 ---
 
-## 📸 Screenshots
+## 📸 Demonstrações
 
-Em breve serão adicionadas imagens demonstrando:
+A documentação visual do projeto será atualizada conforme novas funcionalidades forem implementadas.
+
+Entre as funcionalidades demonstradas estarão:
 
 * Dashboard
-* Cadastro de clientes
-* Perfil de clientes
-* Cadastro de pets
-* Agenda
+* Gerenciamento de clientes
+* Gerenciamento de pets
+* Perfil do cliente
+* Agenda e agendamentos
 * Financeiro
+* Controle de estoque
 
 ---
 
@@ -131,11 +177,14 @@ Em breve serão adicionadas imagens demonstrando:
 * [x] Perfil de clientes
 * [x] Página de atualizações
 * [ ] Agenda
+* [ ] Histórico de atendimentos
 * [ ] Financeiro
 * [ ] Estoque
 * [ ] Relatórios
+* [ ] Dashboard administrativo
 * [ ] WhatsApp
 * [ ] Controle de cargos e permissões
+* [ ] Integrações externas
 
 ---
 
@@ -143,12 +192,12 @@ Em breve serão adicionadas imagens demonstrando:
 
 **Rafael Lopes**
 
-Desenvolvedor Full Stack
+Desenvolvedor de Software
 
 ---
 
-## 📌 Status do Projeto
+## 📌 Status
 
-🚧 Em desenvolvimento
+🚧 **Em desenvolvimento ativo**
 
-Atualizações e novas funcionalidades são adicionadas continuamente.
+O Flooty Pet continua recebendo novas funcionalidades, melhorias e ajustes com base nas necessidades identificadas durante seu uso e desenvolvimento.
