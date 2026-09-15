@@ -5,10 +5,11 @@ const path = require("path");
 
 app.use(express.json());
 
-app.use((req, res, next) => {
-    console.log("REQ:", req.method, req.url);
-    next();
-});
+// * LOGS DE REQS
+// app.use((req, res, next) => {
+//     console.log("REQ:", req.method, req.url);
+//     next();
+// });
 
 require("./database/init");
 
@@ -29,6 +30,7 @@ app.use(require("./routes/agendamentos"));
 app.use(require("./routes/atualizacoes"));
 app.use(require("./routes/notificações"));
 app.use(require("./routes/agenda"));
+app.use(require("./routes/servicos"));
 
 app.use(express.static("public"));
 app.use(
@@ -38,5 +40,5 @@ app.use(
 app.use(require("./routes/pages"));
 
 app.listen(3000, () => {
-    console.log("Estou rodando.");
+    console.log("✅ Servidor iniciado: http://localhost:3000/");
 });

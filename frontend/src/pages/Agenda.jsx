@@ -65,6 +65,7 @@ export default function Agenda() {
       if (resClientes.ok) setClientes(await resClientes.json());
       if (resServicos.ok) setListaServicos(await resServicos.json());
     } catch (error) {
+      console.error("Erro ao carregar dadop de clientes/serviços", error)
       toast.error("Erro ao carregar dados de clientes/serviços.");
     }
   };
