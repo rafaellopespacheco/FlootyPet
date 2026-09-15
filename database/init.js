@@ -9,15 +9,6 @@ db.serialize(() => {
             role INTEGER
     )`)
 
-    db.run(`CREATE TABLE IF NOT EXISTS changelogs(
-            id INTEGER PRIMARY KEY,
-            versao TEXT,
-            titulo TEXT,
-            resumo TEXT,
-            descricao TEXT,
-            data DATETIME 
-    )`);
-
     db.run(`CREATE TABLE IF NOT EXISTS config(
             id INTEGER PRIMARY KEY,
             nome_empresa TEXT        
