@@ -77,6 +77,23 @@
   align-items: start;
 }
 
+.alert-sem-agendamentos {
+  grid-column: 1 / -1;
+  min-height: calc(100vh - 190px);
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  justify-content: center;
+  color: #7e7e7e;
+  text-align: center;
+  gap: 10px;
+}
+
+.alert-sem-agendamentos img {
+  width: 380px;
+  max-width: 70%;
+}
+
 /* Card Individual Estilo TecPet */
 .tecpet-card {
   background: #ffffff;
@@ -526,3 +543,5 @@
 .btn-modal-primary.btn-confirm {
   background: #16a34a;
 }
+
+

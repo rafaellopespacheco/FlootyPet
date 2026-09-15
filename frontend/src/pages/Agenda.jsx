@@ -65,7 +65,7 @@ export default function Agenda() {
       if (resClientes.ok) setClientes(await resClientes.json());
       if (resServicos.ok) setListaServicos(await resServicos.json());
     } catch (error) {
-      console.error("Erro ao carregar dadop de clientes/serviços", error)
+      console.error("Erro ao carregar dados de clientes/serviços", error)
       toast.error("Erro ao carregar dados de clientes/serviços.");
     }
   };
@@ -159,288 +159,466 @@ export default function Agenda() {
   );
 
   return (
-    <div className="agenda-wrapper">
-      {/* Topo da Agenda */}
-      <div className="agenda-header-bar">
-        <h2>Agenda de Atendimentos</h2>
-        <div className="header-actions">
-          <div className="filtro-data">
-            <label htmlFor="data-agenda">Data:</label>
-            <input
-              id="data-agenda"
-              type="date"
-              value={dataSelecionada}
-              onChange={(e) => setDataSelecionada(e.target.value)}
-            />
-          </div>
-          <button className="btn-novo-agendamento" onClick={handleAbrirModalNovo}>
-            <span className="material-symbols-rounded">add</span> Novo Agendamento
-          </button>
-        </div>
-      </div>
-
-      {/* Cards da Agenda */}
-<div className="agenda-grid">
-  {agendamentos.map((item) => (
-    <div className="tecpet-card" key={item.id}>
-      <div className="card-content-wrapper">
-        
-        {/* Bloco de Horário */}
-        <div className="time-block">
-          <span>{item.hora_inicio}</span>
-          <span>{item.hora_fim}</span>
-        </div>
-
-        {/* Conteúdo Principal */}
-        <div className="card-main-info">
-          
-          {/* Header com Dados do Pet e Etiqueta de Status */}
-          <div className="pet-header">
-            <img
-              src={item.pet_foto || "https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png"}
-              alt={item.pet_nome}
-              className="pet-avatar"
-            />
-            
-            <div className="pet-titles">
-              <h4 className="pet-name">{item.pet_nome}</h4>
-              <span className="pet-breed">{item.pet_raca || item.raca || "Raça não inf."}</span>
-            </div>
-
-            {/* Etiqueta de Status (Pílula) */}
-            <span className={`status-badge status-${(item.status || 'Agendado').toLowerCase()}`}>
-              {item.status || "Agendado"}
-            </span>
-          </div>
-
-          {/* Nome do Tutor */}
-          <div className="tutor-divider">
-            <span className="tutor-name">{item.cliente_nome}</span>
-          </div>
-
-          {/* Rodapé com Ícones */}
-          <div className="card-footer-icons">
-            <div className="status-icons">
-              <span className="icon-badge icon-financeiro">$</span>
-            </div>
-            <span className="material-symbols-rounded service-icon">shower</span>
-          </div>
-
-        </div>
-      </div>
-    </div>
-  ))}
-</div>
-
-      {/* MODAL DE NOVO AGENDAMENTO */}
-      {modalNovoAberto && (
-        <div className="modal-overlay" onClick={() => setModalNovoAberto(false)}>
-          <div className="modal-content modal-agendamento" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <h3>Novo Agendamento</h3>
-              <button className="btn-close-modal" onClick={() => setModalNovoAberto(false)}>
-                <span className="material-symbols-rounded">close</span>
-              </button>
-            </div>
-
-            <div className="stepper-bar">
-              <span className={`step-item ${step >= 1 ? "active" : ""}`}>1. Pet/Tutor</span>
-              <span className={`step-item ${step >= 2 ? "active" : ""}`}>2. Serviços</span>
-              <span className={`step-item ${step >= 3 ? "active" : ""}`}>3. Data e Hora</span>
-              <span className={`step-item ${step >= 4 ? "active" : ""}`}>4. Confirmação</span>
-            </div>
-
-            <div className="modal-body step-body">
-              {/* ETAPA 1: PESQUISAR E SELECIONAR */}
-              {step === 1 && (
-                <div className="step-content">
-                  <h4>Selecione o Cliente ou Pet</h4>
-
-                  <div className="search-input-container">
-                    <span className="material-symbols-rounded icon-search">search</span>
-                    <input
-                      type="text"
-                      placeholder="Buscar por cliente, telefone ou nome do pet..."
-                      value={buscaCliente}
-                      onChange={(e) => setBuscaCliente(e.target.value)}
-                      autoFocus
-                    />
-                    {buscaCliente && (
-                      <button className="btn-clear-search" onClick={() => setBuscaCliente("")}>
-                        <span className="material-symbols-rounded">close</span>
-                      </button>
-                    )}
-                  </div>
-
-                  <div className="busca-clientes-list">
-                    {clientesFiltrados.length === 0 ? (
-                      <p className="no-results-text">
-                        Nenhum cliente ou pet encontrado para "{buscaCliente}".
-                      </p>
-                    ) : (
-                      clientesFiltrados.slice(0, 10).map((cliente) => (
-                        <div key={cliente.id} className="cliente-box-item">
-                          <div
-                            className={`cliente-header-item ${
-                              clienteSelecionado?.id === cliente.id ? "selected" : ""
-                            }`}
-                            onClick={() => handleSelectCliente(cliente)}
-                          >
-                            <div>
-                              <strong>{cliente.nome}</strong>
-                              <span className="cliente-phone-badge">{cliente.telefone}</span>
-                            </div>
-                          </div>
-
-                          <div className="pets-sublist">
-                            {cliente.pets?.map((pet) => (
-                              <button
-                                key={pet.id}
-                                className={`btn-pet-chip ${
-                                  petSelecionado?.id === pet.id ? "active" : ""
-                                }`}
-                                onClick={() => handleSelectPet(pet, cliente)}
-                              >
-                                🐾 {pet.nome} <small>({pet.especie || "Pet"})</small>
-                              </button>
-                            ))}
-                            {(!cliente.pets || cliente.pets.length === 0) && (
-                              <span className="no-pets-text">Nenhum pet cadastrado.</span>
-                            )}
-                          </div>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* ETAPA 2: SERVIÇOS */}
-              {step === 2 && (
-                <div className="step-content">
-                  <h4>Escolha os Serviços para {petSelecionado?.nome}</h4>
-                  <div className="servicos-selection-list">
-                    {listaServicos.map((servico) => {
-                      const selecionado = servicosSelecionados.some((s) => s.servico_id === servico.id);
-                      return (
-                        <div
-                          key={servico.id}
-                          className={`servico-card-item ${selecionado ? "selected" : ""}`}
-                          onClick={() => handleToggleServico(servico)}
-                        >
-                          <div>
-                            <strong>{servico.nome}</strong>
-                            <small>{servico.duracao} min</small>
-                          </div>
-                          <span className="preco">R$ {servico.preco_padrao.toFixed(2)}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                  <div className="total-bar">
-                    Total: <strong>R$ {valorTotalServicos.toFixed(2)}</strong>
-                  </div>
-                </div>
-              )}
-
-              {/* ETAPA 3: DATA E HORA */}
-              {step === 3 && (
-                <div className="step-content">
-                  <h4>Data e Horário do Atendimento</h4>
-                  <div className="form-grid-2">
-                    <div className="form-group">
-                      <label>Data:</label>
+      <div className="agenda-wrapper">
+          {/* Topo da Agenda */}
+          <div className="agenda-header-bar">
+              <h2>Agenda de Atendimentos</h2>
+              <div className="header-actions">
+                  <div className="filtro-data">
+                      <label htmlFor="data-agenda">Data:</label>
                       <input
-                        type="date"
-                        value={agendamentoData.data}
-                        onChange={(e) => setAgendamentoData({ ...agendamentoData, data: e.target.value })}
+                          id="data-agenda"
+                          type="date"
+                          value={dataSelecionada}
+                          onChange={(e) => setDataSelecionada(e.target.value)}
                       />
-                    </div>
-                    <div className="form-group">
-                      <label>Hora Início:</label>
-                      <input
-                        type="time"
-                        value={agendamentoData.hora_inicio}
-                        onChange={(e) => setAgendamentoData({ ...agendamentoData, hora_inicio: e.target.value })}
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label>Hora Fim:</label>
-                      <input
-                        type="time"
-                        value={agendamentoData.hora_fim}
-                        onChange={(e) => setAgendamentoData({ ...agendamentoData, hora_fim: e.target.value })}
-                      />
-                    </div>
                   </div>
-                  <div className="form-group">
-                    <label>Observações:</label>
-                    <textarea
-                      rows="3"
-                      placeholder="Ex: Cuidados especiais, alergias..."
-                      value={agendamentoData.observacoes}
-                      onChange={(e) => setAgendamentoData({ ...agendamentoData, observacoes: e.target.value })}
-                    />
-                  </div>
-                </div>
-              )}
+                  <button
+                      className="btn-novo-agendamento"
+                      onClick={handleAbrirModalNovo}
+                  >
+                      <span className="material-symbols-rounded">add</span> Novo
+                      Agendamento
+                  </button>
+              </div>
+          </div>
 
-              {/* ETAPA 4: RESUMO */}
-              {step === 4 && (
-                <div className="step-content resumo-box">
-                  <h4>Confirmação do Agendamento</h4>
-                  <div className="resumo-item">
-                    <span>Tutor:</span> <strong>{clienteSelecionado?.nome}</strong>
+          {/* Cards da Agenda */}
+          <div className="agenda-grid">
+              {agendamentos.length === 0 ? (
+                  <div className="alert-sem-agendamentos">
+                      <p>Sem agendamentos para essa data</p>
+                      <img src="/assets/agenda/agenda-vazia.png" alt="" />
                   </div>
-                  <div className="resumo-item">
-                    <span>Pet:</span> <strong>{petSelecionado?.nome}</strong>
-                  </div>
-                  <div className="resumo-item">
-                    <span>Data/Hora:</span> <strong>{agendamentoData.data} das {agendamentoData.hora_inicio} às {agendamentoData.hora_fim}</strong>
-                  </div>
-                  <div className="resumo-item">
-                    <span>Serviços:</span>
-                    <ul>
-                      {servicosSelecionados.map((s) => (
-                        <li key={s.servico_id}>{s.nome} - R$ {parseFloat(s.valor_cobrado).toFixed(2)}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className="resumo-item total">
-                    <span>Valor Total:</span> <strong>R$ {valorTotalServicos.toFixed(2)}</strong>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Footer */}
-            <div className="modal-footer footer-stepper">
-              {step > 1 && (
-                <button className="btn-secondary" onClick={() => setStep(step - 1)}>
-                  Voltar
-                </button>
-              )}
-
-              {step < 4 ? (
-                <button
-                  className="btn-modal-primary"
-                  disabled={
-                    (step === 1 && !petSelecionado) ||
-                    (step === 2 && servicosSelecionados.length === 0)
-                  }
-                  onClick={() => setStep(step + 1)}
-                >
-                  Próximo Passo
-                </button>
               ) : (
-                <button className="btn-modal-primary btn-confirm" onClick={handleSalvarAgendamento}>
-                  Confirmar e Agendar
-                </button>
+                  agendamentos.map((item) => (
+                      <div className="tecpet-card" key={item.id}>
+                          <div className="card-content-wrapper">
+                              {/* Bloco de Horário */}
+                              <div className="time-block">
+                                  <span>{item.hora_inicio}</span>
+                                  <span>{item.hora_fim}</span>
+                              </div>
+
+                              {/* Conteúdo Principal */}
+                              <div className="card-main-info">
+                                  {/* Header com Dados do Pet e Etiqueta de Status */}
+                                  <div className="pet-header">
+                                      <img
+                                          src={
+                                              item.pet_foto ||
+                                              "https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png"
+                                          }
+                                          alt={item.pet_nome}
+                                          className="pet-avatar"
+                                      />
+
+                                      <div className="pet-titles">
+                                          <h4 className="pet-name">
+                                              {item.pet_nome}
+                                          </h4>
+                                          <span className="pet-breed">
+                                              {item.pet_raca ||
+                                                  item.raca ||
+                                                  "Raça não inf."}
+                                          </span>
+                                      </div>
+
+                                      {/* Etiqueta de Status (Pílula) */}
+                                      <span
+                                          className={`status-badge status-${(item.status || "Agendado").toLowerCase()}`}
+                                      >
+                                          {item.status || "Agendado"}
+                                      </span>
+                                  </div>
+
+                                  {/* Nome do Tutor */}
+                                  <div className="tutor-divider">
+                                      <span className="tutor-name">
+                                          {item.cliente_nome}
+                                      </span>
+                                  </div>
+
+                                  {/* Rodapé com Ícones */}
+                                  <div className="card-footer-icons">
+                                      <div className="status-icons">
+                                          <span className="icon-badge icon-financeiro">
+                                              $
+                                          </span>
+                                      </div>
+                                      <span className="material-symbols-rounded service-icon">
+                                          shower
+                                      </span>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  ))
               )}
-            </div>
           </div>
-        </div>
-      )}
-    </div>
+
+          {/* MODAL DE NOVO AGENDAMENTO */}
+          {modalNovoAberto && (
+              <div
+                  className="modal-overlay"
+                  onClick={() => setModalNovoAberto(false)}
+              >
+                  <div
+                      className="modal-content modal-agendamento"
+                      onClick={(e) => e.stopPropagation()}
+                  >
+                      <div className="modal-header">
+                          <h3>Novo Agendamento</h3>
+                          <button
+                              className="btn-close-modal"
+                              onClick={() => setModalNovoAberto(false)}
+                          >
+                              <span className="material-symbols-rounded">
+                                  close
+                              </span>
+                          </button>
+                      </div>
+
+                      <div className="stepper-bar">
+                          <span
+                              className={`step-item ${step >= 1 ? "active" : ""}`}
+                          >
+                              1. Pet/Tutor
+                          </span>
+                          <span
+                              className={`step-item ${step >= 2 ? "active" : ""}`}
+                          >
+                              2. Serviços
+                          </span>
+                          <span
+                              className={`step-item ${step >= 3 ? "active" : ""}`}
+                          >
+                              3. Data e Hora
+                          </span>
+                          <span
+                              className={`step-item ${step >= 4 ? "active" : ""}`}
+                          >
+                              4. Confirmação
+                          </span>
+                      </div>
+
+                      <div className="modal-body step-body">
+                          {/* ETAPA 1: PESQUISAR E SELECIONAR */}
+                          {step === 1 && (
+                              <div className="step-content">
+                                  <h4>Selecione o Cliente ou Pet</h4>
+
+                                  <div className="search-input-container">
+                                      <span className="material-symbols-rounded icon-search">
+                                          search
+                                      </span>
+                                      <input
+                                          type="text"
+                                          placeholder="Buscar por cliente, telefone ou nome do pet..."
+                                          value={buscaCliente}
+                                          onChange={(e) =>
+                                              setBuscaCliente(e.target.value)
+                                          }
+                                          autoFocus
+                                      />
+                                      {buscaCliente && (
+                                          <button
+                                              className="btn-clear-search"
+                                              onClick={() =>
+                                                  setBuscaCliente("")
+                                              }
+                                          >
+                                              <span className="material-symbols-rounded">
+                                                  close
+                                              </span>
+                                          </button>
+                                      )}
+                                  </div>
+
+                                  <div className="busca-clientes-list">
+                                      {clientesFiltrados.length === 0 ? (
+                                          <p className="no-results-text">
+                                              Nenhum cliente ou pet encontrado
+                                              para "{buscaCliente}".
+                                          </p>
+                                      ) : (
+                                          clientesFiltrados
+                                              .slice(0, 10)
+                                              .map((cliente) => (
+                                                  <div
+                                                      key={cliente.id}
+                                                      className="cliente-box-item"
+                                                  >
+                                                      <div
+                                                          className={`cliente-header-item ${
+                                                              clienteSelecionado?.id ===
+                                                              cliente.id
+                                                                  ? "selected"
+                                                                  : ""
+                                                          }`}
+                                                          onClick={() =>
+                                                              handleSelectCliente(
+                                                                  cliente,
+                                                              )
+                                                          }
+                                                      >
+                                                          <div>
+                                                              <strong>
+                                                                  {cliente.nome}
+                                                              </strong>
+                                                              <span className="cliente-phone-badge">
+                                                                  {
+                                                                      cliente.telefone
+                                                                  }
+                                                              </span>
+                                                          </div>
+                                                      </div>
+
+                                                      <div className="pets-sublist">
+                                                          {cliente.pets?.map(
+                                                              (pet) => (
+                                                                  <button
+                                                                      key={
+                                                                          pet.id
+                                                                      }
+                                                                      className={`btn-pet-chip ${
+                                                                          petSelecionado?.id ===
+                                                                          pet.id
+                                                                              ? "active"
+                                                                              : ""
+                                                                      }`}
+                                                                      onClick={() =>
+                                                                          handleSelectPet(
+                                                                              pet,
+                                                                              cliente,
+                                                                          )
+                                                                      }
+                                                                  >
+                                                                      🐾{" "}
+                                                                      {pet.nome}{" "}
+                                                                      <small>
+                                                                          (
+                                                                          {pet.especie ||
+                                                                              "Pet"}
+                                                                          )
+                                                                      </small>
+                                                                  </button>
+                                                              ),
+                                                          )}
+                                                          {(!cliente.pets ||
+                                                              cliente.pets
+                                                                  .length ===
+                                                                  0) && (
+                                                              <span className="no-pets-text">
+                                                                  Nenhum pet
+                                                                  cadastrado.
+                                                              </span>
+                                                          )}
+                                                      </div>
+                                                  </div>
+                                              ))
+                                      )}
+                                  </div>
+                              </div>
+                          )}
+
+                          {/* ETAPA 2: SERVIÇOS */}
+                          {step === 2 && (
+                              <div className="step-content">
+                                  <h4>
+                                      Escolha os Serviços para{" "}
+                                      {petSelecionado?.nome}
+                                  </h4>
+                                  <div className="servicos-selection-list">
+                                      {listaServicos.map((servico) => {
+                                          const selecionado =
+                                              servicosSelecionados.some(
+                                                  (s) =>
+                                                      s.servico_id ===
+                                                      servico.id,
+                                              );
+                                          return (
+                                              <div
+                                                  key={servico.id}
+                                                  className={`servico-card-item ${selecionado ? "selected" : ""}`}
+                                                  onClick={() =>
+                                                      handleToggleServico(
+                                                          servico,
+                                                      )
+                                                  }
+                                              >
+                                                  <div>
+                                                      <strong>
+                                                          {servico.nome}
+                                                      </strong>
+                                                      <small>
+                                                          {servico.duracao} min
+                                                      </small>
+                                                  </div>
+                                                  <span className="preco">
+                                                      R${" "}
+                                                      {servico.preco_padrao.toFixed(
+                                                          2,
+                                                      )}
+                                                  </span>
+                                              </div>
+                                          );
+                                      })}
+                                  </div>
+                                  <div className="total-bar">
+                                      Total:{" "}
+                                      <strong>
+                                          R$ {valorTotalServicos.toFixed(2)}
+                                      </strong>
+                                  </div>
+                              </div>
+                          )}
+
+                          {/* ETAPA 3: DATA E HORA */}
+                          {step === 3 && (
+                              <div className="step-content">
+                                  <h4>Data e Horário do Atendimento</h4>
+                                  <div className="form-grid-2">
+                                      <div className="form-group">
+                                          <label>Data:</label>
+                                          <input
+                                              type="date"
+                                              value={agendamentoData.data}
+                                              onChange={(e) =>
+                                                  setAgendamentoData({
+                                                      ...agendamentoData,
+                                                      data: e.target.value,
+                                                  })
+                                              }
+                                          />
+                                      </div>
+                                      <div className="form-group">
+                                          <label>Hora Início:</label>
+                                          <input
+                                              type="time"
+                                              value={
+                                                  agendamentoData.hora_inicio
+                                              }
+                                              onChange={(e) =>
+                                                  setAgendamentoData({
+                                                      ...agendamentoData,
+                                                      hora_inicio:
+                                                          e.target.value,
+                                                  })
+                                              }
+                                          />
+                                      </div>
+                                      <div className="form-group">
+                                          <label>Hora Fim:</label>
+                                          <input
+                                              type="time"
+                                              value={agendamentoData.hora_fim}
+                                              onChange={(e) =>
+                                                  setAgendamentoData({
+                                                      ...agendamentoData,
+                                                      hora_fim: e.target.value,
+                                                  })
+                                              }
+                                          />
+                                      </div>
+                                  </div>
+                                  <div className="form-group">
+                                      <label>Observações:</label>
+                                      <textarea
+                                          rows="3"
+                                          placeholder="Ex: Cuidados especiais, alergias..."
+                                          value={agendamentoData.observacoes}
+                                          onChange={(e) =>
+                                              setAgendamentoData({
+                                                  ...agendamentoData,
+                                                  observacoes: e.target.value,
+                                              })
+                                          }
+                                      />
+                                  </div>
+                              </div>
+                          )}
+
+                          {/* ETAPA 4: RESUMO */}
+                          {step === 4 && (
+                              <div className="step-content resumo-box">
+                                  <h4>Confirmação do Agendamento</h4>
+                                  <div className="resumo-item">
+                                      <span>Tutor:</span>{" "}
+                                      <strong>
+                                          {clienteSelecionado?.nome}
+                                      </strong>
+                                  </div>
+                                  <div className="resumo-item">
+                                      <span>Pet:</span>{" "}
+                                      <strong>{petSelecionado?.nome}</strong>
+                                  </div>
+                                  <div className="resumo-item">
+                                      <span>Data/Hora:</span>{" "}
+                                      <strong>
+                                          {agendamentoData.data} das{" "}
+                                          {agendamentoData.hora_inicio} às{" "}
+                                          {agendamentoData.hora_fim}
+                                      </strong>
+                                  </div>
+                                  <div className="resumo-item">
+                                      <span>Serviços:</span>
+                                      <ul>
+                                          {servicosSelecionados.map((s) => (
+                                              <li key={s.servico_id}>
+                                                  {s.nome} - R${" "}
+                                                  {parseFloat(
+                                                      s.valor_cobrado,
+                                                  ).toFixed(2)}
+                                              </li>
+                                          ))}
+                                      </ul>
+                                  </div>
+                                  <div className="resumo-item total">
+                                      <span>Valor Total:</span>{" "}
+                                      <strong>
+                                          R$ {valorTotalServicos.toFixed(2)}
+                                      </strong>
+                                  </div>
+                              </div>
+                          )}
+                      </div>
+
+                      {/* Footer */}
+                      <div className="modal-footer footer-stepper">
+                          {step > 1 && (
+                              <button
+                                  className="btn-secondary"
+                                  onClick={() => setStep(step - 1)}
+                              >
+                                  Voltar
+                              </button>
+                          )}
+
+                          {step < 4 ? (
+                              <button
+                                  className="btn-modal-primary"
+                                  disabled={
+                                      (step === 1 && !petSelecionado) ||
+                                      (step === 2 &&
+                                          servicosSelecionados.length === 0)
+                                  }
+                                  onClick={() => setStep(step + 1)}
+                              >
+                                  Próximo Passo
+                              </button>
+                          ) : (
+                              <button
+                                  className="btn-modal-primary btn-confirm"
+                                  onClick={handleSalvarAgendamento}
+                              >
+                                  Confirmar e Agendar
+                              </button>
+                          )}
+                      </div>
+                  </div>
+              </div>
+          )}
+      </div>
   );
 }
