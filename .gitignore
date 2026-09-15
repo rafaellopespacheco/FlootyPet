@@ -1,2 +1,86 @@
-database/*.db
+# =========================
+# Dependências
+# =========================
+
 node_modules/
+**/node_modules/
+
+
+# =========================
+# Build / Vite
+# =========================
+
+frontend/dist/
+**/dist/
+
+.vite/
+
+
+# =========================
+# Banco de dados local
+# =========================
+
+*.db
+*.db-shm
+*.db-wal
+
+
+# =========================
+# Variáveis de ambiente
+# =========================
+
+.env
+.env.*
+!.env.example
+
+
+# =========================
+# Uploads / arquivos gerados
+# =========================
+
+backend/uploads/
+
+
+# =========================
+# Logs
+# =========================
+
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+
+# =========================
+# Sistema operacional
+# =========================
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+
+
+# =========================
+# Editores
+# =========================
+
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+.idea/
+
+
+# =========================
+# Temporários
+# =========================
+
+*.tmp
+*.temp
+*.swp

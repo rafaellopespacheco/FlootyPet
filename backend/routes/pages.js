@@ -18,7 +18,7 @@ router.get(["/", "/login"], (req, res) => {
     );
     res.set("Pragma", "no-cache");
     res.set("Expires", "0");
-    res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
+    res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"));
 });
 
 router.use(authPage, (req, res) => {
@@ -28,7 +28,7 @@ router.use(authPage, (req, res) => {
     );
     res.set("Pragma", "no-cache");
     res.set("Expires", "0");
-    res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
+    res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"));
 });
 
 module.exports = router;

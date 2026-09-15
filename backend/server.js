@@ -32,11 +32,9 @@ app.use(require("./routes/notificações"));
 app.use(require("./routes/agenda"));
 app.use(require("./routes/servicos"));
 
-app.use(express.static("public"));
-app.use(
-    "/assets",
-    express.static(path.join(__dirname, "frontend/dist/assets")),
-);
+app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "../frontend/dist")));
+
 app.use(require("./routes/pages"));
 
 app.listen(3000, () => {
