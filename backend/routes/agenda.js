@@ -10,26 +10,27 @@ router.get("/api/agenda", authApi, (req, res) => {
   const dataFiltro = req.query.data || hojeLocal;
 
   // Query ajustada com DATE() e LEFT JOINs
-  const query = `
-    SELECT 
-      a.id,
-      a.data,
-      a.hora_inicio,
-      a.hora_fim,
-      a.status,
-      a.observacoes,
-      c.nome AS cliente_nome,
-      c.telefone AS cliente_telefone,
-      p.nome AS pet_nome,
-      GROUP_CONCAT(s.id || ':' || s.nome || ':' || s.categoria || ':' || ags.valor_cobrado, ';') AS servicos_str
-    FROM agendamentos a
-    LEFT JOIN clientes c ON a.cliente_id = c.id
-    LEFT JOIN pets p ON a.pet_id = p.id
-    LEFT JOIN agendamento_servicos ags ON a.id = ags.agendamento_id
-    LEFT JOIN servicos s ON ags.servico_id = s.id
-    WHERE DATE(a.data) = DATE(?)
-    GROUP BY a.id
-    ORDER BY a.hora_inicio ASC
+  const query = `SELECT 
+  a.id,
+  a.data,
+  a.hora_inicio,
+  a.hora_fim,
+  a.status,
+  a.observacoes,
+  c.nome AS cliente_nome,
+  c.telefone AS cliente_telefone,
+  p.nome AS pet_nome,
+  r.nome AS pet_raca,
+  GROUP_CONCAT(s.id || ':' || s.nome || ':' || s.categoria || ':' || ags.valor_cobrado, ';') AS servicos_str
+FROM agendamentos a
+LEFT JOIN clientes c ON a.cliente_id = c.id
+LEFT JOIN pets p ON a.pet_id = p.id
+LEFT JOIN racas r ON p.raca_id = r.id
+LEFT JOIN agendamento_servicos ags ON a.id = ags.agendamento_id
+LEFT JOIN servicos s ON ags.servico_id = s.id
+WHERE DATE(a.data) = DATE(?)
+GROUP BY a.id
+ORDER BY a.hora_inicio ASC
   `;
 
   db.all(query, [dataFiltro], (err, rows) => {
