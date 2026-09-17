@@ -11,6 +11,7 @@ import InfoCliente from "./pages/InfoCliente";
 import CriarNotificacaoForm from "./pages/CriarNotificacaoForm";
 import Config from "./pages/Config";
 import { useEffect, useState } from "react";
+import ConfigServicos from "./pages/ConfigServicos";
 
 function HomeRedirect() {
     const [loading, setLoading] = useState(true);
@@ -66,10 +67,15 @@ function App() {
                         path="/admin/notificacoes/criar"
                         element={<CriarNotificacaoForm />}
                     ></Route>
+                    <Route
+                        path="/config/servicos"
+                        element={<ConfigServicos />}
+                    ></Route>
                 </Route>
                 <Route path="/" element={<HomeRedirect />} />
                 <Route path="/login" element={<Login />}></Route>
                 <Route path="/sobre" element={<Sobre />}></Route>
+
                 <Route path="*" element={<NotFound />}></Route>
             </Routes>
         </BrowserRouter>

@@ -16,11 +16,10 @@ export default function Profile() {
             toast.error(dado.erro);
             return;
         }
-        toast.warning(dado.message)
+        toast.warning(dado.message);
         navigate("/", {
-            replace: true
-        })
-        
+            replace: true,
+        });
     }
 
     const [usuario, setUsuario] = useState(null);
@@ -30,25 +29,25 @@ export default function Profile() {
     useEffect(() => {
         async function carregar() {
             const dados = await buscarUsuario();
-            setUsuario(dados)
+            setUsuario(dados);
         }
 
-        carregar()
-    }, [])
+        carregar();
+    }, []);
 
     const ref = useRef();
     useEffect(() => {
         const handleClick = (e) => {
-            if(!ref.current?.contains(e.target)) {
+            if (!ref.current?.contains(e.target)) {
                 setOpen(false);
             }
         };
 
         document.addEventListener("mousedown", handleClick);
         return () => {
-            document.removeEventListener("mousedown", handleClick)
-        }
-    }, [])
+            document.removeEventListener("mousedown", handleClick);
+        };
+    }, []);
 
     return (
         <>
@@ -59,23 +58,51 @@ export default function Profile() {
                         <p className="conta-email">{usuario?.email}</p>
                     </div>
 
-                    <img src="https://i.pinimg.com/originals/31/ec/2c/31ec2ce212492e600b8de27f38846ed7.jpg" alt=""></img>
+                    <img
+                        src="https://i.pinimg.com/originals/31/ec/2c/31ec2ce212492e600b8de27f38846ed7.jpg"
+                        alt=""
+                    ></img>
                 </button>
                 {open && (
                     <div className="dropdown">
-                        <button onClick={() => {
-                            setOpen(false)
-                            setOpenProfile(true)
-                        }}><span className="material-symbols-rounded">account_circle</span> Meu Perfil</button>
-                        <button disabled><span className="material-symbols-rounded">settings</span> Configuração</button>
+                        <button
+                            onClick={() => {
+                                setOpen(false);
+                                setOpenProfile(true);
+                            }}
+                        >
+                            <span className="material-symbols-rounded">
+                                account_circle
+                            </span>{" "}
+                            Meu Perfil
+                        </button>
+                        <button
+                            onClick={() => {
+                                setOpen(false);
+                                navigate("/config");
+                            }}
+                        >
+                            <span className="material-symbols-rounded">
+                                settings
+                            </span>{" "}
+                            Configuração
+                        </button>
                         <hr />
-                        <button onClick={logoutButton}><span className="material-symbols-rounded">logout</span> Sair</button>
+                        <button onClick={logoutButton}>
+                            <span className="material-symbols-rounded">
+                                logout
+                            </span>{" "}
+                            Sair
+                        </button>
                     </div>
                 )}
             </div>
             {openProfile && (
-                <ModalPerfilUser 
-                    onClose={() => {setOpenProfile(false)}}
+                <ModalPerfilUser
+                    onClose={() => {
+                        setOpenProfile(false);
+                    }}
+                    onSaved={(dados) => setUsuario(dados)}
                 />
             )}
         </>

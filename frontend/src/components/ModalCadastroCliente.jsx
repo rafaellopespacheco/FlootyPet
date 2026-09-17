@@ -17,7 +17,7 @@ export default function ModalCadastroCliente({ aberto, onClose, onSuccess }) {
         complemento: "",
         endereco: "",
         bairro: "",
-        cidade: ""
+        cidade: "",
     });
 
     const navigate = useNavigate();
@@ -41,7 +41,7 @@ export default function ModalCadastroCliente({ aberto, onClose, onSuccess }) {
                 complemento: "",
                 endereco: "",
                 bairro: "",
-                cidade: ""
+                cidade: "",
             });
             setPetsAdicionados([]);
             setErrors({});
@@ -78,9 +78,9 @@ export default function ModalCadastroCliente({ aberto, onClose, onSuccess }) {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        setFormData((prev) => ({ ...prev, [name]: value }));
         if (errors[name]) {
-            setErrors(prev => ({ ...prev, [name]: false }));
+            setErrors((prev) => ({ ...prev, [name]: false }));
         }
     };
 
@@ -90,16 +90,19 @@ export default function ModalCadastroCliente({ aberto, onClose, onSuccess }) {
         valor = valor.slice(0, 11);
 
         if (valor.length > 9) {
-            valor = valor.replace(/^(\d{3})(\d{3})(\d{3})(\d{1,2})$/, "$1.$2.$3-$4");
+            valor = valor.replace(
+                /^(\d{3})(\d{3})(\d{3})(\d{1,2})$/,
+                "$1.$2.$3-$4",
+            );
         } else if (valor.length > 6) {
             valor = valor.replace(/^(\d{3})(\d{3})(\d{1,3})$/, "$1.$2.$3");
         } else if (valor.length > 3) {
             valor = valor.replace(/^(\d{3})(\d{1,3})$/, "$1.$2");
         }
 
-        setFormData(prev => ({ ...prev, cpf: valor }));
+        setFormData((prev) => ({ ...prev, cpf: valor }));
         if (errors.cpf) {
-            setErrors(prev => ({ ...prev, cpf: false }));
+            setErrors((prev) => ({ ...prev, cpf: false }));
         }
     };
 
@@ -114,7 +117,7 @@ export default function ModalCadastroCliente({ aberto, onClose, onSuccess }) {
 
         // Se o usuário apagar tudo, mantém o prefixo
         if (value.length < 4) {
-            setFormData(prev => ({ ...prev, telefone: "+55 " }));
+            setFormData((prev) => ({ ...prev, telefone: "+55 " }));
             return;
         }
 
@@ -134,9 +137,9 @@ export default function ModalCadastroCliente({ aberto, onClose, onSuccess }) {
             valorFormatado += "-" + numeros.slice(7, 11);
         }
 
-        setFormData(prev => ({ ...prev, telefone: valorFormatado }));
+        setFormData((prev) => ({ ...prev, telefone: valorFormatado }));
         if (errors.telefone) {
-            setErrors(prev => ({ ...prev, telefone: false }));
+            setErrors((prev) => ({ ...prev, telefone: false }));
         }
     };
 
@@ -149,12 +152,14 @@ export default function ModalCadastroCliente({ aberto, onClose, onSuccess }) {
             valor = valor.replace(/^(\d{5})(\d{1,3})$/, "$1-$2");
         }
 
-        setFormData(prev => ({ ...prev, cep: valor }));
+        setFormData((prev) => ({ ...prev, cep: valor }));
 
         const cepPuro = valor.replace(/\D/g, "");
         if (cepPuro.length === 8) {
             try {
-                const resposta = await fetch(`https://viacep.com.br/ws/${cepPuro}/json/`);
+                const resposta = await fetch(
+                    `https://viacep.com.br/ws/${cepPuro}/json/`,
+                );
                 const dados = await resposta.json();
 
                 if (dados.erro) {
@@ -162,12 +167,12 @@ export default function ModalCadastroCliente({ aberto, onClose, onSuccess }) {
                     return;
                 }
 
-                setFormData(prev => ({
+                setFormData((prev) => ({
                     ...prev,
                     endereco: dados.logradouro || "",
                     bairro: dados.bairro || "",
                     cidade: dados.localidade || "",
-                    uf: dados.uf || ""
+                    uf: dados.uf || "",
                 }));
             } catch (err) {
                 toast.error("Erro ao buscar CEP.");
@@ -179,14 +184,14 @@ export default function ModalCadastroCliente({ aberto, onClose, onSuccess }) {
     const handleSavePet = (dadosPet) => {
         if (editingPetIndex !== null) {
             // Edição
-            setPetsAdicionados(prev => {
+            setPetsAdicionados((prev) => {
                 const novos = [...prev];
                 novos[editingPetIndex] = dadosPet;
                 return novos;
             });
         } else {
             // Cadastro
-            setPetsAdicionados(prev => [...prev, dadosPet]);
+            setPetsAdicionados((prev) => [...prev, dadosPet]);
         }
         setPetModalAberto(false);
         setEditingPetIndex(null);
@@ -200,7 +205,7 @@ export default function ModalCadastroCliente({ aberto, onClose, onSuccess }) {
 
     // Remover pet temporário da lista
     const handleRemovePetClick = (index) => {
-        setPetsAdicionados(prev => prev.filter((_, i) => i !== index));
+        setPetsAdicionados((prev) => prev.filter((_, i) => i !== index));
     };
 
     // Validação e Envio de Cliente e seus Pets
@@ -239,7 +244,7 @@ export default function ModalCadastroCliente({ aberto, onClose, onSuccess }) {
             const response = await fetch("/api/clientes", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
                     nome: formData.nome.trim(),
@@ -253,8 +258,8 @@ export default function ModalCadastroCliente({ aberto, onClose, onSuccess }) {
                     logradouro: formData.endereco,
                     bairro: formData.bairro,
                     cidade: formData.cidade,
-                    uf: formData.uf
-                })
+                    uf: formData.uf,
+                }),
             });
 
             const dadosCliente = await response.json();
@@ -280,11 +285,11 @@ export default function ModalCadastroCliente({ aberto, onClose, onSuccess }) {
 
             // Se existirem pets, salvá-los sequencialmente
             if (petsAdicionados.length > 0) {
-                const petPromises = petsAdicionados.map(pet => {
+                const petPromises = petsAdicionados.map((pet) => {
                     return fetch(`/api/clientes/${clienteId}/pets`, {
                         method: "POST",
                         headers: {
-                            "Content-Type": "application/json"
+                            "Content-Type": "application/json",
                         },
                         body: JSON.stringify({
                             nome: pet.nome,
@@ -301,9 +306,9 @@ export default function ModalCadastroCliente({ aberto, onClose, onSuccess }) {
                             enfeites: pet.enfeites,
                             shampoo: pet.shampoo,
                             cor: pet.cor,
-                            cuidados_especiais: pet.cuidados_especiais
-                        })
-                    }).then(r => r.json());
+                            cuidados_especiais: pet.cuidados_especiais,
+                        }),
+                    }).then((r) => r.json());
                 });
 
                 await Promise.all(petPromises);
@@ -312,7 +317,10 @@ export default function ModalCadastroCliente({ aberto, onClose, onSuccess }) {
             toast.success("Cliente cadastrado com sucesso!");
             onClose();
             if (onSuccess) {
-                onSuccess();
+                onSuccess(
+                    dadosCliente,
+                    e.nativeEvent.submitter?.value || "cadastrar",
+                );
             }
         } catch (err) {
             console.error(err);
@@ -326,11 +334,19 @@ export default function ModalCadastroCliente({ aberto, onClose, onSuccess }) {
                 <div className="modal-addcliente">
                     <div className="modal-header">
                         <h2>Cadastrar novo cliente</h2>
-                        <button type="button" id="fechar-modal" onClick={onClose}>
+                        <button
+                            type="button"
+                            id="fechar-modal"
+                            onClick={onClose}
+                        >
                             &times;
                         </button>
                     </div>
-                    <form className="modal-body" onSubmit={handleFormSubmit} id="form-cadastro-cliente">
+                    <form
+                        className="modal-body"
+                        onSubmit={handleFormSubmit}
+                        id="form-cadastro-cliente"
+                    >
                         <div className="form-group">
                             <label htmlFor="nome">Nome *</label>
                             <input
@@ -358,7 +374,9 @@ export default function ModalCadastroCliente({ aberto, onClose, onSuccess }) {
                                 />
                             </div>
                             <div className="form-group">
-                                <label htmlFor="datanasc">Data de nascimento</label>
+                                <label htmlFor="datanasc">
+                                    Data de nascimento
+                                </label>
                                 <input
                                     type="date"
                                     name="datanasc"
@@ -479,7 +497,7 @@ export default function ModalCadastroCliente({ aberto, onClose, onSuccess }) {
                                 color: "#444",
                                 fontSize: "1.1rem",
                                 borderBottom: "1px solid #eee",
-                                paddingBottom: "5px"
+                                paddingBottom: "5px",
                             }}
                         >
                             Pets deste Cliente
@@ -492,7 +510,7 @@ export default function ModalCadastroCliente({ aberto, onClose, onSuccess }) {
                                 flexWrap: "wrap",
                                 gap: "10px",
                                 marginBottom: "15px",
-                                marginTop: "5px"
+                                marginTop: "5px",
                             }}
                         >
                             {petsAdicionados.length === 0 ? (
@@ -501,7 +519,7 @@ export default function ModalCadastroCliente({ aberto, onClose, onSuccess }) {
                                     style={{
                                         color: "#999",
                                         fontStyle: "italic",
-                                        fontSize: "0.9rem"
+                                        fontSize: "0.9rem",
                                     }}
                                 >
                                     Nenhum pet adicionado ainda.
@@ -517,32 +535,49 @@ export default function ModalCadastroCliente({ aberto, onClose, onSuccess }) {
                                             />
                                             <span
                                                 className={`pet-temp-badge-gender ${
-                                                    pet.sexo === "fêmea" ? "femea" : "macho"
+                                                    pet.sexo === "fêmea"
+                                                        ? "femea"
+                                                        : "macho"
                                                 }`}
                                             >
-                                                {pet.sexo === "fêmea" ? "🎀" : "👔"}
+                                                {pet.sexo === "fêmea"
+                                                    ? "🎀"
+                                                    : "👔"}
                                             </span>
                                         </div>
                                         <div className="pet-temp-info">
-                                            <span className="pet-temp-name">{pet.nome}</span>
-                                            <span className="pet-temp-raca">{pet.raca || "Sem raça definida"}</span>
+                                            <span className="pet-temp-name">
+                                                {pet.nome}
+                                            </span>
+                                            <span className="pet-temp-raca">
+                                                {pet.raca ||
+                                                    "Sem raça definida"}
+                                            </span>
                                         </div>
                                         <div className="pet-temp-actions">
                                             <button
                                                 type="button"
                                                 className="btn-edit-temp"
                                                 title="Editar Pet"
-                                                onClick={() => handleEditPetClick(index)}
+                                                onClick={() =>
+                                                    handleEditPetClick(index)
+                                                }
                                             >
-                                                <span className="material-symbols-rounded">edit</span>
+                                                <span className="material-symbols-rounded">
+                                                    edit
+                                                </span>
                                             </button>
                                             <button
                                                 type="button"
                                                 className="btn-delete-temp"
                                                 title="Remover Pet"
-                                                onClick={() => handleRemovePetClick(index)}
+                                                onClick={() =>
+                                                    handleRemovePetClick(index)
+                                                }
                                             >
-                                                <span className="material-symbols-rounded">delete</span>
+                                                <span className="material-symbols-rounded">
+                                                    delete
+                                                </span>
                                             </button>
                                         </div>
                                     </div>
@@ -569,18 +604,36 @@ export default function ModalCadastroCliente({ aberto, onClose, onSuccess }) {
                                 padding: "8px 12px",
                                 borderRadius: "8px",
                                 cursor: "pointer",
-                                fontWeight: "600"
+                                fontWeight: "600",
                             }}
                         >
-                            <span className="material-symbols-rounded" style={{ fontSize: "18px" }}>
+                            <span
+                                className="material-symbols-rounded"
+                                style={{ fontSize: "18px" }}
+                            >
                                 add_circle
                             </span>{" "}
                             Adicionar Pet
                         </button>
                     </form>
                     <div className="modal-footer">
-                        <button type="submit" form="form-cadastro-cliente" className="button" id="cadastrar-button">
+                        <button
+                            type="submit"
+                            value="cadastrar"
+                            form="form-cadastro-cliente"
+                            className="button"
+                            id="cadastrar-button"
+                        >
                             Cadastrar
+                        </button>
+                        <button
+                            type="submit"
+                            value="cadastrar-agendar"
+                            form="form-cadastro-cliente"
+                            className="button button-primary-alt"
+                            id="cadastrar-agendar-button"
+                        >
+                            Cadastrar e agendar
                         </button>
                     </div>
                 </div>
@@ -594,7 +647,11 @@ export default function ModalCadastroCliente({ aberto, onClose, onSuccess }) {
                     setEditingPetIndex(null);
                 }}
                 onSave={handleSavePet}
-                petData={editingPetIndex !== null ? petsAdicionados[editingPetIndex] : null}
+                petData={
+                    editingPetIndex !== null
+                        ? petsAdicionados[editingPetIndex]
+                        : null
+                }
             />
         </>
     );
