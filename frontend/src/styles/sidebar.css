@@ -62,10 +62,10 @@
 
 .sidebar .link .material-symbols-rounded {
     font-variation-settings:
-    'FILL' 1,
-    'wght' 400,
-    'GRAD' 0,
-    'opsz' 24;
+        "FILL" 1,
+        "wght" 400,
+        "GRAD" 0,
+        "opsz" 24;
     font-size: 30px;
     width: 30px;
     margin-right: 10px;
@@ -76,4 +76,92 @@
     text-align: center;
     font-size: 0.8em;
     color: var(--sidebar_text);
+}
+
+.config-back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    width: fit-content;
+    padding: 8px 10px;
+    border: 1px solid rgba(226, 226, 226, 0.2);
+    border-radius: 6px;
+    color: var(--sidebar_text);
+    background: transparent;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition:
+        background-color 0.2s,
+        border-color 0.2s;
+}
+
+.config-back-button:hover {
+    border-color: rgba(226, 226, 226, 0.45);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.config-back-button .material-symbols-rounded {
+    font-size: 19px;
+}
+
+.config-sidebar-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 30px;
+    padding: 16px 0 22px;
+    border-bottom: 1px solid rgba(226, 226, 226, 0.14);
+}
+
+.config-sidebar-icon {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    color: #fff;
+    background: var(--destaque_color);
+}
+
+.config-sidebar-icon .material-symbols-rounded {
+    font-size: 24px;
+}
+
+.config-sidebar-title strong,
+.config-sidebar-title small {
+    display: block;
+}
+
+.config-sidebar-title strong {
+    color: #fff;
+    font-size: 1.05rem;
+}
+
+.config-sidebar-title small {
+    margin-top: 3px;
+    color: #aeb4c5;
+    font-size: 0.73rem;
+}
+
+.config-sidebar-label {
+    display: block;
+    margin: 22px 10px 7px;
+    color: #8f97ad;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+}
+
+.config-sidebar-footer {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 12px 0 0;
+    border-top: 1px solid rgba(226, 226, 226, 0.14);
+    color: #8f97ad;
+    font-size: 0.75rem;
+}
+
+.config-sidebar-footer .material-symbols-rounded {
+    font-size: 17px;
 }

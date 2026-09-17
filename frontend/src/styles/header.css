@@ -1,11 +1,43 @@
-
-
 header {
     width: 100%;
     display: flex;
     align-items: center;
     padding: 10px 40px;
     justify-content: space-between;
+}
+
+.header-new-appointment {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-left: auto;
+    margin-right: 18px;
+    padding: 9px 13px;
+    border: 0;
+    border-radius: 7px;
+    color: #fff;
+    background: var(--destaque_color);
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.header-new-appointment:hover {
+    background: var(--sidebar_color);
+}
+.header-new-appointment .material-symbols-rounded {
+    font-size: 19px;
+}
+
+@media (max-width: 760px) {
+    .header-new-appointment {
+        margin-right: 8px;
+        padding: 8px;
+        font-size: 0;
+    }
+
+    .header-new-appointment .material-symbols-rounded {
+        font-size: 21px;
+    }
 }
 
 header h1 {
@@ -43,7 +75,7 @@ header .conta-container .dropdown button {
     gap: 5px;
     padding: 8px;
     border-radius: 5px;
-    transition: .3;
+    transition: 0.3;
 }
 
 header .conta-container .dropdown button:hover {
@@ -66,10 +98,10 @@ header .conta-container .dropdown {
 header .conta-container .dropdown .material-symbols-rounded {
     font-size: 16px;
     font-variation-settings:
-    'FILL' 1,
-    'wght' 400,
-    'GRAD' 0,
-    'opsz' 24
+        "FILL" 1,
+        "wght" 400,
+        "GRAD" 0,
+        "opsz" 24;
 }
 
 header .conta-container hr {

@@ -1,0 +1,194 @@
+.config-page {
+    flex: 1;
+    overflow-y: auto;
+    background: #f1f3f7;
+    padding: 32px clamp(20px, 5vw, 64px) 48px;
+}
+
+.config-intro {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    max-width: 1050px;
+    margin: 0 auto 24px;
+}
+
+.config-intro > .material-symbols-rounded {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    color: #fff;
+    background: var(--destaque_color);
+    font-size: 28px;
+}
+
+.config-intro h2 {
+    color: var(--sidebar_color);
+    font-size: 1.55rem;
+    margin-bottom: 4px;
+}
+
+.config-intro p,
+.config-section-heading p {
+    color: #687083;
+}
+
+.config-secondary-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-left: auto;
+    padding: 10px 14px;
+    border: 1px solid #d8d3ff;
+    border-radius: 7px;
+    color: var(--destaque_color);
+    background: #fff;
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.config-secondary-link:hover {
+    background: #f5f3ff;
+}
+
+.config-secondary-link .material-symbols-rounded {
+    font-size: 19px;
+}
+
+.config-form {
+    max-width: 1050px;
+    margin: 0 auto;
+}
+
+.config-section {
+    padding: 26px;
+    margin-bottom: 20px;
+    background: #fff;
+    border: 1px solid #e2e5ec;
+    border-radius: 12px;
+    box-shadow: 0 5px 18px rgba(21, 26, 45, 0.04);
+}
+
+.config-section-heading {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 22px;
+}
+
+.config-section-heading > .material-symbols-rounded {
+    color: var(--destaque_color);
+    font-size: 25px;
+}
+
+.config-section-heading h3 {
+    color: #252b3b;
+    font-size: 1.05rem;
+    margin-bottom: 4px;
+}
+
+.config-fields {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.config-fields-main {
+    grid-template-columns: 2fr 1fr;
+}
+
+.config-fields label {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    color: #42495a;
+    font-size: 0.88rem;
+    font-weight: 700;
+}
+
+.config-fields input {
+    width: 100%;
+    min-height: 42px;
+    padding: 10px 12px;
+    border: 1px solid #cfd4df;
+    border-radius: 7px;
+    color: #252b3b;
+    background: #fff;
+    font-size: 0.95rem;
+    outline: none;
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s;
+}
+
+.config-fields input:focus {
+    border-color: var(--destaque_color);
+    box-shadow: 0 0 0 3px rgba(124, 92, 250, 0.14);
+}
+
+.config-fields .field-wide {
+    grid-column: span 2;
+}
+
+.config-fields .field-small {
+    grid-column: span 1;
+}
+
+.config-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.config-actions .button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+}
+
+.config-actions .button:disabled {
+    cursor: wait;
+    opacity: 0.7;
+}
+
+.config-actions .material-symbols-rounded {
+    font-size: 20px;
+}
+
+.config-status {
+    max-width: 1050px;
+    margin: 0 auto;
+    color: #687083;
+}
+
+@media (max-width: 760px) {
+    .config-page {
+        padding: 24px 16px 36px;
+    }
+
+    .config-section {
+        padding: 20px 16px;
+    }
+
+    .config-secondary-link {
+        margin-left: 0;
+    }
+
+    .config-fields,
+    .config-fields-main {
+        grid-template-columns: 1fr;
+    }
+
+    .config-fields .field-wide,
+    .config-fields .field-small {
+        grid-column: span 1;
+    }
+
+    .config-actions .button {
+        width: 100%;
+        justify-content: center;
+    }
+}

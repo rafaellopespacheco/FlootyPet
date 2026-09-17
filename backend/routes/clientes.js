@@ -1,31 +1,34 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const db = require('../database/db');
-const authApi = require('../middlewares/authApi');
-
+const db = require("../database/db");
+const authApi = require("../middlewares/authApi");
 
 router.get("/api/clientes", authApi, (req, res) => {
     db.all(`SELECT * FROM clientes`, [], (err, clientes) => {
         if (err) {
             return res.status(500).json({ erro: err.message });
         }
-        db.all(`SELECT id, cliente_id, nome, sexo, especie, cor FROM pets`, [], (err, pets) => {
-            if (err) {
-                return res.json(clientes.map(c => ({ ...c, pets: [] })));
-            }
-            const petsByCliente = {};
-            pets.forEach(pet => {
-                if (!petsByCliente[pet.cliente_id]) {
-                    petsByCliente[pet.cliente_id] = [];
+        db.all(
+            `SELECT id, cliente_id, nome, sexo, especie, cor, raca_id FROM pets`,
+            [],
+            (err, pets) => {
+                if (err) {
+                    return res.json(clientes.map((c) => ({ ...c, pets: [] })));
                 }
-                petsByCliente[pet.cliente_id].push(pet);
-            });
-            const result = clientes.map(c => ({
-                ...c,
-                pets: petsByCliente[c.id] || []
-            }));
-            res.json(result);
-        });
+                const petsByCliente = {};
+                pets.forEach((pet) => {
+                    if (!petsByCliente[pet.cliente_id]) {
+                        petsByCliente[pet.cliente_id] = [];
+                    }
+                    petsByCliente[pet.cliente_id].push(pet);
+                });
+                const result = clientes.map((c) => ({
+                    ...c,
+                    pets: petsByCliente[c.id] || [],
+                }));
+                res.json(result);
+            },
+        );
     });
 });
 
@@ -44,55 +47,66 @@ router.post("/api/clientes", authApi, function (req, res) {
     let uf = req.body.uf;
     let notificacao = req.body.notificacao ?? 1;
 
-    if (!nome || !telefone) return res.status(400).json({ erro: "Você precisa preencher os campos obrigatórios" })
-    
-    db.get("SELECT * FROM clientes WHERE telefone = ?", [telefone], function (err, row) {
-        if (err) {
-            return res.status(400).json({ erro: "Houve um erro ao verificar duplicatas de clientes" })
-        }
-        if (row) {
-            return res.status(400).json({
-                erro: "Já existe um cliente cadastrado com esse número!",
-                nome: row.nome,
-                id: row.id
-            })
-        }
+    if (!nome || !telefone)
+        return res
+            .status(400)
+            .json({ erro: "Você precisa preencher os campos obrigatórios" });
 
-        db.run(
-            `
+    db.get(
+        "SELECT * FROM clientes WHERE telefone = ?",
+        [telefone],
+        function (err, row) {
+            if (err) {
+                return res
+                    .status(400)
+                    .json({
+                        erro: "Houve um erro ao verificar duplicatas de clientes",
+                    });
+            }
+            if (row) {
+                return res.status(400).json({
+                    erro: "Já existe um cliente cadastrado com esse número!",
+                    nome: row.nome,
+                    id: row.id,
+                });
+            }
+
+            db.run(
+                `
         INSERT INTO clientes (nome, cpf, datanasc, telefone, obs, cep, logradouro, numero, complemento, bairro, cidade, uf, notificacao)
         VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-            [
-                nome,
-                cpf,
-                datanasc,
-                telefone,
-                obs,
-                cep,
-                logradouro,
-                numero,
-                complemento,
-                bairro,
-                cidade,
-                uf,
-                notificacao,
-            ],
-            function (err) {
-                if (err)
-                    return res
-                        .status(500)
-                        .json({ erro: "Erro ao cadastrar um novo cliente." });
-                res.json({
-                    mensagem: "Cliente cadastrado com sucesso.",
-                    nome: nome,
-                    telefone: telefone,
-                    id: this.lastID,
-                });
-            },
-        );
-
-    })
-
+                [
+                    nome,
+                    cpf,
+                    datanasc,
+                    telefone,
+                    obs,
+                    cep,
+                    logradouro,
+                    numero,
+                    complemento,
+                    bairro,
+                    cidade,
+                    uf,
+                    notificacao,
+                ],
+                function (err) {
+                    if (err)
+                        return res
+                            .status(500)
+                            .json({
+                                erro: "Erro ao cadastrar um novo cliente.",
+                            });
+                    res.json({
+                        mensagem: "Cliente cadastrado com sucesso.",
+                        nome: nome,
+                        telefone: telefone,
+                        id: this.lastID,
+                    });
+                },
+            );
+        },
+    );
 });
 
 router.get("/api/clientes/:id", authApi, (req, res) => {
@@ -176,16 +190,16 @@ router.delete("/api/clientes/:id", authApi, (req, res) => {
     db.run(`DELETE FROM clientes WHERE id = ?`, [id], (err) => {
         if (err) {
             return res.status(500).json({
-                erro: 'Erro ao deletar usuário'
-            })
+                erro: "Erro ao deletar usuário",
+            });
         }
 
         res.json({
-            mensagem: 'Usuário deletado com sucesso',
-            linhasAfetadas: this.changes
-        })
-    })
-})
+            mensagem: "Usuário deletado com sucesso",
+            linhasAfetadas: this.changes,
+        });
+    });
+});
 
 router.get("/api/clientes/:id/pets", authApi, (req, res) => {
     let id = req.params.id;
@@ -206,7 +220,7 @@ router.get("/api/clientes/:id/pets", authApi, (req, res) => {
             }
 
             res.json(rows);
-        }
+        },
     );
 });
 
@@ -263,14 +277,16 @@ router.put("/api/pets/:id", authApi, (req, res) => {
             shampoo,
             cuidados_especiais,
             cor,
-            id
+            id,
         ],
         (err) => {
             if (err) {
-                return res.status(500).json({ erro: `Erro ao atualizar pet: ${err.message}` });
+                return res
+                    .status(500)
+                    .json({ erro: `Erro ao atualizar pet: ${err.message}` });
             }
             res.json({ mensagem: "Pet atualizado com sucesso." });
-        }
+        },
     );
 });
 
@@ -330,7 +346,7 @@ router.post("/api/clientes/:id/pets", authApi, (req, res) => {
                     enfeites,
                     shampoo,
                     cuidados_especiais,
-                    cor
+                    cor,
                 ],
                 function (err) {
                     if (err) {
@@ -351,9 +367,9 @@ router.post("/api/clientes/:id/pets", authApi, (req, res) => {
 
 router.delete("/api/clientes/:id/pets", authApi, (req, res) => {
     db.run(`DELETE FROM pets WHERE id = ?`, [req.params.id], (err) => {
-        if (err) return res.status(500).json({ erro: "Erro ao apagar pet." })
-        res.json({ mensagem: "Pet apagado com sucesso!" })
-    })
+        if (err) return res.status(500).json({ erro: "Erro ao apagar pet." });
+        res.json({ mensagem: "Pet apagado com sucesso!" });
+    });
 });
 
 module.exports = router;

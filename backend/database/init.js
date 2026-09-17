@@ -1,4 +1,4 @@
-const db = require('./db')
+const db = require("./db");
 
 db.serialize(() => {
     db.run(`CREATE TABLE IF NOT EXISTS users (
@@ -7,12 +7,30 @@ db.serialize(() => {
             email TEXT,
             password_hash TEXT,
             role INTEGER
-    )`)
+    )`);
 
     db.run(`CREATE TABLE IF NOT EXISTS config(
             id INTEGER PRIMARY KEY,
-            nome_empresa TEXT        
+            nome_empresa TEXT,
+            cnpj TEXT,
+            cep TEXT,
+            logradouro TEXT,
+            numero TEXT,
+            complemento TEXT,
+            bairro TEXT,
+            cidade TEXT,
+            uf TEXT
     )`);
+
+    // Adiciona os campos da configuracao geral em bancos existentes.
+    db.run(`ALTER TABLE config ADD COLUMN cnpj TEXT`, (err) => {});
+    db.run(`ALTER TABLE config ADD COLUMN cep TEXT`, (err) => {});
+    db.run(`ALTER TABLE config ADD COLUMN logradouro TEXT`, (err) => {});
+    db.run(`ALTER TABLE config ADD COLUMN numero TEXT`, (err) => {});
+    db.run(`ALTER TABLE config ADD COLUMN complemento TEXT`, (err) => {});
+    db.run(`ALTER TABLE config ADD COLUMN bairro TEXT`, (err) => {});
+    db.run(`ALTER TABLE config ADD COLUMN cidade TEXT`, (err) => {});
+    db.run(`ALTER TABLE config ADD COLUMN uf TEXT`, (err) => {});
 
     db.run(`CREATE TABLE IF NOT EXISTS clientes(
         id INTEGER PRIMARY KEY,
@@ -80,7 +98,9 @@ db.serialize(() => {
     // Popular a tabela de raças se estiver vazia
     db.get("SELECT COUNT(*) AS count FROM racas", [], (err, row) => {
         if (!err && row && row.count === 0) {
-            const stmt = db.prepare("INSERT INTO racas (nome, especie_id, tamanho, tamanhopelo) VALUES (?, ?, ?, ?)");
+            const stmt = db.prepare(
+                "INSERT INTO racas (nome, especie_id, tamanho, tamanhopelo) VALUES (?, ?, ?, ?)",
+            );
             stmt.run("Poodle", 1, "pequeno", "médio");
             stmt.run("Labrador", 1, "grande", "curto");
             stmt.run("Golden Retriever", 1, "grande", "longo");
@@ -97,7 +117,9 @@ db.serialize(() => {
     // Popular a tabela de checklist se estiver vazia
     db.get("SELECT COUNT(*) AS count FROM config_checklist", [], (err, row) => {
         if (!err && row && row.count === 0) {
-            const stmt = db.prepare("INSERT INTO config_checklist (checklist_tipo, categoria, valor) VALUES (?, ?, ?)");
+            const stmt = db.prepare(
+                "INSERT INTO config_checklist (checklist_tipo, categoria, valor) VALUES (?, ?, ?)",
+            );
             // Perfume
             stmt.run("agendado", "perfume", "Sim");
             stmt.run("agendado", "perfume", "Não");
@@ -111,7 +133,11 @@ db.serialize(() => {
             // Shampoo
             stmt.run("agendado", "shampoo", "Normal");
             stmt.run("agendado", "shampoo", "Neutro");
-            stmt.run("agendado", "shampoo", "Medicamento - Cliente traz e leva");
+            stmt.run(
+                "agendado",
+                "shampoo",
+                "Medicamento - Cliente traz e leva",
+            );
             stmt.run("agendado", "shampoo", "Extra Soft");
             stmt.run("agendado", "shampoo", "Tonalizador");
             // Cores
@@ -137,7 +163,22 @@ db.serialize(() => {
     ativo INTEGER DEFAULT 1,
 
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);`)
+);`);
+
+    db.run(`CREATE TABLE IF NOT EXISTS servico_racas (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        servico_id INTEGER NOT NULL,
+        raca_id INTEGER NOT NULL,
+        preco REAL NOT NULL,
+        duracao INTEGER NOT NULL,
+        UNIQUE (servico_id, raca_id),
+        FOREIGN KEY (servico_id) REFERENCES servicos(id) ON DELETE CASCADE,
+        FOREIGN KEY (raca_id) REFERENCES racas(id) ON DELETE CASCADE
+    );`);
+    db.run(
+        `ALTER TABLE servico_racas ADD COLUMN grupo TEXT NOT NULL DEFAULT 'Regra por raça'`,
+        (err) => {},
+    );
 
     db.run(`CREATE TABLE IF NOT EXISTS agendamento_servicos (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -146,6 +187,7 @@ db.serialize(() => {
     servico_id INTEGER NOT NULL,
 
     valor_cobrado REAL NOT NULL,
+    duracao_cobrada INTEGER,
 
     FOREIGN KEY (agendamento_id)
         REFERENCES agendamentos(id)
@@ -153,7 +195,11 @@ db.serialize(() => {
 
     FOREIGN KEY (servico_id)
         REFERENCES servicos(id)
-);`)
+);`);
+    db.run(
+        `ALTER TABLE agendamento_servicos ADD COLUMN duracao_cobrada INTEGER`,
+        (err) => {},
+    );
 
     db.run(`CREATE TABLE IF NOT EXISTS agendamentos (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -168,6 +214,11 @@ db.serialize(() => {
     status TEXT DEFAULT 'Agendado',
 
     observacoes TEXT,
+    desconto REAL DEFAULT 0,
+    taxi_dog INTEGER DEFAULT 0,
+    valor_taxi REAL DEFAULT 0,
+    valor_total REAL DEFAULT 0,
+    status_pagamento TEXT DEFAULT 'Pendente',
 
     criado_por INTEGER,
 
@@ -177,9 +228,29 @@ db.serialize(() => {
     FOREIGN KEY (cliente_id) REFERENCES clientes(id),
     FOREIGN KEY (pet_id) REFERENCES pets(id),
     FOREIGN KEY (criado_por) REFERENCES usuarios(id)
-);`)
+);`);
+    db.run(
+        `ALTER TABLE agendamentos ADD COLUMN desconto REAL DEFAULT 0`,
+        (err) => {},
+    );
+    db.run(
+        `ALTER TABLE agendamentos ADD COLUMN taxi_dog INTEGER DEFAULT 0`,
+        (err) => {},
+    );
+    db.run(
+        `ALTER TABLE agendamentos ADD COLUMN valor_taxi REAL DEFAULT 0`,
+        (err) => {},
+    );
+    db.run(
+        `ALTER TABLE agendamentos ADD COLUMN valor_total REAL DEFAULT 0`,
+        (err) => {},
+    );
+    db.run(
+        `ALTER TABLE agendamentos ADD COLUMN status_pagamento TEXT DEFAULT 'Pendente'`,
+        (err) => {},
+    );
 
-db.run(`
+    db.run(`
     CREATE TABLE IF NOT EXISTS notificacoes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     titulo VARCHAR(150) NOT NULL,
@@ -188,6 +259,5 @@ db.run(`
     author VARCHAR(100) DEFAULT 'Equipe Flooty Pet',
     lida TINYINT(1) DEFAULT 0,
     created_at DATETIME DEFAULT (datetime('now', '-3 hours'))
-);`)
+);`);
 });
-
