@@ -7,7 +7,7 @@ const originalFetch = window.fetch;
 window.fetch = async (...args) => {
     const response = await originalFetch(...args);
     if (response.status === 401 && !response.url.includes('/api/login')) {
-        window.location.href = "/";
+      window.location.href = "/login";
     }
     return response;
 };

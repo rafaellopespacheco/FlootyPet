@@ -1,17 +1,16 @@
-import Layout from './components/Layout';
-import Agenda from './pages/Agenda';
-import Atualizacoes from './pages/Atualizacoes';
-import Clientes from './pages/Cliente';
-import Login from './pages/Login';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
-import NotFound from './pages/NotFound';
-import { Toaster } from 'sonner';
-import Sobre from './pages/Sobre';
-import InfoCliente from './pages/InfoCliente';
-import CriarNotificacaoForm from './pages/CriarNotificacaoForm';
-import Config from './pages/Config';
+import Layout from "./components/Layout";
+import Agenda from "./pages/Agenda";
+import Atualizacoes from "./pages/Atualizacoes";
+import Clientes from "./pages/Cliente";
+import Login from "./pages/Login";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import NotFound from "./pages/NotFound";
+import { Toaster } from "sonner";
+import Sobre from "./pages/Sobre";
+import InfoCliente from "./pages/InfoCliente";
+import CriarNotificacaoForm from "./pages/CriarNotificacaoForm";
+import Config from "./pages/Config";
 import { useEffect, useState } from "react";
-
 
 function HomeRedirect() {
     const [loading, setLoading] = useState(true);
@@ -68,7 +67,7 @@ function App() {
                         element={<CriarNotificacaoForm />}
                     ></Route>
                 </Route>
-                <Route path="/" element={<HomeRedirect />} />{" "}
+                <Route path="/" element={<HomeRedirect />} />
                 <Route path="/login" element={<Login />}></Route>
                 <Route path="/sobre" element={<Sobre />}></Route>
                 <Route path="*" element={<NotFound />}></Route>

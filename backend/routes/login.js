@@ -36,10 +36,20 @@ router.post("/api/login", (req, res) => {
             req.session.email = user.email;
             req.session.role = user.role;
 
-            res.json({
-                message: 'Login efetuado com sucesso.',
-                email: user.email
-            })
+            
+            req.session.save((err) => {
+                if (err) {
+                    console.error("Erro ao salvar sessão:", err);
+                    return res.status(500).json({
+                        erro: "Erro ao salvar a sessão.",
+                    });
+                }
+
+                res.json({
+                    message: "Login efetuado com sucesso.",
+                    email: user.email,
+                });
+            });
         })
     })
 });
